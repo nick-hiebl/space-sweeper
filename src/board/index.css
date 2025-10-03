@@ -1,0 +1,23 @@
+.cell {
+    border: 1px solid black;
+    width: 80px;
+    height: 80px;
+    display: inline-block;
+}
+
+.cell-chip {
+    line-height: 1em;
+}
+
+.board-list {
+    list-style-type: none;
+    padding: 0;
+    gap: 4px;
+    display: inline-grid;
+    grid-template-columns: repeat(10, auto);
+    flex-grow: 0;
+}
+
+.grid-item {
+    line-height: 0;
+}

@@ -1,0 +1,68 @@
+export type Style =
+    | 'explosion'
+    | 'gear'
+    | 'fuel'
+    | 'asteroid';
+
+export type Id = number;
+
+export type Quantity = number | 'quantity' | '-quantity';
+
+export type Chip = {
+    id: Id;
+    style: Style;
+    quantity: number;
+};
+
+export type HealthEffect = {
+    type: 'health';
+    healthShift: Quantity;
+};
+
+export type MoneyEffect = {
+    type: 'money';
+    moneyShift: Quantity;
+};
+
+export type EnergyEffect = {
+    type: 'energy';
+    energyShift: Quantity;
+};
+
+export type DiscardEffect = {
+    type: 'discard';
+};
+
+export type ForcedEffect = {
+    type: 'forced';
+};
+
+export type MoveEffect = {
+    type: 'move';
+    distance: Quantity;
+};
+
+export type Effect =
+    | HealthEffect
+    | MoneyEffect
+    | EnergyEffect
+    | DiscardEffect
+    | ForcedEffect
+    | MoveEffect;
+
+export type EffectModule = {
+    style: Style;
+    effects: Effect[];
+};
+
+export type GameState = {
+    bag: Chip[];
+    effectDeck: EffectModule[];
+    energy: number;
+    maxEnergy: number;
+    hitPoints: number;
+    maxHitPoints: number;
+    money: number;
+};
+
+export type GameAction = { type: 'playChip'; chip: Chip; effectModules: EffectModule[] };
