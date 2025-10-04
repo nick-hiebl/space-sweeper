@@ -57,6 +57,8 @@ export type EffectModule = {
     effects: Effect[];
 };
 
+export type Activity = 'start' | 'board' | 'board-finished' | 'shop';
+
 export type GameState = {
     bag: Chip[];
     effectDeck: EffectModule[];
@@ -66,6 +68,11 @@ export type GameState = {
     maxHitPoints: number;
     money: number;
     weights: Weight[];
+    currentActivity: Activity;
 };
 
-export type GameAction = { type: 'trigger-effects'; effects: Effect[] };
+export type GameAction =
+    | { type: 'trigger-effects'; effects: Effect[] }
+    | { type: 'start-board' }
+    | { type: 'end-board' }
+    | { type: 'leave-board' };

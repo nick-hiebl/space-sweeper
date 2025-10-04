@@ -1,4 +1,4 @@
-import type { Chip, GameAction, GameState, Quantity } from './types';
+import type { GameAction, GameState, Quantity } from './types';
 
 const readQuantity = (quantity: Quantity): number => {
     if (quantity === 'quantity' || quantity === '-quantity') {
@@ -9,7 +9,22 @@ const readQuantity = (quantity: Quantity): number => {
 };
 
 export const GameStateManager = (state: GameState, action: GameAction): GameState => {
-    if (action.type === 'trigger-effects') {
+    if (action.type === 'start-board') {
+        return {
+            ...state,
+            currentActivity: 'board',
+        };
+    } else if (action.type === 'end-board') {
+        return {
+            ...state,
+            currentActivity: 'board-finished',
+        };
+    } else if (action.type === 'leave-board') {
+        return {
+            ...state,
+            currentActivity: 'shop',
+        };
+    } else if (action.type === 'trigger-effects') {
         const pendingState = {
             ...state
         };
@@ -25,6 +40,10 @@ export const GameStateManager = (state: GameState, action: GameAction): GameStat
                         pendingState.hitPoints + readQuantity(effect.healthShift),
                     ),
                 );
+
+                if (pendingState.hitPoints <= 0 && state.currentActivity === 'board') {
+                    pendingState.currentActivity = 'board-finished';
+                }
             } else if (effect.type === 'energy') {
                 pendingState.energy = Math.max(
                     0,

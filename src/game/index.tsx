@@ -1,9 +1,9 @@
 import { useReducer } from 'react';
 
-import { Board } from '../board';
+import { Activity } from '../activity';
+import { Sprite } from '../common/Sprite';
 import { initialGameState } from '../state/initialiser';
 import { GameStateManager } from '../state/state-manager';
-import { Sprite } from '../common/Sprite';
 
 import './index.css';
 
@@ -40,7 +40,7 @@ export const Game = () => {
                 </div>
                 <div id="player-hp">Money: ${state.money}</div>
             </div>
-            <Board state={state} onGameAction={signal} />
+            <Activity state={state} onAction={signal} />
         </div>
     );
 };

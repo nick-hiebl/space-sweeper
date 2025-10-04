@@ -76,59 +76,70 @@ export const Board = ({ onGameAction, state }: Props) => {
                     );
                 })}
             </ul>
-            <div id="action-row">
-                {boardState.action.type === 'ended' ? (
-                    <div>
-                        Game over
-                    </div>
-                ) : boardState.action.type === 'drawing' ? (
-                    <div>
-                        {boardState.action.options.map((chip, _, options) => {
-                            const isSomeForced = options.some(chip => {
-                                const relevantRule = state.effectDeck.find(module => module.style === chip.style)!;
+            {state.currentActivity === 'board' && (
+                <div id="action-row">
+                    {boardState.action.type === 'ended' ? (
+                        <div>
+                            <button onClick={() => onGameAction({ type: 'leave-board' })}>Leave</button>
+                        </div>
+                    ) : boardState.action.type === 'drawing' ? (
+                        <div>
+                            {boardState.action.options.map((chip, _, options) => {
+                                const isSomeForced = options.some(chip => {
+                                    const relevantRule = state.effectDeck.find(module => module.style === chip.style)!;
 
-                                return relevantRule.effects.some(effect => effect.type === 'forced');
-                            });
+                                    return relevantRule.effects.some(effect => effect.type === 'forced');
+                                });
 
-                            const isThisForced = state.effectDeck.some(effectCard => {
-                                return effectCard.style === chip.style
-                                    && effectCard.effects.some(effect => effect.type === 'forced');
-                            });
+                                const isThisForced = state.effectDeck.some(effectCard => {
+                                    return effectCard.style === chip.style
+                                        && effectCard.effects.some(effect => effect.type === 'forced');
+                                });
 
-                            return (
-                                <button
-                                    key={chip.id}
-                                    onClick={() => {
-                                        boardAction({ type: 'choose', chip });
+                                return (
+                                    <button
+                                        key={chip.id}
+                                        onClick={() => {
+                                            boardAction({ type: 'choose', chip });
 
-                                        const relevantRule = boardState.effectModules.find(module => module.style === chip.style);
+                                            const relevantRule = boardState.effectModules.find(module => module.style === chip.style);
 
-                                        if (!relevantRule) {
-                                            console.error('No relevant rule for chosen chip:', chip, boardState.effectModules);
-                                            throw new Error('No relevant rule!');
-                                        }
+                                            if (!relevantRule) {
+                                                console.error('No relevant rule for chosen chip:', chip, boardState.effectModules);
+                                                throw new Error('No relevant rule!');
+                                            }
 
-                                        onGameAction({
-                                            type: 'trigger-effects',
-                                            effects: relevantRule.effects
-                                                .map(effect => resolveEffect(effect, chip))
-                                                .concat(DEFAULT_ENERGY_COST),
-                                        });
-                                    }}
-                                    disabled={isSomeForced && !isThisForced}
-                                >
-                                    <ChipDisplay chip={chip} />
-                                </button>
-                            );
-                        })}
-                    </div>
-                ) : (
-                    <div>
-                        <button onClick={() => boardAction({ type: 'draw' })}>Draw</button>
-                        <button onClick={() => boardAction({ type: 'end' })}>End</button>
-                    </div>
-                )}
-            </div>
+                                            onGameAction({
+                                                type: 'trigger-effects',
+                                                effects: relevantRule.effects.map(effect => resolveEffect(effect, chip)),
+                                            });
+                                        }}
+                                        disabled={isSomeForced && !isThisForced}
+                                    >
+                                        <ChipDisplay chip={chip} />
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    ) : (
+                        <div>
+                            <button
+                                disabled={state.energy <= 0}
+                                onClick={() => {
+                                    onGameAction({
+                                        type: 'trigger-effects',
+                                        effects: [DEFAULT_ENERGY_COST],
+                                    });
+                                    boardAction({ type: 'draw' });
+                                }}
+                            >
+                                Draw
+                            </button>
+                            <button onClick={() => onGameAction({ type: 'end-board' })}>End</button>
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     );
 };

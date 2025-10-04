@@ -56,5 +56,6 @@ export const initialGameState = (): GameState => {
 		money: 0,
 		effectDeck: defaultEffectDeck(),
 		weights: getDefaultWeights(),
+		currentActivity: 'start',
     };
 };
