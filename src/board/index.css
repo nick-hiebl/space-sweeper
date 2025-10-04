@@ -23,6 +23,20 @@
     line-height: 0;
 }
 
+.grid-item > .cell {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.grid-item[data-hovered=true] > .cell::after {
+    content: '';
+    border-radius: 8px;
+    width: 56px;
+    height: 56px;
+    border: 2px dashed #ccc;
+}
+
 .number-overlay {
     position: absolute;
     top: 0;

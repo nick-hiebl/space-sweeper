@@ -24,10 +24,12 @@ export const Board = ({ onGameAction, state }: Props) => {
     const [boardState, boardAction] = useReducer(StateManager(state), defaultBoardState(state));
 
     const [hoveredStyle, setHoveredStyle] = useState<Style | undefined>(undefined);
+    const [hoveredPlace, setHoveredPlace] = useState<number | undefined>(undefined);
 
     useEffect(() => {
         if (boardState.action.type !== 'drawing') {
             setHoveredStyle(undefined);
+            setHoveredPlace(undefined);
         }
     }, [boardState]);
 
@@ -35,6 +37,8 @@ export const Board = ({ onGameAction, state }: Props) => {
     const lastIndex = lastPlace.position;
 
     const anythingPlacedInLast = boardState.played.some(([_, index]) => index === lastIndex);
+
+    const priorIndex = boardState.played[boardState.played.length - 1]?.[1] ?? -1;
 
     return (
         <div id="board-state">
@@ -44,7 +48,7 @@ export const Board = ({ onGameAction, state }: Props) => {
                     const placement = boardState.played.find(([_, pos]) => pos === cell.position);
 
                     return (
-                        <li key={cell.position} className="grid-item">
+                        <li key={cell.position} className="grid-item" data-hovered={cell.position === hoveredPlace}>
                             <div className="cell">
                                 {placement && (
                                     <ChipDisplay
@@ -119,8 +123,14 @@ export const Board = ({ onGameAction, state }: Props) => {
                                         disabled={isSomeForced && !isThisForced}
                                     >
                                         <ChipDisplay
-                                            onMouseEnter={() => setHoveredStyle(chip.style)}
-                                            onMouseLeave={() => setHoveredStyle(undefined)}
+                                            onMouseEnter={() => {
+                                                setHoveredStyle(chip.style);
+                                                setHoveredPlace(Math.min(priorIndex + chip.quantity, lastIndex));
+                                            }}
+                                            onMouseLeave={() => {
+                                                setHoveredStyle(undefined);
+                                                setHoveredPlace(undefined);
+                                            }}
                                             chip={chip}
                                         />
                                     </button>
