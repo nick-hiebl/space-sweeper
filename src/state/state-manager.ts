@@ -1,37 +1,28 @@
 import type { Chip, GameAction, GameState, Quantity } from './types';
 
-const readQuantity = (quantity: Quantity, chip: Chip): number => {
-    if (quantity === 'quantity') {
-        return chip.quantity;
-    } else if (quantity === '-quantity') {
-        return -chip.quantity;
+const readQuantity = (quantity: Quantity): number => {
+    if (quantity === 'quantity' || quantity === '-quantity') {
+        throw new Error('Game state manager should not receive quantity');
     }
 
     return quantity;
 };
 
 export const GameStateManager = (state: GameState, action: GameAction): GameState => {
-    if (action.type === 'playChip') {
-        const relevantRule = action.effectModules.find(module => module.style === action.chip.style);
-
-        if (!relevantRule) {
-            console.error('Found no relevant rules', action.effectModules, action.chip);
-            throw new Error('No relevant rules for played chip');
-        }
-
+    if (action.type === 'trigger-effects') {
         const pendingState = {
             ...state
         };
 
-        relevantRule.effects.forEach(effect => {
+        action.effects.forEach(effect => {
             if (effect.type === 'money') {
-                pendingState.money += readQuantity(effect.moneyShift, action.chip);
+                pendingState.money += readQuantity(effect.moneyShift);
             } else if (effect.type === 'health') {
                 pendingState.hitPoints = Math.max(
                     0,
                     Math.min(
                         pendingState.maxHitPoints,
-                        pendingState.hitPoints + readQuantity(effect.healthShift, action.chip),
+                        pendingState.hitPoints + readQuantity(effect.healthShift),
                     ),
                 );
             } else if (effect.type === 'energy') {
@@ -39,7 +30,7 @@ export const GameStateManager = (state: GameState, action: GameAction): GameStat
                     0,
                     Math.min(
                         pendingState.maxEnergy,
-                        pendingState.energy + readQuantity(effect.energyShift, action.chip),
+                        pendingState.energy + readQuantity(effect.energyShift),
                     ),
                 );
             }

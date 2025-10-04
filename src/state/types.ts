@@ -65,4 +65,4 @@ export type GameState = {
     money: number;
 };
 
-export type GameAction = { type: 'playChip'; chip: Chip; effectModules: EffectModule[] };
+export type GameAction = { type: 'trigger-effects'; effects: Effect[] };

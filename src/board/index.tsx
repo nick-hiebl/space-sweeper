@@ -1,5 +1,6 @@
 import { useReducer } from 'react';
 
+import { resolveEffect } from '../state/common';
 import type { Chip, GameAction, GameState } from '../state/types';
 
 import { StateManager } from './state-manager';
@@ -92,10 +93,17 @@ export const Board = ({ onGameAction, state }: Props) => {
                                     key={chip.id}
                                     onClick={() => {
                                         boardAction({ type: 'choose', chip });
+
+                                        const relevantRule = boardState.effectModules.find(module => module.style === chip.style);
+
+                                        if (!relevantRule) {
+                                            console.error('No relevant rule for chosen chip:', chip, boardState.effectModules);
+                                            throw new Error('No relevant rule!');
+                                        }
+
                                         onGameAction({
-                                            type: 'playChip',
-                                            chip,
-                                            effectModules: boardState.effectModules,
+                                            type: 'trigger-effects',
+                                            effects: relevantRule.effects.map(effect => resolveEffect(effect, chip)),
                                         });
                                     }}
                                     disabled={isSomeForced && !isThisForced}
