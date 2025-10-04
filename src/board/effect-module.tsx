@@ -1,0 +1,55 @@
+import type { ReactNode } from 'react';
+import { Sprite } from '../common/Sprite';
+import type { Effect as EffectType, EffectModule as EffectModuleType } from '../state/types';
+
+type EffectModuleProps = {
+    module: EffectModuleType;
+    isHighlighted?: boolean;
+};
+
+const Effect = ({ effect }: { effect: EffectType }) => {
+    if (effect.type === 'discard') {
+        return <div className="effect">discard</div>;
+    } else if (effect.type === 'energy') {
+        return (
+            <div className="effect">
+                <Sprite type="ui-icon" icon="energy" />
+                <Sprite type="number" value={effect.energyShift} />
+            </div>
+        );
+    } else if (effect.type === 'health') {
+        return (
+            <div className="effect">
+                <Sprite type="ui-icon" icon="heart" />
+                <Sprite type="number" value={effect.healthShift} />
+            </div>
+        );
+    } else if (effect.type === 'money') {
+        return (
+            <div className="effect">
+                <Sprite type="ui-icon" icon="money" />
+                <Sprite type="number" value={effect.moneyShift} />
+            </div>
+        );
+    } else if (effect.type === 'forced') {
+        return (
+            <div className="effect">
+                <Sprite type="ui-icon" icon="forced" />
+            </div>
+        );
+    }
+
+    return null;
+};
+
+export const EffectModule = (props: EffectModuleProps) => {
+    return (
+        <div className="effect-module" data-isHighlighted={props.isHighlighted}>
+            <Sprite type="chip" chip={{ style: props.module.style }} />
+            {'->'}
+            {props.module.effects.map((effect, index) => (
+                <Effect key={index} effect={effect} />
+            ))}
+        </div>
+    );
+};

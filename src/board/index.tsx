@@ -1,9 +1,10 @@
-import { useReducer } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 
 import { Sprite } from '../common/Sprite';
 import { resolveEffect } from '../state/common';
-import type { Chip, Effect, GameAction, GameState } from '../state/types';
+import type { Chip, Effect, GameAction, GameState, Style } from '../state/types';
 
+import { EffectModule } from './effect-module';
 import { StateManager } from './state-manager';
 import type { BoardState, Board as BoardType } from './types';
 
@@ -61,6 +62,14 @@ const DEFAULT_ENERGY_COST: Effect = {
 export const Board = ({ onGameAction, state }: Props) => {
     const [boardState, boardAction] = useReducer(StateManager, defaultBoardState(state));
 
+    const [hoveredStyle, setHoveredStyle] = useState<Style | undefined>(undefined);
+
+    useEffect(() => {
+        if (boardState.action.type !== 'drawing') {
+            setHoveredStyle(undefined);
+        }
+    }, [boardState]);
+
     return (
         <div id="board">
             <ul id="cells" className="board-list">
@@ -76,6 +85,12 @@ export const Board = ({ onGameAction, state }: Props) => {
                     );
                 })}
             </ul>
+            {boardState.effectModules.map(effectModule => (
+                <EffectModule
+                    module={effectModule}
+                    isHighlighted={!hoveredStyle || effectModule.style === hoveredStyle}
+                />
+            ))}
             {state.currentActivity === 'board' && (
                 <div id="action-row">
                     {boardState.action.type === 'ended' ? (
@@ -99,6 +114,8 @@ export const Board = ({ onGameAction, state }: Props) => {
                                 return (
                                     <button
                                         key={chip.id}
+                                        onMouseEnter={() => setHoveredStyle(chip.style)}
+                                        onMouseLeave={() => setHoveredStyle(undefined)}
                                         onClick={() => {
                                             boardAction({ type: 'choose', chip });
 

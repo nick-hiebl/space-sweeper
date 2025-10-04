@@ -46,6 +46,18 @@
     background-position-x: -160px;
 }
 
+.number.q4 {
+    background-position-x: -240px;
+}
+
+.number.qquantity {
+    background-position-x: -1200px;
+}
+
+.number.q-quantity {
+    background-position-x: -1120px;
+}
+
 .sprite-sheet.icon {
     background-position-y: -560px;
 }
@@ -59,16 +71,18 @@
 }
 
 .icon.energy {
-    width: 40px;
-    height: 80px;
-    background-size: 3200% 800%;
-
-    background-position-x: -180px;
+    background-position-x: -160px;
 }
 
 .icon.energy-empty {
-    width: 40px;
-    height: 80px;
-    background-size: 3200% 800%;
-    background-position-x: -260px;
+    background-position-x: -240px;
+}
+
+.icon.money {
+    background-position-x: -320px;
+}
+
+.icon.forced {
+    background-position-x: 0px;
+    background-position-y: -480px;
 }

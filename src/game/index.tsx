@@ -38,7 +38,14 @@ export const Game = () => {
                     </div>
                     {state.energy} / {state.maxEnergy}
                 </div>
-                <div id="player-hp">Money: ${state.money}</div>
+                <div id="player-hp">
+                    Money:
+                    <div className="icon-bar">
+                        {new Array(state.money).fill(0).map((_, index) => (
+                            <Sprite key={index} type="ui-icon" icon="money" />
+                        ))}
+                    </div>
+                </div>
             </div>
             <Activity state={state} onAction={signal} />
         </div>

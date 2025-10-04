@@ -32,3 +32,17 @@
 button:disabled {
     opacity: 60%;
 }
+
+.effect-module {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.effect-module[data-isHighlighted=false] {
+    opacity: 66%;
+}
+
+.effect {
+    position: relative;
+}
