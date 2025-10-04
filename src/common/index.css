@@ -1,0 +1,74 @@
+.sprite-sheet.size-80 {
+    width: 80px;
+    height: 80px;
+    background-size: 1600% 800%;
+}
+
+.sprite-sheet {
+    display: block;
+    display: block;
+    background-image: url('../../public/shape-sprites.png');
+    image-rendering: pixelated;
+    background-repeat: no-repeat;
+}
+
+.sprite-sheet.chip {
+    background-position-y: 0px;
+}
+
+.sprite-sheet.number {
+    position: absolute;
+    top: 0px;
+    background-position-y: -80px;
+}
+
+.chip.explosion {
+    background-position-x: -80px;
+}
+
+.chip.asteroid {
+    background-position-x: -160px;
+}
+
+.chip.gear {
+    background-position-x: -240px;
+}
+
+.number.q1 {
+    background-position-x: 0px;
+}
+
+.number.q2 {
+    background-position-x: -80px;
+}
+
+.number.q3 {
+    background-position-x: -160px;
+}
+
+.sprite-sheet.icon {
+    background-position-y: -560px;
+}
+
+.icon.heart {
+    background-position-x: 0px;
+}
+
+.icon.heart-empty {
+    background-position-x: -80px;
+}
+
+.icon.energy {
+    width: 40px;
+    height: 80px;
+    background-size: 3200% 800%;
+
+    background-position-x: -180px;
+}
+
+.icon.energy-empty {
+    width: 40px;
+    height: 80px;
+    background-size: 3200% 800%;
+    background-position-x: -260px;
+}

@@ -1,16 +1,12 @@
-import type { Chip, EffectModule, GameState } from './types';
+import type { Chip, EffectModule, GameState, Weight } from './types';
 
 let startId = 0;
-const getId = () => {
+export const getId = () => {
 	return startId++;
 };
 
 const defaultBag = (): Chip[] => {
 	return [
-		{ style: 'explosion', quantity: 1, id: getId() },
-		{ style: 'explosion', quantity: 1, id: getId() },
-		{ style: 'explosion', quantity: 1, id: getId() },
-		{ style: 'explosion', quantity: 2, id: getId() },
 		{ style: 'gear', quantity: 1, id: getId() },
 		{ style: 'gear', quantity: 1, id: getId() },
 		{ style: 'gear', quantity: 1, id: getId() },
@@ -23,6 +19,12 @@ const defaultBag = (): Chip[] => {
 	];
 };
 
+const getDefaultWeights = (): Weight[] => {
+	return [
+		{ style: 'explosion', quantity: 1 },
+	];
+};
+
 const defaultEffectDeck = (): EffectModule[] => {
 	return [
 		{
@@ -31,7 +33,7 @@ const defaultEffectDeck = (): EffectModule[] => {
 		},
 		{
 			style: 'gear',
-			effects: [],
+			effects: [{ type: 'health', healthShift: 1 }],
 		},
 		{
 			style: 'fuel',
@@ -53,5 +55,6 @@ export const initialGameState = (): GameState => {
 		maxHitPoints: 4,
 		money: 0,
 		effectDeck: defaultEffectDeck(),
+		weights: getDefaultWeights(),
     };
 };

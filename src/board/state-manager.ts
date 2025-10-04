@@ -1,4 +1,5 @@
-import type { Chip } from '../state/types';
+import { getId } from '../state/initialiser';
+import type { Chip, Weight } from '../state/types';
 
 import type { BoardState } from './types';
 
@@ -7,16 +8,24 @@ type DrawingActions = { type: 'choose'; chip: Chip };
 
 type Action = WaitingActions | DrawingActions;
 
-function selectN<T>(items: T[], count: number): T[] {
-    return items.reduce((chosen: T[], current: T, index: number) => {
+function selectN(items: Chip[], count: number, weights: Weight[]): Chip[] {
+    const bagItems = items.reduce((chosen: Chip[], current: Chip, index: number) => {
         const stillNeeded = count - chosen.length;
-        const remainingOptions = items.length - index;
+        const remainingOptions = items.length + weights.length - index;
         if (Math.random() < stillNeeded / remainingOptions) {
             return chosen.concat(current);
         } else {
             return chosen;
         }
     }, []);
+
+    while (bagItems.length < count) {
+        const chosenWeight = weights[Math.floor(Math.random() * weights.length)];
+
+        bagItems.push({ ...chosenWeight, id: getId() });
+    }
+
+    return bagItems;
 }
 
 const CHIPS_TO_CHOOSE_FROM = 3;
@@ -37,6 +46,7 @@ export const StateManager = (state: BoardState, action: Action): BoardState => {
                         state.bag
                             .filter(chip => !state.played.some(([playedChip]) => playedChip === chip)),
                         CHIPS_TO_CHOOSE_FROM,
+                        state.weights,
                     ),
                 },
             };

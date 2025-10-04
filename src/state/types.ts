@@ -14,6 +14,8 @@ export type Chip = {
     quantity: number;
 };
 
+export type Weight = Omit<Chip, 'id'>;
+
 export type HealthEffect = {
     type: 'health';
     healthShift: Quantity;
@@ -63,6 +65,7 @@ export type GameState = {
     hitPoints: number;
     maxHitPoints: number;
     money: number;
+    weights: Weight[];
 };
 
 export type GameAction = { type: 'trigger-effects'; effects: Effect[] };

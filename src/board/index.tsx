@@ -1,7 +1,8 @@
 import { useReducer } from 'react';
 
+import { Sprite } from '../common/Sprite';
 import { resolveEffect } from '../state/common';
-import type { Chip, GameAction, GameState } from '../state/types';
+import type { Chip, Effect, GameAction, GameState } from '../state/types';
 
 import { StateManager } from './state-manager';
 import type { BoardState, Board as BoardType } from './types';
@@ -20,7 +21,7 @@ const getDefaultBoard = (): BoardType => {
 };
 
 const defaultBoardState = (state: GameState): BoardState => {
-    const styles = new Set();
+    const styles = new Set(['explosion']);
     state.bag.forEach(chip => {
         styles.add(chip.style);
     });
@@ -35,23 +36,26 @@ const defaultBoardState = (state: GameState): BoardState => {
         board: getDefaultBoard(),
         played: [],
         action: { type: 'waiting' },
+        weights: state.weights.slice(),
     };
 };
 
-export const ChipDisplay = ({ chip }: { chip?: Chip }) => {
+export const ChipDisplay = ({ chip }: { chip: Chip }) => {
     if (!chip) {
         return null;
     }
 
     return (
         <div className="cell-chip">
-            <div aria-label={chip.style} className={`sprite-sheet chip ${chip.style}`} />
-            <div
-                aria-label={chip.quantity.toString()}
-                className={`sprite-sheet number q${chip.quantity}`}
-            />
+            <Sprite type="chip" chip={chip} />
+            <Sprite type="number" value={chip.quantity} />
         </div>
     );
+};
+
+const DEFAULT_ENERGY_COST: Effect = {
+    type: 'energy',
+    energyShift: -1,
 };
 
 export const Board = ({ onGameAction, state }: Props) => {
@@ -106,7 +110,9 @@ export const Board = ({ onGameAction, state }: Props) => {
 
                                         onGameAction({
                                             type: 'trigger-effects',
-                                            effects: relevantRule.effects.map(effect => resolveEffect(effect, chip)),
+                                            effects: relevantRule.effects
+                                                .map(effect => resolveEffect(effect, chip))
+                                                .concat(DEFAULT_ENERGY_COST),
                                         });
                                     }}
                                     disabled={isSomeForced && !isThisForced}

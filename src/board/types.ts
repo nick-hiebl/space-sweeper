@@ -1,4 +1,4 @@
-import { Chip, Effect, EffectModule } from '../state/types';
+import { Chip, Effect, EffectModule, Weight } from '../state/types';
 
 export type Position = number;
 
@@ -25,4 +25,5 @@ export type BoardState = {
     board: Board;
     played: [Chip, Position][];
     action: ImmediateState;
+    weights: Weight[];
 };
