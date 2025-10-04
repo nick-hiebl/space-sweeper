@@ -1,4 +1,3 @@
-import type { ReactNode } from 'react';
 import { Sprite } from '../common/Sprite';
 import type { Effect as EffectType, EffectModule as EffectModuleType } from '../state/types';
 

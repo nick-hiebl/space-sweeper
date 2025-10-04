@@ -9,24 +9,11 @@ type ActivityProps = {
 
 export const Activity = ({ state, onAction }: ActivityProps) => {
     if (state.currentActivity === 'start') {
-        return (
-            <button onClick={() => onAction({ type: 'start-board' })}>Start</button>
-        );
+        return <button onClick={() => onAction({ type: 'start-board' })}>Start</button>;
     } else if (state.currentActivity === 'board' || state.currentActivity === 'board-finished') {
-        return (
-            <div>
-                <Board state={state} onGameAction={onAction} />
-                {state.currentActivity === 'board-finished' && (
-                    <button onClick={() => onAction({ type: 'leave-board' })}>Move on</button>
-                )}
-            </div>
-        );
+        return <Board state={state} onGameAction={onAction} />;
     } else if (state.currentActivity === 'shop') {
-        return (
-            <div>
-                <Shop state={state} onGameAction={onAction} />
-            </div>
-        )
+        return <Shop state={state} onGameAction={onAction} />;
     }
 
     return null;

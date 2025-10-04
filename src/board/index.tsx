@@ -63,7 +63,8 @@ export const Board = ({ onGameAction, state }: Props) => {
     const anythingPlacedInLast = boardState.played.some(([_, index]) => index === lastIndex);
 
     return (
-        <div id="board">
+        <div id="board-state">
+            <h2>Board</h2>
             <ul id="cells" className="board-list">
                 {boardState.board.cells.map(cell => {
                     const placement = boardState.played.find(([_, pos]) => pos === cell.position);
@@ -83,13 +84,8 @@ export const Board = ({ onGameAction, state }: Props) => {
                     );
                 })}
             </ul>
-            {boardState.effectModules.map(effectModule => (
-                <EffectModule
-                    module={effectModule}
-                    isHighlighted={!hoveredStyle || effectModule.style === hoveredStyle}
-                />
-            ))}
-            {state.currentActivity === 'board' && (
+            <h2>Actions</h2>
+            {state.currentActivity === 'board' ? (
                 <div id="action-row">
                     {boardState.action.type === 'ended' ? (
                         <div>
@@ -156,7 +152,18 @@ export const Board = ({ onGameAction, state }: Props) => {
                         </div>
                     )}
                 </div>
-            )}
+            ) : state.currentActivity === 'board-finished' ? (
+                <button onClick={() => onGameAction({ type: 'leave-board' })}>Move on</button>
+            ) : null}
+            <h2>Rules</h2>
+            <div id="effect-modules">
+                {boardState.effectModules.map(effectModule => (
+                    <EffectModule
+                        module={effectModule}
+                        isHighlighted={!hoveredStyle ? undefined : effectModule.style === hoveredStyle}
+                    />
+                ))}
+            </div>
         </div>
     );
 };

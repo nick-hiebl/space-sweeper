@@ -30,17 +30,31 @@
 }
 
 button:disabled {
-    opacity: 60%;
+    opacity: 45%;
+}
+
+#effect-modules {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .effect-module {
-    display: flex;
+    display: inline-flex;
     flex-direction: row;
     align-items: center;
+    padding: 8px;
+    border: 1px solid grey;
+    border-radius: 4px;
 }
 
 .effect-module[data-isHighlighted=false] {
     opacity: 66%;
+}
+
+.effect-module[data-isHighlighted=true] {
+    outline: 2px solid #3388ff;
+    outline-offset: 2px;
 }
 
 .effect {
