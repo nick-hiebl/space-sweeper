@@ -7,7 +7,3 @@
 .icon-bar.hp, .icon-bar.money {
     gap: 4px;
 }
-
-.icon-bar.energy {
-    padding-inline: 4px;
-}

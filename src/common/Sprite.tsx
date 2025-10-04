@@ -16,7 +16,7 @@ type SpriteTypeProps =
     | { type: 'number'; value: Quantity }
     | { type: 'ui-icon'; icon: IconType };
 
-type IconType = 'heart' | 'heart-empty' | 'energy' | 'energy-empty' | 'money' | 'forced';
+type IconType = 'heart' | 'heart-empty' | 'energy' | 'energy-empty' | 'money' | 'forced' | 'arrow';
 
 type SpriteProps = SpriteTypeProps & {
     size?: '80';
@@ -26,15 +26,6 @@ type SpriteId =
     | `chip:${Style}`
     | `number:${Quantity}`
     | `ui-icon:${IconType}`;
-
-const ICON_LABELS: Record<IconType, string> = {
-    heart: 'heart',
-    'heart-empty': 'empty heart',
-    energy: 'energy',
-    'energy-empty': 'empty energy',
-    money: 'money',
-    forced: 'Forced choice',
-};
 
 const DATA_URL_MAP = new Map<SpriteId, string>();
 
@@ -61,9 +52,10 @@ const POSITION_DATA: Record<SpriteId, PositionData> = {
     'ui-icon:forced': { x: 0, y: 96, ...COMMON },
     'ui-icon:heart': { x: 0, y: 112, ...COMMON },
     'ui-icon:heart-empty': { x: 16, y: 112, ...COMMON },
-    'ui-icon:energy': { x: 35, y: 112, width: 10, height: 16 },
-    'ui-icon:energy-empty': { x: 51, y: 112, width: 10, height: 16 },
+    'ui-icon:energy': { x: 32, y: 112, ...COMMON },
+    'ui-icon:energy-empty': { x: 48, y: 112, ...COMMON },
     'ui-icon:money': { x: 64, y: 112, ...COMMON },
+    'ui-icon:arrow': { x: 240, y: 112, ...COMMON },
 };
 
 const LABEL_DATA: Record<SpriteId, string> = {
@@ -83,6 +75,7 @@ const LABEL_DATA: Record<SpriteId, string> = {
     'ui-icon:energy': 'Energy',
     'ui-icon:energy-empty': 'Empty energy',
     'ui-icon:money': 'Money',
+    'ui-icon:arrow': 'causes',
 };
 
 const propsToSpriteId = (props: SpriteProps): SpriteId => {
