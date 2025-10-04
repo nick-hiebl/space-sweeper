@@ -1,5 +1,6 @@
 {
   "name": "space-sweeper",
+  "homepage": "https://nick-hiebl.github.io/space-sweeper/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
