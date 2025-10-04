@@ -41,13 +41,19 @@ const defaultBoardState = (state: GameState): BoardState => {
     };
 };
 
-export const ChipDisplay = ({ chip }: { chip: Chip }) => {
+type ChipDisplayProps = {
+    chip: Chip;
+    onMouseEnter: () => void;
+    onMouseLeave: () => void;
+}
+
+export const ChipDisplay = ({ chip, ...handlers }: ChipDisplayProps) => {
     if (!chip) {
         return null;
     }
 
     return (
-        <div className="cell-chip">
+        <div className="cell-chip" {...handlers}>
             <Sprite type="chip" chip={chip} />
             <Sprite type="number" value={chip.quantity} />
         </div>
@@ -79,7 +85,13 @@ export const Board = ({ onGameAction, state }: Props) => {
                     return (
                         <li key={cell.position} className="grid-item">
                             <div className="cell">
-                                {placement && <ChipDisplay chip={placement[0]} />}
+                                {placement && (
+                                    <ChipDisplay
+                                        chip={placement[0]}
+                                        onMouseEnter={() => setHoveredStyle(placement[0].style)}
+                                        onMouseLeave={() => setHoveredStyle(undefined)}
+                                    />
+                                )}
                             </div>
                         </li>
                     );
@@ -114,8 +126,6 @@ export const Board = ({ onGameAction, state }: Props) => {
                                 return (
                                     <button
                                         key={chip.id}
-                                        onMouseEnter={() => setHoveredStyle(chip.style)}
-                                        onMouseLeave={() => setHoveredStyle(undefined)}
                                         onClick={() => {
                                             boardAction({ type: 'choose', chip });
 
@@ -133,7 +143,11 @@ export const Board = ({ onGameAction, state }: Props) => {
                                         }}
                                         disabled={isSomeForced && !isThisForced}
                                     >
-                                        <ChipDisplay chip={chip} />
+                                        <ChipDisplay
+                                            onMouseEnter={() => setHoveredStyle(chip.style)}
+                                            onMouseLeave={() => setHoveredStyle(undefined)}
+                                            chip={chip}
+                                        />
                                     </button>
                                 );
                             })}
