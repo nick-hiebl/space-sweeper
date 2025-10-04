@@ -92,7 +92,7 @@ export const Board = ({ onGameAction, state }: Props) => {
                             <h2>Actions</h2>
                             {boardState.action.options.map((chip, _, options) => {
                                 const isSomeForced = options.some(chip => {
-                                    const relevantRule = state.effectDeck.find(module => module.style === chip.style)!;
+                                    const relevantRule = boardState.effectModules.find(module => module.style === chip.style)!;
 
                                     return relevantRule.effects.some(effect => effect.type === 'forced');
                                 });

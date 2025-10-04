@@ -2,7 +2,9 @@ export type Style =
     | 'explosion'
     | 'gear'
     | 'fuel'
-    | 'asteroid';
+    | 'asteroid'
+    | 'red'
+    | 'blue';
 
 export type Id = number;
 

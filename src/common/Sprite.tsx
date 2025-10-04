@@ -19,7 +19,7 @@ type SpriteTypeProps =
 type IconType = 'heart' | 'heart-empty' | 'energy' | 'energy-empty' | 'money' | 'forced' | 'arrow';
 
 type SpriteProps = SpriteTypeProps & {
-    size?: '80';
+    size?: '80' | '32';
 };
 
 type SpriteId =
@@ -43,6 +43,8 @@ const POSITION_DATA: Record<SpriteId, PositionData> = {
     'chip:explosion': { x: 16, y: 0, ...COMMON },
     'chip:asteroid': { x: 32, y: 0, ...COMMON },
     'chip:gear': { x: 48, y: 0, ...COMMON },
+    'chip:red': { x: 64, y: 0, ...COMMON },
+    'chip:blue': { x: 80, y: 0, ...COMMON },
     'number:1': { x: 0, y: 16, ...COMMON },
     'number:2': { x: 16, y: 16, ...COMMON },
     'number:3': { x: 32, y: 16, ...COMMON },
@@ -63,6 +65,8 @@ const LABEL_DATA: Record<SpriteId, string> = {
     'chip:explosion': 'Explosion item',
     'chip:asteroid': 'Asteroid item',
     'chip:gear': 'Wrench item',
+    'chip:blue': 'Blue item',
+    'chip:red': 'Red item',
     'number:1': '1',
     'number:2': '2',
     'number:3': '3',
@@ -109,15 +113,17 @@ const getDataURI = (id: SpriteId): string => {
 };
 
 export const Sprite = (props: SpriteProps) => {
+    const { size = '80' } = props;
+
     const id = propsToSpriteId(props);
 
     if (DATA_URL_MAP.has(id)) {
-        return <img src={DATA_URL_MAP.get(id)} alt={LABEL_DATA[id]} className="sprite" />;
+        return <img src={DATA_URL_MAP.get(id)} alt={LABEL_DATA[id]} className="sprite" data-size={size} />;
     }
 
     const dataURI = getDataURI(id);
 
     DATA_URL_MAP.set(id, dataURI);
 
-    return <img src={DATA_URL_MAP.get(id)} alt={LABEL_DATA[id]} className="sprite" />;
+    return <img src={DATA_URL_MAP.get(id)} alt={LABEL_DATA[id]} className="sprite" data-size={size} />;
 };

@@ -10,3 +10,7 @@
     height: 80px;
     image-rendering: pixelated;
 }
+
+.sprite[data-size="32"] {
+    height: 32px;
+}

@@ -1,11 +1,8 @@
+import { selectRandom } from '../common/random';
 import { getId } from '../state/initialiser';
 import type { Chip, EffectModule, GameState, Style, Weight } from '../state/types';
 
 import type { Board, BoardAction, BoardState, ImmediateState } from './types';
-
-function selectRandom<T>(items: T[]): T {
-    return items[Math.floor(Math.random() * items.length)];
-}
 
 function selectN(items: Chip[], count: number, weights: Weight[]): Chip[] {
     const bagItems = items.reduce((chosen: Chip[], current: Chip, index: number) => {
@@ -108,6 +105,13 @@ const getDefaultBoard = (): Board => {
     };
 };
 
+const DEFAULT_MODULE = (style: Style): EffectModule => {
+    return {
+        style,
+        effects: [],
+    };
+};
+
 export const defaultBoardState = (state: GameState): BoardState => {
     const unresolvedStyles = new Set<Style>();
     state.bag.forEach(chip => {
@@ -123,6 +127,9 @@ export const defaultBoardState = (state: GameState): BoardState => {
         const modules = state.effectDeck.filter(mod => mod.style === style);
         if (modules.length === 1) {
             effectModules.push(modules[0]);
+            unresolvedStyles.delete(style);
+        } else if (modules.length === 0) {
+            effectModules.push(DEFAULT_MODULE(style));
             unresolvedStyles.delete(style);
         }
     });

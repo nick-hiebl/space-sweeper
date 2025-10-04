@@ -1,3 +1,4 @@
+import { selectRandomN } from '../common/random';
 import type { EffectModule, GameState } from '../state/types';
 
 import type { ShopAction, ShopState } from './types';
@@ -10,13 +11,16 @@ export const getDefaultShop = (state: GameState): ShopState => {
     return {
         rebootPrice: 2,
         healPrice: 1,
-        sales: [
+        sales: selectRandomN([
+            { price: 1, remaining: 1, chip: { style: 'red', quantity: 1 } },
             { price: 2, remaining: -1, chip: { style: 'fuel', quantity: 2 } },
             { price: 1, remaining: 2, chip: { style: 'asteroid', quantity: 1 } },
-        ],
+            { price: 6, remaining: 1, chip: { style: 'blue', quantity: 4 } },
+        ], 2),
         modules: [
             { price: 5, sold: false, module: DEFAULT_BETTER_FUEL_MODULE },
-        ],
+        ]
+            .filter(sale => !state.effectDeck.some(module => module === sale.module)),
     };
 };
 

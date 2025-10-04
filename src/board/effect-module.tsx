@@ -51,7 +51,7 @@ export const EffectModule = (props: EffectModuleProps) => {
     return (
         <div className="effect-module" data-isHighlighted={props.isHighlighted}>
             <Sprite type="chip" chip={{ style: props.module.style }} />
-            <Sprite type="ui-icon" icon="arrow" />
+            <Sprite type="ui-icon" icon="arrow" size="32" />
             {props.module.effects.map((effect, index) => (
                 <Effect key={index} effect={effect} />
             ))}
