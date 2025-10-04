@@ -57,11 +57,18 @@ export const StateManager = (state: BoardState, action: Action): BoardState => {
             const alreadyPlayed = state.played.some(([playedChip]) => playedChip === chosenChip);
             console.assert(!alreadyPlayed, 'Chip was already played');
 
+            const { cells } = state.board;
+            const lastCellPosition = cells[cells.length - 1].position;
+
             const [_, lastPosition] = state.played[state.played.length - 1] ?? [undefined, -1];
+
+            console.assert(lastPosition < lastCellPosition, 'Something already placed in final cell but tried to place another!');
+
+            const placedPosition = Math.min(lastPosition + chosenChip.quantity, lastCellPosition);
 
             return {
                 ...state,
-                played: state.played.concat([[chosenChip, lastPosition + chosenChip.quantity]]),
+                played: state.played.concat([[chosenChip, placedPosition]]),
                 action: { type: 'waiting' },
             };
         }

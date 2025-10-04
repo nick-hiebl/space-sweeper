@@ -57,6 +57,11 @@ export const Board = ({ onGameAction, state }: Props) => {
         }
     }, [boardState]);
 
+    const lastPlace = boardState.board.cells[boardState.board.cells.length - 1];
+    const lastIndex = lastPlace.position;
+
+    const anythingPlacedInLast = boardState.played.some(([_, index]) => index === lastIndex);
+
     return (
         <div id="board">
             <ul id="cells" className="board-list">
@@ -136,7 +141,7 @@ export const Board = ({ onGameAction, state }: Props) => {
                     ) : (
                         <div>
                             <button
-                                disabled={state.energy <= 0}
+                                disabled={state.energy <= 0 || anythingPlacedInLast}
                                 onClick={() => {
                                     onGameAction({
                                         type: 'trigger-effects',

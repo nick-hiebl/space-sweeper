@@ -1,0 +1,6 @@
+#bag {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    flex-wrap: wrap;
+}
