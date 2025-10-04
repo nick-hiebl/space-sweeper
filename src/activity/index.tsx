@@ -1,4 +1,5 @@
 import { Board } from '../board';
+import { Shop } from '../shop';
 import type { GameAction, GameState } from '../state/types';
 
 type ActivityProps = {
@@ -20,6 +21,12 @@ export const Activity = ({ state, onAction }: ActivityProps) => {
                 )}
             </div>
         );
+    } else if (state.currentActivity === 'shop') {
+        return (
+            <div>
+                <Shop state={state} onGameAction={onAction} />
+            </div>
+        )
     }
 
     return null;

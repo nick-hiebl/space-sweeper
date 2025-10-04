@@ -1,3 +1,4 @@
+import { getId } from './initialiser';
 import type { GameAction, GameState, Quantity } from './types';
 
 const readQuantity = (quantity: Quantity): number => {
@@ -23,6 +24,11 @@ export const GameStateManager = (state: GameState, action: GameAction): GameStat
         return {
             ...state,
             currentActivity: 'shop',
+        };
+    } else if (action.type === 'leave-shop') {
+        return {
+            ...state,
+            currentActivity: 'board',
         };
     } else if (action.type === 'trigger-effects') {
         const pendingState = {
@@ -56,6 +62,11 @@ export const GameStateManager = (state: GameState, action: GameAction): GameStat
         });
 
         return pendingState;
+    } else if (action.type === 'add-chip') {
+        return {
+            ...state,
+            bag: state.bag.concat({ ...action.partialChip, id: getId() }),
+        };
     }
 
     console.error('Unexpected state and action', state, action);

@@ -1,4 +1,4 @@
-import { Chip, Effect, EffectModule, Weight } from '../state/types';
+import type { Chip, Effect, EffectModule, Weight } from '../state/types';
 
 export type Position = number;
 

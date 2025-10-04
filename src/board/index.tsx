@@ -1,8 +1,8 @@
 import { useEffect, useReducer, useState } from 'react';
 
-import { Sprite } from '../common/Sprite';
+import { ChipDisplay } from '../common/ChipDisplay';
 import { resolveEffect } from '../state/common';
-import type { Chip, Effect, GameAction, GameState, Style } from '../state/types';
+import type { Effect, GameAction, GameState, Style } from '../state/types';
 
 import { EffectModule } from './effect-module';
 import { StateManager } from './state-manager';
@@ -39,25 +39,6 @@ const defaultBoardState = (state: GameState): BoardState => {
         action: { type: 'waiting' },
         weights: state.weights.slice(),
     };
-};
-
-type ChipDisplayProps = {
-    chip: Chip;
-    onMouseEnter: () => void;
-    onMouseLeave: () => void;
-}
-
-export const ChipDisplay = ({ chip, ...handlers }: ChipDisplayProps) => {
-    if (!chip) {
-        return null;
-    }
-
-    return (
-        <div className="cell-chip" {...handlers}>
-            <Sprite type="chip" chip={chip} />
-            <Sprite type="number" value={chip.quantity} />
-        </div>
-    );
 };
 
 const DEFAULT_ENERGY_COST: Effect = {
