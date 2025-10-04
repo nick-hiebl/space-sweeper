@@ -45,8 +45,11 @@ export const ChipDisplay = ({ chip }: { chip?: Chip }) => {
 
     return (
         <div className="cell-chip">
-            {chip.quantity}
-            {chip.style}
+            <div aria-label={chip.style} className={`sprite-sheet chip ${chip.style}`} />
+            <div
+                aria-label={chip.quantity.toString()}
+                className={`sprite-sheet number q${chip.quantity}`}
+            />
         </div>
     );
 };

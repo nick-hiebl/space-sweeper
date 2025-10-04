@@ -6,6 +6,7 @@
 }
 
 .cell-chip {
+    position: relative;
     line-height: 1em;
 }
 
@@ -20,4 +21,53 @@
 
 .grid-item {
     line-height: 0;
+}
+
+.sprite-sheet {
+    display: block;
+    width: 80px;
+    height: 80px;
+    background-image: url('../../public/shape-sprites.png');
+    background-size: 1600%;
+    image-rendering: optimizeSpeed;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -o-crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: pixelated;
+}
+
+.sprite-sheet.chip {
+    background-position-y: 0px;
+}
+
+.sprite-sheet.number {
+    position: absolute;
+    top: 0px;
+    background-position-y: -80px;
+}
+
+.chip.explosion {
+    background-position-x: -80px;
+}
+
+.chip.asteroid {
+    background-position-x: -160px;
+}
+
+.chip.gear {
+    background-position-x: -240px;
+}
+
+.number.q1 {
+    background-position-x: 0px;
+}
+.number.q2 {
+    background-position-x: -80px;
+}
+.number.q3 {
+    background-position-x: -160px;
+}
+
+button:disabled {
+    opacity: 60%;
 }
