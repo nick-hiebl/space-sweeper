@@ -11,7 +11,3 @@
 .icon-bar.energy {
     padding-inline: 4px;
 }
-
-.icon-bar.energy > div {
-    margin-inline: -18px;
-}

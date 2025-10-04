@@ -2,6 +2,8 @@ import type { Chip } from '../state/types';
 
 import { Sprite } from './Sprite';
 
+import './index.css';
+
 type ChipDisplayProps = {
     chip: Omit<Chip, 'id'>;
     onMouseEnter?: () => void;
@@ -16,7 +18,9 @@ export const ChipDisplay = ({ chip, ...handlers }: ChipDisplayProps) => {
     return (
         <div className="cell-chip" {...handlers}>
             <Sprite type="chip" chip={chip} />
-            <Sprite type="number" value={chip.quantity} />
+            <div className="number-overlay">
+                <Sprite type="number" value={chip.quantity} />
+            </div>
         </div>
     );
 };

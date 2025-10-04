@@ -1,88 +1,12 @@
-.sprite-sheet.size-80 {
-    width: 80px;
-    height: 80px;
-    background-size: 1600% 800%;
+.cell-chip {
+    position: relative;
 }
 
-.sprite-sheet {
-    display: block;
-    display: block;
-    background-image: url('../../public/shape-sprites.png');
-    image-rendering: pixelated;
-    background-repeat: no-repeat;
-}
-
-.sprite-sheet.chip {
-    background-position-y: 0px;
-}
-
-.sprite-sheet.number {
+.number-overlay {
     position: absolute;
-    top: 0px;
-    background-position-y: -80px;
 }
 
-.chip.explosion {
-    background-position-x: -80px;
-}
-
-.chip.asteroid {
-    background-position-x: -160px;
-}
-
-.chip.gear {
-    background-position-x: -240px;
-}
-
-.number.q1 {
-    background-position-x: 0px;
-}
-
-.number.q2 {
-    background-position-x: -80px;
-}
-
-.number.q3 {
-    background-position-x: -160px;
-}
-
-.number.q4 {
-    background-position-x: -240px;
-}
-
-.number.qquantity {
-    background-position-x: -1200px;
-}
-
-.number.q-quantity {
-    background-position-x: -1120px;
-}
-
-.sprite-sheet.icon {
-    background-position-y: -560px;
-}
-
-.icon.heart {
-    background-position-x: 0px;
-}
-
-.icon.heart-empty {
-    background-position-x: -80px;
-}
-
-.icon.energy {
-    background-position-x: -160px;
-}
-
-.icon.energy-empty {
-    background-position-x: -240px;
-}
-
-.icon.money {
-    background-position-x: -320px;
-}
-
-.icon.forced {
-    background-position-x: 0px;
-    background-position-y: -480px;
+.sprite {
+    height: 80px;
+    image-rendering: pixelated;
 }

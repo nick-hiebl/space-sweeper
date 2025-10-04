@@ -13,21 +13,27 @@ const Effect = ({ effect }: { effect: EffectType }) => {
         return (
             <div className="effect">
                 <Sprite type="ui-icon" icon="energy" />
-                <Sprite type="number" value={effect.energyShift} />
+                <div className="number-overlay">
+                    <Sprite type="number" value={effect.energyShift} />
+                </div>
             </div>
         );
     } else if (effect.type === 'health') {
         return (
             <div className="effect">
                 <Sprite type="ui-icon" icon="heart" />
-                <Sprite type="number" value={effect.healthShift} />
+                <div className="number-overlay">
+                    <Sprite type="number" value={effect.healthShift} />
+                </div>
             </div>
         );
     } else if (effect.type === 'money') {
         return (
             <div className="effect">
                 <Sprite type="ui-icon" icon="money" />
-                <Sprite type="number" value={effect.moneyShift} />
+                <div className="number-overlay">
+                    <Sprite type="number" value={effect.moneyShift} />
+                </div>
             </div>
         );
     } else if (effect.type === 'forced') {

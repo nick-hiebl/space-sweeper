@@ -74,3 +74,7 @@ button:disabled {
 .effect {
     position: relative;
 }
+
+.number-overlay {
+    position: absolute;
+}
