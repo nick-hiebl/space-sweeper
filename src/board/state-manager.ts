@@ -1,5 +1,5 @@
 import { getId } from '../state/initialiser';
-import type { Chip, GameState, Style, Weight } from '../state/types';
+import type { Chip, EffectModule, GameState, Style, Weight } from '../state/types';
 
 import type { Board, BoardAction, BoardState, ImmediateState } from './types';
 
@@ -109,21 +109,31 @@ const getDefaultBoard = (): Board => {
 };
 
 export const defaultBoardState = (state: GameState): BoardState => {
-    const styles = new Set<Style>();
+    const unresolvedStyles = new Set<Style>();
     state.bag.forEach(chip => {
-        styles.add(chip.style);
+        unresolvedStyles.add(chip.style);
     });
     state.weights.forEach(weight => {
-        styles.add(weight.style);
+        unresolvedStyles.add(weight.style);
     });
 
-    const initialAction: ImmediateState = styles.size > 0
-        ? { type: 'picking-modules', style: selectRandom(Array.from(styles)) }
+    const effectModules: EffectModule[] = [];
+
+    Array.from(unresolvedStyles).forEach(style => {
+        const modules = state.effectDeck.filter(mod => mod.style === style);
+        if (modules.length === 1) {
+            effectModules.push(modules[0]);
+            unresolvedStyles.delete(style);
+        }
+    });
+
+    const initialAction: ImmediateState = unresolvedStyles.size > 0
+        ? { type: 'picking-modules', style: selectRandom(Array.from(unresolvedStyles)) }
         : { type: 'waiting' };
 
     return {
         bag: state.bag,
-        effectModules: [],
+        effectModules: effectModules,
         board: getDefaultBoard(),
         played: [],
         action: initialAction,
