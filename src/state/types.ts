@@ -74,6 +74,7 @@ export type GameState = {
 export type GameAction =
     | { type: 'trigger-effects'; effects: Effect[] }
     | { type: 'add-chip'; partialChip: Omit<Chip, 'id'> }
+    | { type: 'add-module'; module: EffectModule }
     | { type: 'start-board' }
     | { type: 'end-board' }
     | { type: 'leave-board' }

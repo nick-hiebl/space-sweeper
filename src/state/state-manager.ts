@@ -67,6 +67,11 @@ export const GameStateManager = (state: GameState, action: GameAction): GameStat
             ...state,
             bag: state.bag.concat({ ...action.partialChip, id: getId() }),
         };
+    } else if (action.type === 'add-module') {
+        return {
+            ...state,
+            effectDeck: state.effectDeck.concat(action.module),
+        };
     }
 
     console.error('Unexpected state and action', state, action);

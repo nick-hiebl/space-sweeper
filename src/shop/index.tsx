@@ -1,5 +1,6 @@
 import { useReducer } from 'react';
 
+import { EffectModule } from '../board/effect-module';
 import { ChipDisplay } from '../common/ChipDisplay';
 import { GameAction, GameState } from '../state/types';
 
@@ -50,32 +51,66 @@ export const Shop = ({ state, onGameAction }: Props) => {
                     Heal (${shopState.healPrice})
                 </button>
             </div>
-            <h2>Buy</h2>
-            <div id="buy-chips">
-                {shopState.sales.map((sale, index) => (
-                    <button
-                        key={index}
-                        disabled={sale.price > state.money || sale.remaining === 0}
-                        onClick={() => {
-                            onGameAction({
-                                type: 'trigger-effects',
-                                effects: [{ type: 'money', moneyShift: -sale.price }],
-                            });
-                            onShopAction({
-                                type: 'buy',
-                                chip: sale.chip,
-                            });
-                            onGameAction({
-                                type: 'add-chip',
-                                partialChip: sale.chip,
-                            });
-                        }}
-                    >
-                        <ChipDisplay chip={sale.chip} />
-                        {sale.remaining === -1 ? 'No limit' : `${sale.remaining} left`} (${sale.price})
-                    </button>
-                ))}
-            </div>
+            {shopState.sales.length > 0 && (
+                <div>
+                    <h2>Buy chips</h2>
+                    <div id="buy-chips">
+                        {shopState.sales.map((sale, index) => (
+                            <button
+                                key={index}
+                                disabled={sale.price > state.money || sale.remaining === 0}
+                                onClick={() => {
+                                    onGameAction({
+                                        type: 'trigger-effects',
+                                        effects: [{ type: 'money', moneyShift: -sale.price }],
+                                    });
+                                    onShopAction({
+                                        type: 'buy',
+                                        chip: sale.chip,
+                                    });
+                                    onGameAction({
+                                        type: 'add-chip',
+                                        partialChip: sale.chip,
+                                    });
+                                }}
+                            >
+                                <ChipDisplay chip={sale.chip} />
+                                {sale.remaining === -1 ? 'No limit' : `${sale.remaining} left`} (${sale.price})
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
+            {shopState.modules.length > 0 && (
+                <div>
+                    <h2>Buy modules</h2>
+                    <div id="buy-modules">
+                        {shopState.modules.map((sale, index) => (
+                            <button
+                                key={index}
+                                disabled={sale.price > state.money || sale.sold}
+                                onClick={() => {
+                                    onGameAction({
+                                        type: 'trigger-effects',
+                                        effects: [{ type: 'money', moneyShift: -sale.price }],
+                                    });
+                                    onShopAction({
+                                        type: 'buy-module',
+                                        module: sale.module,
+                                    });
+                                    onGameAction({
+                                        type: 'add-module',
+                                        module: sale.module,
+                                    });
+                                }}
+                            >
+                                <EffectModule module={sale.module} />
+                                {sale.sold ? 'Sold' : `$${sale.price}`}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
             <div id="actions">
                 <button
                     onClick={() => {

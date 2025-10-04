@@ -40,10 +40,6 @@ const defaultEffectDeck = (): EffectModule[] => {
 			effects: [{ type: 'energy', energyShift: 1 }],
 		},
 		{
-			style: 'fuel',
-			effects: [{ type: 'energy', energyShift: 'quantity' }],
-		},
-		{
 			style: 'asteroid',
 			effects: [{ type: 'money', moneyShift: 'quantity' }],
 		},
