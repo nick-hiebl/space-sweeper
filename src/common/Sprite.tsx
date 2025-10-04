@@ -16,10 +16,13 @@ type SpriteTypeProps =
     | { type: 'number'; value: Quantity }
     | { type: 'ui-icon'; icon: IconType };
 
-type IconType = 'heart' | 'heart-empty' | 'energy' | 'energy-empty' | 'money' | 'forced' | 'arrow';
+type IconType = 'heart' | 'heart-empty' | 'energy' | 'energy-empty' | 'money' | 'no-money' | 'forced' | 'arrow';
 
 type SpriteProps = SpriteTypeProps & {
-    size?: '80' | '32';
+    /**
+     * Defaults to 80
+     */
+    size?: '80' | '32' | '48';
 };
 
 type SpriteId =
@@ -57,6 +60,7 @@ const POSITION_DATA: Record<SpriteId, PositionData> = {
     'ui-icon:energy': { x: 32, y: 112, ...COMMON },
     'ui-icon:energy-empty': { x: 48, y: 112, ...COMMON },
     'ui-icon:money': { x: 64, y: 112, ...COMMON },
+    'ui-icon:no-money': { x: 80, y: 112, ...COMMON },
     'ui-icon:arrow': { x: 240, y: 112, ...COMMON },
 };
 
@@ -79,6 +83,7 @@ const LABEL_DATA: Record<SpriteId, string> = {
     'ui-icon:energy': 'Energy',
     'ui-icon:energy-empty': 'Empty energy',
     'ui-icon:money': 'Money',
+    'ui-icon:no-money': 'No money',
     'ui-icon:arrow': 'causes',
 };
 

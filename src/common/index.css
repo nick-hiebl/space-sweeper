@@ -14,3 +14,7 @@
 .sprite[data-size="32"] {
     height: 32px;
 }
+
+.sprite[data-size="48"] {
+    height: 48px;
+}

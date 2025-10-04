@@ -21,6 +21,7 @@ export const Game = () => {
                                 key={index}
                                 type="ui-icon"
                                 icon={index < state.hitPoints ? 'heart' : 'heart-empty'}
+                                size="48"
                             />
                         ))}
                     </div>
@@ -33,6 +34,7 @@ export const Game = () => {
                                 key={index}
                                 type="ui-icon"
                                 icon={index < state.energy ? 'energy' : 'energy-empty'}
+                                size="48"
                             />
                         ))}
                     </div>
@@ -41,8 +43,11 @@ export const Game = () => {
                 <div id="player-hp">
                     Money:
                     <div className="icon-bar money">
+                        {state.money === 0 && (
+                            <Sprite type="ui-icon" icon="no-money" size="48" />
+                        )}
                         {new Array(state.money).fill(0).map((_, index) => (
-                            <Sprite key={index} type="ui-icon" icon="money" />
+                            <Sprite key={index} type="ui-icon" icon="money" size="48" />
                         ))}
                     </div>
                 </div>
