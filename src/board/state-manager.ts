@@ -1,12 +1,11 @@
 import { getId } from '../state/initialiser';
-import type { Chip, Weight } from '../state/types';
+import type { Chip, GameState, Style, Weight } from '../state/types';
 
-import type { BoardState } from './types';
+import type { Board, BoardAction, BoardState, ImmediateState } from './types';
 
-type WaitingActions = { type: 'end' } | { type: 'draw' };
-type DrawingActions = { type: 'choose'; chip: Chip };
-
-type Action = WaitingActions | DrawingActions;
+function selectRandom<T>(items: T[]): T {
+    return items[Math.floor(Math.random() * items.length)];
+}
 
 function selectN(items: Chip[], count: number, weights: Weight[]): Chip[] {
     const bagItems = items.reduce((chosen: Chip[], current: Chip, index: number) => {
@@ -30,8 +29,33 @@ function selectN(items: Chip[], count: number, weights: Weight[]): Chip[] {
 
 const CHIPS_TO_CHOOSE_FROM = 3;
 
-export const StateManager = (state: BoardState, action: Action): BoardState => {
-    if (state.action.type === 'waiting') {
+export const StateManager = (initialGameState: GameState) => (state: BoardState, action: BoardAction): BoardState => {
+    if (state.action.type === 'picking-modules') {
+        if (action.type === 'select-module') {
+            const unpickedTypes = new Set<Style>();
+            initialGameState.bag.forEach(chip => {
+                unpickedTypes.add(chip.style);
+            });
+            initialGameState.weights.forEach(weight => {
+                unpickedTypes.add(weight.style);
+            });
+
+            state.effectModules.forEach(module => {
+                unpickedTypes.delete(module.style);
+            });
+            unpickedTypes.delete(action.module.style);
+
+            const nextAction: ImmediateState = unpickedTypes.size === 0
+                ? { type: 'waiting' }
+                : { type: 'picking-modules', style: selectRandom(Array.from(unpickedTypes)) };
+
+            return {
+                ...state,
+                effectModules: state.effectModules.concat(action.module),
+                action: nextAction,
+            };
+        }
+    } else if (state.action.type === 'waiting') {
         if (action.type === 'end') {
             return {
                 ...state,
@@ -76,4 +100,33 @@ export const StateManager = (state: BoardState, action: Action): BoardState => {
 
     console.error('Unexpected action from state!', state, action);
     throw new Error('UnacceptableAction');
+};
+
+const getDefaultBoard = (): Board => {
+    return {
+        cells: Array.from(new Array(20), (_, index: number) => ({ position: index, effects: [] })),
+    };
+};
+
+export const defaultBoardState = (state: GameState): BoardState => {
+    const styles = new Set<Style>();
+    state.bag.forEach(chip => {
+        styles.add(chip.style);
+    });
+    state.weights.forEach(weight => {
+        styles.add(weight.style);
+    });
+
+    const initialAction: ImmediateState = styles.size > 0
+        ? { type: 'picking-modules', style: selectRandom(Array.from(styles)) }
+        : { type: 'waiting' };
+
+    return {
+        bag: state.bag,
+        effectModules: [],
+        board: getDefaultBoard(),
+        played: [],
+        action: initialAction,
+        weights: state.weights.slice(),
+    };
 };

@@ -5,8 +5,8 @@ import { resolveEffect } from '../state/common';
 import type { Effect, GameAction, GameState, Style } from '../state/types';
 
 import { EffectModule } from './effect-module';
-import { StateManager } from './state-manager';
-import type { BoardState, Board as BoardType } from './types';
+import { StateManager, defaultBoardState } from './state-manager';
+import { PickingModuleState } from './types';
 
 import './index.css';
 
@@ -15,39 +15,13 @@ type Props = {
     state: GameState;
 };
 
-const getDefaultBoard = (): BoardType => {
-    return {
-        cells: Array.from(new Array(20), (_, index: number) => ({ position: index, effects: [] })),
-    };
-};
-
-const defaultBoardState = (state: GameState): BoardState => {
-    const styles = new Set(['explosion']);
-    state.bag.forEach(chip => {
-        styles.add(chip.style);
-    });
-
-    const effectModules = Array.from(styles).map(style => {
-        return state.effectDeck.find(effect => effect.style === style)!;
-    });
-
-    return {
-        bag: state.bag,
-        effectModules,
-        board: getDefaultBoard(),
-        played: [],
-        action: { type: 'waiting' },
-        weights: state.weights.slice(),
-    };
-};
-
 const DEFAULT_ENERGY_COST: Effect = {
     type: 'energy',
     energyShift: -1,
 };
 
 export const Board = ({ onGameAction, state }: Props) => {
-    const [boardState, boardAction] = useReducer(StateManager, defaultBoardState(state));
+    const [boardState, boardAction] = useReducer(StateManager(state), defaultBoardState(state));
 
     const [hoveredStyle, setHoveredStyle] = useState<Style | undefined>(undefined);
 
@@ -84,15 +58,34 @@ export const Board = ({ onGameAction, state }: Props) => {
                     );
                 })}
             </ul>
-            <h2>Actions</h2>
             {state.currentActivity === 'board' ? (
                 <div id="action-row">
                     {boardState.action.type === 'ended' ? (
                         <div>
+                            <h2>Actions</h2>
                             <button onClick={() => onGameAction({ type: 'leave-board' })}>Leave</button>
+                        </div>
+                    ) : boardState.action.type === 'picking-modules' ? (
+                        <div>
+                            <h2>Select module</h2>
+                            <div>
+                                {state.effectDeck
+                                    .filter(effectModule => effectModule.style === (boardState.action as PickingModuleState).style)
+                                    .map((effectModule, index) => (
+                                        <button
+                                            key={index}
+                                            onClick={() => {
+                                                boardAction({ type: 'select-module', module: effectModule });
+                                            }}
+                                        >
+                                            <EffectModule module={effectModule} />
+                                        </button>
+                                    ))}
+                            </div>
                         </div>
                     ) : boardState.action.type === 'drawing' ? (
                         <div>
+                            <h2>Actions</h2>
                             {boardState.action.options.map((chip, _, options) => {
                                 const isSomeForced = options.some(chip => {
                                     const relevantRule = state.effectDeck.find(module => module.style === chip.style)!;
@@ -136,6 +129,7 @@ export const Board = ({ onGameAction, state }: Props) => {
                         </div>
                     ) : (
                         <div>
+                            <h2>Actions</h2>
                             <button
                                 disabled={state.energy <= 0 || anythingPlacedInLast}
                                 onClick={() => {
@@ -153,7 +147,10 @@ export const Board = ({ onGameAction, state }: Props) => {
                     )}
                 </div>
             ) : state.currentActivity === 'board-finished' ? (
-                <button onClick={() => onGameAction({ type: 'leave-board' })}>Move on</button>
+                <div>
+                    <h2>Actions</h2>
+                    <button onClick={() => onGameAction({ type: 'leave-board' })}>Move on</button>
+                </div>
             ) : null}
             <h2>Rules</h2>
             <div id="effect-modules">
