@@ -15,7 +15,7 @@ export const Game = () => {
             <div id="player-info">
                 <div id="player-hp">
                     HP:
-                    <div className="icon-bar">
+                    <div className="icon-bar hp">
                         {new Array(state.maxHitPoints).fill(0).map((_, index) => (
                             <Sprite
                                 key={index}
@@ -27,7 +27,7 @@ export const Game = () => {
                 </div>
                 <div id="player-energy">
                     Energy:
-                    <div className="icon-bar">
+                    <div className="icon-bar energy">
                         {new Array(state.maxEnergy).fill(0).map((_, index) => (
                             <Sprite
                                 key={index}
@@ -40,7 +40,7 @@ export const Game = () => {
                 </div>
                 <div id="player-hp">
                     Money:
-                    <div className="icon-bar">
+                    <div className="icon-bar money">
                         {new Array(state.money).fill(0).map((_, index) => (
                             <Sprite key={index} type="ui-icon" icon="money" />
                         ))}

@@ -1,4 +1,17 @@
 .icon-bar {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.icon-bar.hp, .icon-bar.money {
+    gap: 4px;
+}
+
+.icon-bar.energy {
+    padding-inline: 4px;
+}
+
+.icon-bar.energy > div {
+    margin-inline: -18px;
 }

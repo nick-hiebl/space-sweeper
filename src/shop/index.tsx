@@ -1,8 +1,11 @@
 import { useReducer } from 'react';
 
-import { getDefaultShop, ShopStateManager } from './state-manager';
-import { GameAction, GameState } from '../state/types';
 import { ChipDisplay } from '../common/ChipDisplay';
+import { GameAction, GameState } from '../state/types';
+
+import { getDefaultShop, ShopStateManager } from './state-manager';
+
+import './index.css';
 
 type Props = {
     state: GameState;
@@ -14,6 +17,7 @@ export const Shop = ({ state, onGameAction }: Props) => {
 
     return (
         <div id="shop">
+            <h2>Heal</h2>
             <div id="healing">
                 <button
                     disabled={state.hitPoints > 0 || state.money < shopState.rebootPrice}
@@ -45,6 +49,9 @@ export const Shop = ({ state, onGameAction }: Props) => {
                 >
                     Heal (${shopState.healPrice})
                 </button>
+            </div>
+            <h2>Buy</h2>
+            <div id="buy-chips">
                 {shopState.sales.map((sale, index) => (
                     <button
                         key={index}
@@ -68,6 +75,8 @@ export const Shop = ({ state, onGameAction }: Props) => {
                         {sale.remaining === -1 ? 'No limit' : `${sale.remaining} left`} (${sale.price})
                     </button>
                 ))}
+            </div>
+            <div id="actions">
                 <button
                     onClick={() => {
                         onGameAction({
@@ -79,6 +88,18 @@ export const Shop = ({ state, onGameAction }: Props) => {
                 >
                     Leave shop
                 </button>
+            </div>
+            <h2>Bag</h2>
+            <div id="bag">
+                {state.bag.map(chip => (
+                    <ChipDisplay key={chip.id} chip={chip} />
+                ))}
+            </div>
+            <h2>Always present in your bag</h2>
+            <div id="weights">
+                {state.weights.map((weight, index) => (
+                    <ChipDisplay key={index} chip={weight} />
+                ))}
             </div>
         </div>
     );
