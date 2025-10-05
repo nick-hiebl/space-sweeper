@@ -74,8 +74,10 @@ export const Shop = ({ state, onGameAction }: Props) => {
                                     });
                                 }}
                             >
-                                <ChipDisplay chip={sale.chip} />
-                                {sale.remaining === -1 ? 'No limit' : `${sale.remaining} left`} (${sale.price})
+                                <div className="stack-center">
+                                    <ChipDisplay chip={sale.chip} />
+                                    {sale.remaining === -1 ? 'No limit' : `${sale.remaining} left`} (${sale.price})
+                                </div>
                             </button>
                         ))}
                     </div>

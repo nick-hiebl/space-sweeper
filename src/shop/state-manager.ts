@@ -7,6 +7,10 @@ const DEFAULT_BETTER_FUEL_MODULE: EffectModule = {
     style: 'fuel', playEffects: [{ type: 'energy', energyShift: 'quantity' }],
 };
 
+const RED_ENERGY_MODULE: EffectModule = {
+    style: 'red', drawEffects: [{ type: 'energy', energyShift: 1 }],
+};
+
 export const getDefaultShop = (state: GameState): ShopState => {
     return {
         rebootPrice: 2,
@@ -17,10 +21,10 @@ export const getDefaultShop = (state: GameState): ShopState => {
             { price: 1, remaining: 2, chip: { style: 'asteroid', quantity: 1 } },
             { price: 6, remaining: 1, chip: { style: 'blue', quantity: 4 } },
         ], 2),
-        modules: [
+        modules: selectRandomN([
             { price: 5, sold: false, module: DEFAULT_BETTER_FUEL_MODULE },
-        ]
-            .filter(sale => !state.effectDeck.some(module => module === sale.module)),
+            { price: 6, sold: false, module: RED_ENERGY_MODULE },
+        ], 1).filter(sale => !state.effectDeck.some(module => module === sale.module)),
     };
 };
 
