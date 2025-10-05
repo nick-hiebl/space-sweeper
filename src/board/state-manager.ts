@@ -133,7 +133,10 @@ export const StateManager = (initialGameState: GameState) => (state: BoardState,
 
 const getDefaultBoard = (): Board => {
     return {
-        cells: Array.from(new Array(20), (_, index: number) => ({ position: index, effects: [] })),
+        cells: Array.from(new Array(20), (_, index: number) => ({
+            position: index,
+            effects: index === 9 ? [{ type: 'energy', energyShift: -1 }] : [],
+        })),
     };
 };
 

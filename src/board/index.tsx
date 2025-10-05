@@ -2,11 +2,11 @@ import { useEffect, useReducer, useState } from 'react';
 
 import { ChipDisplay } from '../common/ChipDisplay';
 import { last, resolveEffect } from '../state/common';
-import type { Effect, GameAction, GameState, MoveEffect, Style } from '../state/types';
+import type { Chip, Effect, GameAction, GameState, Style } from '../state/types';
 
 import { EffectModule } from './effect-module';
 import { StateManager, defaultBoardState, resolvePlacementDistance } from './state-manager';
-import { PickingModuleState } from './types';
+import type { Cell, PickingModuleState } from './types';
 
 import './index.css';
 
@@ -18,6 +18,30 @@ type Props = {
 const DEFAULT_ENERGY_COST: Effect = {
     type: 'energy',
     energyShift: -1,
+};
+
+type CellComponentProps = {
+    cell: Cell;
+    chip?: Chip;
+    onMouseEnter?: () => void;
+    onMouseLeave?: () => void;
+    isHovered?: boolean;
+};
+
+const CellComponent = ({ cell, chip, isHovered, onMouseEnter, onMouseLeave }: CellComponentProps) => {
+    return (
+        <li className="grid-item" data-hovered={isHovered}>
+            <div className="cell">
+                {chip && (
+                    <ChipDisplay
+                        chip={chip}
+                        onMouseEnter={() => onMouseEnter?.()}
+                        onMouseLeave={() => onMouseLeave?.()}
+                    />
+                )}
+            </div>
+        </li>
+    );
 };
 
 export const Board = ({ onGameAction, state }: Props) => {
@@ -56,27 +80,23 @@ export const Board = ({ onGameAction, state }: Props) => {
 
     const anythingPlacedInLast = boardState.played.some(([_, index]) => index === lastIndex);
 
-    const priorIndex = last(boardState.played)?.[1] ?? -1;
-
     return (
         <div id="board-state">
             <h2>Board</h2>
             <ul id="cells" className="board-list">
                 {boardState.board.cells.map(cell => {
                     const placement = boardState.played.find(([_, pos]) => pos === cell.position);
+                    const chip = placement?.[0];
 
                     return (
-                        <li key={cell.position} className="grid-item" data-hovered={cell.position === hoveredPlace}>
-                            <div className="cell">
-                                {placement && (
-                                    <ChipDisplay
-                                        chip={placement[0]}
-                                        onMouseEnter={() => setHoveredStyle(placement[0].style)}
-                                        onMouseLeave={() => setHoveredStyle(undefined)}
-                                    />
-                                )}
-                            </div>
-                        </li>
+                        <CellComponent
+                            key={cell.position}
+                            cell={cell}
+                            chip={chip}
+                            isHovered={cell.position === hoveredPlace}
+                            onMouseEnter={chip ? () => setHoveredStyle(chip.style) : undefined}
+                            onMouseLeave={chip ? () => setHoveredStyle(undefined) : undefined}
+                        />
                     );
                 })}
             </ul>
