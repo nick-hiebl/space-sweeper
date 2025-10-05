@@ -1,11 +1,11 @@
 import { useEffect, useReducer, useState } from 'react';
 
 import { ChipDisplay } from '../common/ChipDisplay';
-import { resolveEffect } from '../state/common';
+import { last, resolveEffect } from '../state/common';
 import type { Effect, GameAction, GameState, MoveEffect, Style } from '../state/types';
 
 import { EffectModule } from './effect-module';
-import { StateManager, defaultBoardState } from './state-manager';
+import { StateManager, defaultBoardState, resolvePlacementDistance } from './state-manager';
 import { PickingModuleState } from './types';
 
 import './index.css';
@@ -51,12 +51,12 @@ export const Board = ({ onGameAction, state }: Props) => {
         });
     }, [boardState]);
 
-    const lastPlace = boardState.board.cells[boardState.board.cells.length - 1];
+    const lastPlace = last(boardState.board.cells);
     const lastIndex = lastPlace.position;
 
     const anythingPlacedInLast = boardState.played.some(([_, index]) => index === lastIndex);
 
-    const priorIndex = boardState.played[boardState.played.length - 1]?.[1] ?? -1;
+    const priorIndex = last(boardState.played)?.[1] ?? -1;
 
     return (
         <div id="board-state">
@@ -110,16 +110,8 @@ export const Board = ({ onGameAction, state }: Props) => {
                             <h2>Actions</h2>
                             {boardState.action.options.map((chip, _) => {
                                 const relevantRule = boardState.effectModules.find(module => module.style === chip.style);
-                                const bonusDistance = (relevantRule?.playEffects ?? [])
-                                    .filter(effect => effect.type === 'move')
-                                    .map(effect => resolveEffect(effect, chip))
-                                    .reduce((total, effect) => {
-                                        return total + ((effect as MoveEffect).distance as number);
-                                    }, 0);
 
-                                const coveredDistance = chip.quantity + bonusDistance;
-
-                                const willLandOn = Math.min(priorIndex + coveredDistance, lastIndex);
+                                const willLandOn = resolvePlacementDistance(boardState, chip);
 
                                 return (
                                     <button

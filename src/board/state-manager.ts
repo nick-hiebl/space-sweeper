@@ -1,9 +1,43 @@
 import { selectRandom } from '../common/random';
-import { resolveEffect } from '../state/common';
+import { last, resolveEffect } from '../state/common';
 import { getId } from '../state/initialiser';
-import type { Chip, EffectModule, GameState, MoveEffect, Style, Weight } from '../state/types';
+import type { Chip, Effect, EffectModule, GameState, MoveEffect, Style, Weight } from '../state/types';
 
-import type { Board, BoardAction, BoardState, ImmediateState } from './types';
+import type { Board, BoardAction, BoardState, ImmediateState, Position } from './types';
+
+export const resolvePlacementDistance = (state: BoardState, chip: Chip): Position => {
+    if (state.action.type !== 'drawing' || !state.action.options.includes(chip)) {
+        console.error('Calculating placement outside of drawing phase, or with invalid chip', state, chip);
+        throw new Error('Invalid placement distance resolution');
+    }
+
+    const { cells } = state.board;
+    const lastCellPosition = last(cells).position;
+
+    const thisRule = state.effectModules.find(({ style }) => style === chip.style);
+
+    const playBonusDistance = (thisRule?.playEffects ?? [])
+        .filter(effect => effect.type === 'move')
+        .map(effect => resolveEffect(effect, chip))
+        .reduce((total, effect) => {
+            return total + ((effect as MoveEffect).distance as number);
+        }, 0);
+
+    const drawBonusDistance = state.action.options
+        .map<[Chip, Effect[]]>(chip => [chip, state.effectModules.find(module => module.style === chip.style)?.drawEffects ?? []])
+        .filter(([_, effects]) => effects.length > 0)
+        .map<[Chip, Effect[]]>(([chip, effects]) => [chip, effects.filter(effect => effect.type === 'move')])
+        .flatMap(([chip, effects]) => effects.map(effect => resolveEffect(effect, chip)))
+        .reduce((total, effect) => {
+            return total + ((effect as MoveEffect).distance as number);
+        }, 0);
+
+    const [_, lastPosition] = last(state.played) ?? [undefined, -1];
+
+    console.assert(lastPosition < lastCellPosition, 'Something already placed in final cell but tried to place another!');
+
+    return Math.min(lastPosition + chip.quantity + playBonusDistance + drawBonusDistance, lastCellPosition);
+};
 
 function selectN(items: Chip[], count: number, weights: Weight[]): Chip[] {
     const bagItems = items.reduce((chosen: Chip[], current: Chip, index: number) => {
@@ -80,25 +114,10 @@ export const StateManager = (initialGameState: GameState) => (state: BoardState,
         if (action.type === 'choose') {
             const chosenChip = action.chip;
             const alreadyPlayed = state.played.some(([playedChip]) => playedChip === chosenChip);
+
             console.assert(!alreadyPlayed, 'Chip was already played');
 
-            const { cells } = state.board;
-            const lastCellPosition = cells[cells.length - 1].position;
-
-            const [_, lastPosition] = state.played[state.played.length - 1] ?? [undefined, -1];
-
-            console.assert(lastPosition < lastCellPosition, 'Something already placed in final cell but tried to place another!');
-
-            const relevantRule = state.effectModules.find(({ style }) => style === action.chip.style);
-
-            const bonusDistance = (relevantRule?.playEffects ?? [])
-                .filter(effect => effect.type === 'move')
-                .map(effect => resolveEffect(effect, action.chip))
-                .reduce((total, effect) => {
-                    return total + ((effect as MoveEffect).distance as number);
-                }, 0);
-
-            const placedPosition = Math.min(lastPosition + chosenChip.quantity + bonusDistance, lastCellPosition);
+            const placedPosition = resolvePlacementDistance(state, chosenChip);
 
             return {
                 ...state,

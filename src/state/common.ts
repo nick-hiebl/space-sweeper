@@ -35,3 +35,11 @@ export const resolveEffect = (effect: Effect, chip: Chip): Effect => {
 
     return effect;
 };
+
+export function isDefined<T>(item: T | undefined | null): item is T {
+    return !!item;
+}
+
+export function last<T>(list: T[]): T {
+    return list[list.length - 1];
+}
