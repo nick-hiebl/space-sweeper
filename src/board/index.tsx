@@ -28,12 +28,12 @@ type CellComponentProps = {
     isHovered?: boolean;
 };
 
-const CellComponent = ({ cell, chip, isHovered, onMouseEnter, onMouseLeave }: CellComponentProps) => {
-    const effects = cell.effects;
+const IMAGE_SCALE = 5;
 
+const CellComponent = ({ cell, chip, isHovered, onMouseEnter, onMouseLeave }: CellComponentProps) => {
     return (
         <li className="grid-item" data-hovered={isHovered}>
-            <div className="cell">
+            <div className="cell" style={{ top: cell.offset.y * IMAGE_SCALE, left: cell.offset.x * IMAGE_SCALE }}>
                 {cell.effects.length > 0 && (
                     <div className="cell-effects-container">
                         {cell.effects.map((effect, index) => (
@@ -92,23 +92,26 @@ export const Board = ({ onGameAction, state }: Props) => {
     return (
         <div id="board-state">
             <h2>Board</h2>
-            <ul id="cells" className="board-list">
-                {boardState.board.cells.map(cell => {
-                    const placement = boardState.played.find(([_, pos]) => pos === cell.position);
-                    const chip = placement?.[0];
+            <div id="board" style={{ height: boardState.board.dimensions.height * IMAGE_SCALE }}>
+                <img src={boardState.board.imageSrc} height={boardState.board.dimensions.height * IMAGE_SCALE} />
+                <ul id="cells" className="board-list">
+                    {boardState.board.cells.map(cell => {
+                        const placement = boardState.played.find(([_, pos]) => pos === cell.position);
+                        const chip = placement?.[0];
 
-                    return (
-                        <CellComponent
-                            key={cell.position}
-                            cell={cell}
-                            chip={chip}
-                            isHovered={cell.position === hoveredPlace}
-                            onMouseEnter={chip ? () => setHoveredStyle(chip.style) : undefined}
-                            onMouseLeave={chip ? () => setHoveredStyle(undefined) : undefined}
-                        />
-                    );
-                })}
-            </ul>
+                        return (
+                            <CellComponent
+                                key={cell.position}
+                                cell={cell}
+                                chip={chip}
+                                isHovered={cell.position === hoveredPlace}
+                                onMouseEnter={chip ? () => setHoveredStyle(chip.style) : undefined}
+                                onMouseLeave={chip ? () => setHoveredStyle(undefined) : undefined}
+                            />
+                        );
+                    })}
+                </ul>
+            </div>
             {state.currentActivity === 'board' ? (
                 <div id="action-row">
                     {boardState.action.type === 'ended' ? (

@@ -3,6 +3,7 @@ import { last, resolveEffect } from '../state/common';
 import { getId } from '../state/initialiser';
 import type { Chip, Effect, EffectModule, GameState, MoveEffect, Style, Weight } from '../state/types';
 
+import { BOARD_MAP } from './board-data';
 import type { Board, BoardAction, BoardState, ImmediateState, Position } from './types';
 
 export const resolvePlacementDistance = (state: BoardState, chip: Chip): Position => {
@@ -132,18 +133,12 @@ export const StateManager = (initialGameState: GameState) => (state: BoardState,
 };
 
 const getDefaultBoard = (): Board => {
-    return {
-        cells: Array.from(new Array(20), (_, index: number) => ({
-            position: index,
-            effects: index === 9
-                ? [{ type: 'energy', energyShift: -1 }]
-                : index === 13
-                ? [{ type: 'money', moneyShift: 3 }]
-                : index === 19
-                ? [{ type: 'health', healthShift: 4 }]
-                : [],
-        })),
-    };
+    const board = BOARD_MAP.get('SMALL');
+    if (!board) {
+        throw new Error('Cannot find SMALL level');
+    }
+
+    return board;
 };
 
 const DEFAULT_MODULE = (style: Style): EffectModule => {

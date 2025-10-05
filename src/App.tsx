@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+import { boardDataPromise } from './board/board-data';
 import { imageReady } from './common/Sprite';
 import { Game } from './game';
 
@@ -9,7 +10,12 @@ export const App = () => {
   const [isSpritesheetReady, setReady] = useState(false);
 
   useEffect(() => {
-    imageReady.then(() => {
+    const allPromises = Promise.all([
+      imageReady,
+      boardDataPromise,
+    ]);
+
+    allPromises.then(() => {
       setReady(true);
     });
   }, []);

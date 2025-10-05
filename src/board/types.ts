@@ -3,11 +3,14 @@ import type { Chip, Effect, EffectModule, Style, Weight } from '../state/types';
 export type Position = number;
 
 export type Cell = {
+    offset: { x: number; y: number };
     position: Position;
     effects: Effect[];
 };
 
 export type Board = {
+    dimensions: { width: number; height: number };
+    imageSrc: string;
     cells: Cell[];
 };
 

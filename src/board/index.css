@@ -3,6 +3,7 @@
     width: 80px;
     height: 80px;
     display: inline-block;
+    position: absolute;
 }
 
 .cell-effects-container {
@@ -33,7 +34,16 @@
     border-radius: 8px;
     width: 56px;
     height: 56px;
-    border: 2px dashed #ccc;
+    border-width: 4px;
+    border-style: dashed;
+    border-color: #4cf;
+    animation: emphasisColor 2s linear infinite;
+}
+
+@keyframes emphasisColor {
+    0% { border-color: #4cf; }
+    50% { border-color: #c4f; }
+    100% { border-color: #4cf; }
 }
 
 .number-overlay {
@@ -72,4 +82,15 @@ button:disabled {
 
 .effect {
     position: relative;
+}
+
+#board {
+    position: relative;
+}
+
+#board > img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    image-rendering: pixelated;
 }
