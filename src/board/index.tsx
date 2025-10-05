@@ -2,7 +2,7 @@ import { useEffect, useReducer, useState } from 'react';
 
 import { ChipDisplay } from '../common/ChipDisplay';
 import { resolveEffect } from '../state/common';
-import type { Effect, GameAction, GameState, Style } from '../state/types';
+import type { Effect, GameAction, GameState, MoveEffect, Style } from '../state/types';
 
 import { EffectModule } from './effect-module';
 import { StateManager, defaultBoardState } from './state-manager';
@@ -108,14 +108,24 @@ export const Board = ({ onGameAction, state }: Props) => {
                     ) : boardState.action.type === 'drawing' ? (
                         <div>
                             <h2>Actions</h2>
-                            {boardState.action.options.map((chip, _, options) => {
+                            {boardState.action.options.map((chip, _) => {
+                                const relevantRule = boardState.effectModules.find(module => module.style === chip.style);
+                                const bonusDistance = (relevantRule?.playEffects ?? [])
+                                    .filter(effect => effect.type === 'move')
+                                    .map(effect => resolveEffect(effect, chip))
+                                    .reduce((total, effect) => {
+                                        return total + ((effect as MoveEffect).distance as number);
+                                    }, 0);
+
+                                const coveredDistance = chip.quantity + bonusDistance;
+
+                                const willLandOn = Math.min(priorIndex + coveredDistance, lastIndex);
+
                                 return (
                                     <button
                                         key={chip.id}
                                         onClick={() => {
                                             onBoardAction({ type: 'choose', chip });
-
-                                            const relevantRule = boardState.effectModules.find(module => module.style === chip.style);
 
                                             if (!relevantRule) {
                                                 console.error('No relevant rule for chosen chip:', chip, boardState.effectModules);
@@ -133,7 +143,7 @@ export const Board = ({ onGameAction, state }: Props) => {
                                         <ChipDisplay
                                             onMouseEnter={() => {
                                                 setHoveredStyle(chip.style);
-                                                setHoveredPlace(Math.min(priorIndex + chip.quantity, lastIndex));
+                                                setHoveredPlace(willLandOn);
                                             }}
                                             onMouseLeave={() => {
                                                 setHoveredStyle(undefined);

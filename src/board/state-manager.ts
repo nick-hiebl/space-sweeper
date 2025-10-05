@@ -1,6 +1,7 @@
 import { selectRandom } from '../common/random';
+import { resolveEffect } from '../state/common';
 import { getId } from '../state/initialiser';
-import type { Chip, EffectModule, GameState, Style, Weight } from '../state/types';
+import type { Chip, EffectModule, GameState, MoveEffect, Style, Weight } from '../state/types';
 
 import type { Board, BoardAction, BoardState, ImmediateState } from './types';
 
@@ -88,7 +89,16 @@ export const StateManager = (initialGameState: GameState) => (state: BoardState,
 
             console.assert(lastPosition < lastCellPosition, 'Something already placed in final cell but tried to place another!');
 
-            const placedPosition = Math.min(lastPosition + chosenChip.quantity, lastCellPosition);
+            const relevantRule = state.effectModules.find(({ style }) => style === action.chip.style);
+
+            const bonusDistance = (relevantRule?.playEffects ?? [])
+                .filter(effect => effect.type === 'move')
+                .map(effect => resolveEffect(effect, action.chip))
+                .reduce((total, effect) => {
+                    return total + ((effect as MoveEffect).distance as number);
+                }, 0);
+
+            const placedPosition = Math.min(lastPosition + chosenChip.quantity + bonusDistance, lastCellPosition);
 
             return {
                 ...state,
