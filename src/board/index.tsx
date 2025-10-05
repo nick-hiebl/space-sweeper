@@ -4,7 +4,7 @@ import { ChipDisplay } from '../common/ChipDisplay';
 import { last, resolveEffect } from '../state/common';
 import type { Chip, Effect, GameAction, GameState, Style } from '../state/types';
 
-import { EffectModule } from './effect-module';
+import { DisplayEffect, EffectModule } from './effect-module';
 import { StateManager, defaultBoardState, resolvePlacementDistance } from './state-manager';
 import type { Cell, PickingModuleState } from './types';
 
@@ -29,9 +29,18 @@ type CellComponentProps = {
 };
 
 const CellComponent = ({ cell, chip, isHovered, onMouseEnter, onMouseLeave }: CellComponentProps) => {
+    const effects = cell.effects;
+
     return (
         <li className="grid-item" data-hovered={isHovered}>
             <div className="cell">
+                {cell.effects.length > 0 && (
+                    <div className="cell-effects-container">
+                        {cell.effects.map((effect, index) => (
+                            <DisplayEffect key={index} effect={effect} size="small" />
+                        ))}
+                    </div>
+                )}
                 {chip && (
                     <ChipDisplay
                         chip={chip}
@@ -148,6 +157,14 @@ export const Board = ({ onGameAction, state }: Props) => {
                                                 onGameAction({
                                                     type: 'trigger-effects',
                                                     effects: relevantRule.playEffects.map(effect => resolveEffect(effect, chip)),
+                                                });
+                                            }
+
+                                            const landedCell = boardState.board.cells.find(({ position }) => position === willLandOn);
+                                            if (landedCell && (landedCell?.effects?.length ?? 0) > 0) {
+                                                onGameAction({
+                                                    type: 'trigger-effects',
+                                                    effects: landedCell.effects,
                                                 });
                                             }
                                         }}

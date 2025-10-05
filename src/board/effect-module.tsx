@@ -6,48 +6,48 @@ type EffectModuleProps = {
     isHighlighted?: boolean;
 };
 
-const Effect = ({ effect }: { effect: EffectType }) => {
+export const DisplayEffect = ({ effect, size }: { effect: EffectType, size?: 'regular' | 'small' }) => {
     if (effect.type === 'discard') {
         return <div className="effect">discard</div>;
     } else if (effect.type === 'energy') {
         return (
             <div className="effect">
-                <Sprite type="ui-icon" icon="energy" />
+                <Sprite type="ui-icon" icon="energy" size={size === 'regular' ? '80' : '48'} />
                 <div className="number-overlay">
-                    <Sprite type="number" value={effect.energyShift} size="48" />
+                    <Sprite type="number" value={effect.energyShift} size={size === 'regular' ? '48' : '32'} />
                 </div>
             </div>
         );
     } else if (effect.type === 'health') {
         return (
             <div className="effect">
-                <Sprite type="ui-icon" icon="heart" />
+                <Sprite type="ui-icon" icon="heart" size={size === 'regular' ? '80' : '48'} />
                 <div className="number-overlay">
-                    <Sprite type="number" value={effect.healthShift} size="48" />
+                    <Sprite type="number" value={effect.healthShift} size={size === 'regular' ? '48' : '32'} />
                 </div>
             </div>
         );
     } else if (effect.type === 'money') {
         return (
             <div className="effect">
-                <Sprite type="ui-icon" icon="money" />
+                <Sprite type="ui-icon" icon="money" size={size === 'regular' ? '80' : '48'} />
                 <div className="number-overlay">
-                    <Sprite type="number" value={effect.moneyShift} size="48" />
+                    <Sprite type="number" value={effect.moneyShift} size={size === 'regular' ? '48' : '32'} />
                 </div>
             </div>
         );
     } else if (effect.type === 'forced') {
         return (
             <div className="effect">
-                <Sprite type="ui-icon" icon="forced" />
+                <Sprite type="ui-icon" icon="forced" size={size === 'regular' ? '80' : '48'} />
             </div>
         );
     } else if (effect.type === 'move') {
         return (
             <div className="effect">
-                <Sprite type="ui-icon" icon="arrow" />
+                <Sprite type="ui-icon" icon="arrow" size={size === 'regular' ? '80' : '48'} />
                 <div className="number-overlay">
-                    <Sprite type="number" value={effect.distance} size="48" />
+                    <Sprite type="number" value={effect.distance} size={size === 'regular' ? '48' : '32'} />
                 </div>
             </div>
         )
@@ -65,7 +65,7 @@ export const EffectModule = ({ isHighlighted, module }: EffectModuleProps) => {
                     <Sprite type="ui-icon" icon="play" />
                     <Sprite type="ui-icon" icon="arrow" size="32" />
                     {module.playEffects.map((effect, index) => (
-                        <Effect key={index} effect={effect} />
+                        <DisplayEffect key={index} effect={effect} />
                     ))}
                 </div>
             )}
@@ -74,7 +74,7 @@ export const EffectModule = ({ isHighlighted, module }: EffectModuleProps) => {
                     <Sprite type="ui-icon" icon="draw" />
                     <Sprite type="ui-icon" icon="arrow" size="32" />
                     {module.drawEffects.map((effect, index) => (
-                        <Effect key={index} effect={effect} />
+                        <DisplayEffect key={index} effect={effect} />
                     ))}
                 </div>
             )}

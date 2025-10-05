@@ -5,6 +5,10 @@
     display: inline-block;
 }
 
+.cell-effects-container {
+    position: absolute;
+}
+
 .board-list {
     list-style-type: none;
     padding: 0;
