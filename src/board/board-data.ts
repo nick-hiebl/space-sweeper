@@ -64,7 +64,7 @@ const buildEntitiesBackwards = (allEntities: Entity[]): Entity[] => {
     }
 
     const chain: Entity[] = [lastEntity];
-    
+
     while (chain.length < allEntities.length) {
         const front = chain[0]!;
 
@@ -88,7 +88,7 @@ export const drawBoard = (level: Level): Board => {
     canvas.height = level.pxHei;
 
     const ctx = canvas.getContext('2d');
-    
+
     if (!ctx) {
         throw new Error('Could not construct 2d context for canvas');
     }
@@ -98,7 +98,7 @@ export const drawBoard = (level: Level): Board => {
 
     ctx.imageSmoothingEnabled = true;
 
-    
+
     const entities: Entity[] = [];
 
     level.layerInstances.forEach(layer => {
@@ -112,16 +112,66 @@ export const drawBoard = (level: Level): Board => {
     ctx.lineWidth = 1;
 
     chain.forEach((entity, index) => {
-        ctx.strokeStyle = entity.__smartColor;
-        ctx.strokeRect(entity.px[0] + 0.5, entity.px[1] + 0.5, entity.width - 1, entity.height - 1);
+        ctx.fillStyle = entity.__smartColor;
+        ctx.fillRect(...entity.px, entity.width, entity.height);
+        ctx.fillStyle = level.__smartColor;
+        ctx.fillRect(entity.px[0] + 1, entity.px[1] + 1, entity.width - 2, entity.height - 2);
 
         const next = chain[index + 1];
 
+        const current = {
+            left: entity.px[0],
+            top: entity.px[1],
+            right: entity.px[0] + entity.width,
+            bottom: entity.px[1] + entity.height,
+        };
+
         if (next) {
-            ctx.beginPath();
-            ctx.moveTo(...entity.px);
-            ctx.lineTo(...next.px);
-            ctx.stroke();
+            const after = {
+                left: next.px[0],
+                top: next.px[1],
+                right: next.px[0] + next.width,
+                bottom: next.px[1] + next.height,
+            };
+
+            if (current.right < after.left) {
+                // Going left-to-right
+                const minY = Math.max(current.top, after.top) + 1;
+                const maxY = Math.min(current.bottom, after.bottom) - 1;
+
+                const y = Math.round(Math.random() * (maxY - minY) + minY);
+
+                ctx.fillStyle = entity.__smartColor;
+                ctx.fillRect(current.right, y, after.left - current.right, 1);
+            } else if (current.left > after.right) {
+                // Going left-to-right
+                const minY = Math.max(current.top, after.top) + 1;
+                const maxY = Math.min(current.bottom, after.bottom) - 1;
+
+                const y = Math.round(Math.random() * (maxY - minY) + minY);
+
+                ctx.fillStyle = entity.__smartColor;
+                ctx.fillRect(after.right, y, current.left - after.right, 1);
+            } else if (current.bottom < after.top) {
+                // Going top-to-bottom
+                const minX = Math.max(current.left, after.left) + 1;
+                const maxX = Math.min(current.right, after.right) - 1;
+
+                const x = Math.round(Math.random() * (maxX - minX) + minX);
+
+                ctx.fillStyle = entity.__smartColor;
+                ctx.fillRect(x, current.bottom, 1, after.top - current.bottom);
+            } else if (current.top > after.bottom) {
+                // Going bottom-to-top
+                const minX = Math.max(current.left, after.left) + 1;
+                const maxX = Math.min(current.right, after.right) - 1;
+
+                const x = Math.round(Math.random() * (maxX - minX) + minX);
+
+                ctx.fillStyle = entity.__smartColor;
+                ctx.fillRect(x, after.bottom, 1, current.top - after.bottom);
+            }
+
         }
     });
 
