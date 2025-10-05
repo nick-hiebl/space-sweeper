@@ -14,7 +14,7 @@ const Effect = ({ effect }: { effect: EffectType }) => {
             <div className="effect">
                 <Sprite type="ui-icon" icon="energy" />
                 <div className="number-overlay">
-                    <Sprite type="number" value={effect.energyShift} />
+                    <Sprite type="number" value={effect.energyShift} size="48" />
                 </div>
             </div>
         );
@@ -23,7 +23,7 @@ const Effect = ({ effect }: { effect: EffectType }) => {
             <div className="effect">
                 <Sprite type="ui-icon" icon="heart" />
                 <div className="number-overlay">
-                    <Sprite type="number" value={effect.healthShift} />
+                    <Sprite type="number" value={effect.healthShift} size="48" />
                 </div>
             </div>
         );
@@ -32,7 +32,7 @@ const Effect = ({ effect }: { effect: EffectType }) => {
             <div className="effect">
                 <Sprite type="ui-icon" icon="money" />
                 <div className="number-overlay">
-                    <Sprite type="number" value={effect.moneyShift} />
+                    <Sprite type="number" value={effect.moneyShift} size="48" />
                 </div>
             </div>
         );
@@ -42,19 +42,45 @@ const Effect = ({ effect }: { effect: EffectType }) => {
                 <Sprite type="ui-icon" icon="forced" />
             </div>
         );
+    } else if (effect.type === 'move') {
+        return (
+            <div className="effect">
+                <Sprite type="ui-icon" icon="arrow" />
+                <div className="number-overlay">
+                    <Sprite type="number" value={effect.distance} size="48" />
+                </div>
+            </div>
+        )
     }
 
     return null;
 };
 
-export const EffectModule = (props: EffectModuleProps) => {
+export const EffectModule = ({ isHighlighted, module }: EffectModuleProps) => {
     return (
-        <div className="effect-module" data-isHighlighted={props.isHighlighted}>
-            <Sprite type="chip" chip={{ style: props.module.style }} />
-            <Sprite type="ui-icon" icon="arrow" size="32" />
-            {props.module.effects.map((effect, index) => (
-                <Effect key={index} effect={effect} />
-            ))}
+        <div className="effect-module stack-center" data-ishighlighted={isHighlighted}>
+            <Sprite type="chip" chip={{ style: module.style }} />
+            {module.playEffects && (
+                <div className="inline-center">
+                    <Sprite type="ui-icon" icon="play" />
+                    <Sprite type="ui-icon" icon="arrow" size="32" />
+                    {module.playEffects.map((effect, index) => (
+                        <Effect key={index} effect={effect} />
+                    ))}
+                </div>
+            )}
+            {module.drawEffects && (
+                <div className="inline-center">
+                    <Sprite type="ui-icon" icon="draw" />
+                    <Sprite type="ui-icon" icon="arrow" size="32" />
+                    {module.drawEffects.map((effect, index) => (
+                        <Effect key={index} effect={effect} />
+                    ))}
+                </div>
+            )}
+            {!module.drawEffects && !module.playEffects && (
+                <Sprite type="ui-icon" icon="do-nothing" />
+            )}
         </div>
     );
 };

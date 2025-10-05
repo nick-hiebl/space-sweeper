@@ -16,7 +16,18 @@ type SpriteTypeProps =
     | { type: 'number'; value: Quantity }
     | { type: 'ui-icon'; icon: IconType };
 
-type IconType = 'heart' | 'heart-empty' | 'energy' | 'energy-empty' | 'money' | 'no-money' | 'forced' | 'arrow';
+type IconType =
+    | 'heart'
+    | 'heart-empty'
+    | 'energy'
+    | 'energy-empty'
+    | 'money'
+    | 'no-money'
+    | 'forced'
+    | 'draw'
+    | 'play'
+    | 'do-nothing'
+    | 'arrow';
 
 type SpriteProps = SpriteTypeProps & {
     /**
@@ -61,6 +72,9 @@ const POSITION_DATA: Record<SpriteId, PositionData> = {
     'ui-icon:energy-empty': { x: 48, y: 112, ...COMMON },
     'ui-icon:money': { x: 64, y: 112, ...COMMON },
     'ui-icon:no-money': { x: 80, y: 112, ...COMMON },
+    'ui-icon:draw': { x: 16, y: 96, ...COMMON },
+    'ui-icon:play': { x: 32, y: 96, ...COMMON },
+    'ui-icon:do-nothing': { x: 48, y: 96, ...COMMON },
     'ui-icon:arrow': { x: 240, y: 112, ...COMMON },
 };
 
@@ -84,6 +98,9 @@ const LABEL_DATA: Record<SpriteId, string> = {
     'ui-icon:energy-empty': 'Empty energy',
     'ui-icon:money': 'Money',
     'ui-icon:no-money': 'No money',
+    'ui-icon:draw': 'When drawing an item',
+    'ui-icon:play': 'When playing an item',
+    'ui-icon:do-nothing': 'Do nothing',
     'ui-icon:arrow': 'causes',
 };
 

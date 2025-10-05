@@ -29,19 +29,20 @@ const defaultEffectDeck = (): EffectModule[] => {
 	return [
 		{
 			style: 'explosion',
-			effects: [{ type: 'forced' }, { type: 'health', healthShift: '-quantity' }],
+			drawEffects: [{ type: 'health', healthShift: '-quantity' }],
+			playEffects: [{ type: 'move', distance: 1 }],
 		},
 		{
 			style: 'gear',
-			effects: [{ type: 'health', healthShift: 1 }],
+			playEffects: [{ type: 'health', healthShift: 1 }],
 		},
 		{
 			style: 'fuel',
-			effects: [{ type: 'energy', energyShift: 1 }],
+			playEffects: [{ type: 'energy', energyShift: 1 }],
 		},
 		{
 			style: 'asteroid',
-			effects: [{ type: 'money', moneyShift: 'quantity' }],
+			playEffects: [{ type: 'money', moneyShift: 'quantity' }],
 		},
 	];
 };

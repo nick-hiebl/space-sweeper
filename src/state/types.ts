@@ -56,7 +56,8 @@ export type Effect =
 
 export type EffectModule = {
     style: Style;
-    effects: Effect[];
+    playEffects?: Effect[];
+    drawEffects?: Effect[];
 };
 
 export type Activity = 'start' | 'board' | 'board-finished' | 'shop';

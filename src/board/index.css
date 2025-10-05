@@ -5,11 +5,6 @@
     display: inline-block;
 }
 
-.cell-chip {
-    position: relative;
-    line-height: 1em;
-}
-
 .board-list {
     list-style-type: none;
     padding: 0;
@@ -40,7 +35,7 @@
 .number-overlay {
     position: absolute;
     top: 0;
-    left: 0;
+    right: 0;
 }
 
 button:disabled {
@@ -62,19 +57,15 @@ button:disabled {
     border-radius: 4px;
 }
 
-.effect-module[data-isHighlighted=false] {
+.effect-module[data-ishighlighted=false] {
     opacity: 66%;
 }
 
-.effect-module[data-isHighlighted=true] {
+.effect-module[data-ishighlighted=true] {
     outline: 2px solid #3388ff;
     outline-offset: 2px;
 }
 
 .effect {
     position: relative;
-}
-
-.number-overlay {
-    position: absolute;
 }

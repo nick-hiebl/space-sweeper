@@ -21,7 +21,7 @@ const DEFAULT_ENERGY_COST: Effect = {
 };
 
 export const Board = ({ onGameAction, state }: Props) => {
-    const [boardState, boardAction] = useReducer(StateManager(state), defaultBoardState(state));
+    const [boardState, onBoardAction] = useReducer(StateManager(state), defaultBoardState(state));
 
     const [hoveredStyle, setHoveredStyle] = useState<Style | undefined>(undefined);
     const [hoveredPlace, setHoveredPlace] = useState<number | undefined>(undefined);
@@ -31,6 +31,24 @@ export const Board = ({ onGameAction, state }: Props) => {
             setHoveredStyle(undefined);
             setHoveredPlace(undefined);
         }
+    }, [boardState]);
+
+    useEffect(() => {
+        if (boardState.action.type !== 'drawing') {
+            return;
+        }
+
+        const drawEffects = boardState.action.options
+            .flatMap(chip => (
+                (boardState.effectModules
+                    .find(module => module.style === chip.style)?.drawEffects ?? [])
+                    .map(effect => resolveEffect(effect, chip))
+            ));
+
+        onGameAction({
+            type: 'trigger-effects',
+            effects: drawEffects,
+        });
     }, [boardState]);
 
     const lastPlace = boardState.board.cells[boardState.board.cells.length - 1];
@@ -79,7 +97,7 @@ export const Board = ({ onGameAction, state }: Props) => {
                                         <button
                                             key={index}
                                             onClick={() => {
-                                                boardAction({ type: 'select-module', module: effectModule });
+                                                onBoardAction({ type: 'select-module', module: effectModule });
                                             }}
                                         >
                                             <EffectModule module={effectModule} />
@@ -91,22 +109,11 @@ export const Board = ({ onGameAction, state }: Props) => {
                         <div>
                             <h2>Actions</h2>
                             {boardState.action.options.map((chip, _, options) => {
-                                const isSomeForced = options.some(chip => {
-                                    const relevantRule = boardState.effectModules.find(module => module.style === chip.style)!;
-
-                                    return relevantRule.effects.some(effect => effect.type === 'forced');
-                                });
-
-                                const isThisForced = state.effectDeck.some(effectCard => {
-                                    return effectCard.style === chip.style
-                                        && effectCard.effects.some(effect => effect.type === 'forced');
-                                });
-
                                 return (
                                     <button
                                         key={chip.id}
                                         onClick={() => {
-                                            boardAction({ type: 'choose', chip });
+                                            onBoardAction({ type: 'choose', chip });
 
                                             const relevantRule = boardState.effectModules.find(module => module.style === chip.style);
 
@@ -115,12 +122,13 @@ export const Board = ({ onGameAction, state }: Props) => {
                                                 throw new Error('No relevant rule!');
                                             }
 
-                                            onGameAction({
-                                                type: 'trigger-effects',
-                                                effects: relevantRule.effects.map(effect => resolveEffect(effect, chip)),
-                                            });
+                                            if (relevantRule.playEffects) {
+                                                onGameAction({
+                                                    type: 'trigger-effects',
+                                                    effects: relevantRule.playEffects.map(effect => resolveEffect(effect, chip)),
+                                                });
+                                            }
                                         }}
-                                        disabled={isSomeForced && !isThisForced}
                                     >
                                         <ChipDisplay
                                             onMouseEnter={() => {
@@ -147,7 +155,7 @@ export const Board = ({ onGameAction, state }: Props) => {
                                         type: 'trigger-effects',
                                         effects: [DEFAULT_ENERGY_COST],
                                     });
-                                    boardAction({ type: 'draw' });
+                                    onBoardAction({ type: 'draw' });
                                 }}
                             >
                                 Draw
@@ -164,8 +172,9 @@ export const Board = ({ onGameAction, state }: Props) => {
             ) : null}
             <h2>Rules</h2>
             <div id="effect-modules">
-                {boardState.effectModules.map(effectModule => (
+                {boardState.effectModules.map((effectModule, index) => (
                     <EffectModule
+                        key={index}
                         module={effectModule}
                         isHighlighted={!hoveredStyle ? undefined : effectModule.style === hoveredStyle}
                     />

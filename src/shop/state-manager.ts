@@ -4,7 +4,7 @@ import type { EffectModule, GameState } from '../state/types';
 import type { ShopAction, ShopState } from './types';
 
 const DEFAULT_BETTER_FUEL_MODULE: EffectModule = {
-    style: 'fuel', effects: [{ type: 'energy', energyShift: 'quantity' }],
+    style: 'fuel', playEffects: [{ type: 'energy', energyShift: 'quantity' }],
 };
 
 export const getDefaultShop = (state: GameState): ShopState => {

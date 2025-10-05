@@ -1,9 +1,6 @@
 .cell-chip {
+    display: inline-flex;
     position: relative;
-}
-
-.number-overlay {
-    position: absolute;
 }
 
 .sprite {

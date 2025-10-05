@@ -15,8 +15,11 @@ function selectN(items: Chip[], count: number, weights: Weight[]): Chip[] {
         }
     }, []);
 
-    while (bagItems.length < count) {
-        const chosenWeight = weights[Math.floor(Math.random() * weights.length)];
+    let selectableWeights = weights.slice();
+
+    while (bagItems.length < count && selectableWeights.length > 0) {
+        const chosenWeight = selectRandom(selectableWeights);
+        selectableWeights = selectableWeights.filter(w => w !== chosenWeight);
 
         bagItems.push({ ...chosenWeight, id: getId() });
     }
@@ -108,7 +111,6 @@ const getDefaultBoard = (): Board => {
 const DEFAULT_MODULE = (style: Style): EffectModule => {
     return {
         style,
-        effects: [],
     };
 };
 
