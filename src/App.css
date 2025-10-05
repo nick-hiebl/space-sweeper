@@ -2,6 +2,10 @@ body {
   padding-inline: 16px;
 }
 
+button {
+  padding: 16px;
+}
+
 .stack, .stack-center {
   display: flex;
   flex-direction: column;
