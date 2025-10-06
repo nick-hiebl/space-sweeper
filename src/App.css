@@ -1,25 +1,43 @@
 body {
-  padding-inline: 16px;
+    padding-inline: 16px;
 }
 
 button {
-  padding: 16px;
+    padding: 16px;
 }
 
-.stack, .stack-center {
-  display: flex;
-  flex-direction: column;
+.stack,
+.stack-center {
+    display: flex;
+    flex-direction: column;
 }
 
-.inline, .inline-center {
-  display: flex;
-  flex-direction: row;
+.inline,
+.inline-center {
+    display: flex;
+    flex-direction: row;
 }
 
 .stack-center {
-  align-items: center;
+    align-items: center;
 }
 
 .inline-center {
-  align-items: center;
+    align-items: center;
+}
+
+.inline-end {
+    align-items: end;
+}
+
+.gap-4px {
+    gap: 4px;
+}
+
+.gap-8px {
+    gap: 8px;
+}
+
+.gap-16px {
+    gap: 16px;
 }

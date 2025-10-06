@@ -33,7 +33,7 @@ type SpriteProps = SpriteTypeProps & {
     /**
      * Defaults to 80
      */
-    size?: '80' | '32' | '48';
+    size?: '80' | '16' | '32' | '48';
 };
 
 type SpriteId =

@@ -8,11 +8,7 @@ export const getId = () => {
 const defaultBag = (): Chip[] => {
 	return [
 		{ style: 'gear', quantity: 1, id: getId() },
-		{ style: 'gear', quantity: 1, id: getId() },
-		{ style: 'gear', quantity: 1, id: getId() },
 		{ style: 'fuel', quantity: 1, id: getId() },
-		{ style: 'fuel', quantity: 1, id: getId() },
-		{ style: 'asteroid', quantity: 1, id: getId() },
 		{ style: 'asteroid', quantity: 1, id: getId() },
 		{ style: 'asteroid', quantity: 2, id: getId() },
 		{ style: 'asteroid', quantity: 3, id: getId() },
@@ -20,9 +16,7 @@ const defaultBag = (): Chip[] => {
 };
 
 const getDefaultWeights = (): Weight[] => {
-	return [
-		{ style: 'explosion', quantity: 1 },
-	];
+	return [];
 };
 
 const defaultEffectDeck = (): EffectModule[] => {
@@ -50,13 +44,13 @@ const defaultEffectDeck = (): EffectModule[] => {
 export const initialGameState = (): GameState => {
     return {
 		bag: defaultBag(),
-		energy: 8,
-		maxEnergy: 8,
-		hitPoints: 4,
-		maxHitPoints: 4,
+		energy: 5,
+		maxEnergy: 5,
+		hitPoints: 3,
+		maxHitPoints: 3,
 		money: 0,
 		effectDeck: defaultEffectDeck(),
 		weights: getDefaultWeights(),
-		currentActivity: 'start',
+		currentActivity: { type: 'tutorial', key: 'intro' },
     };
 };

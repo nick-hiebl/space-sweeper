@@ -1,3 +1,5 @@
+import { TutorialKey } from '../activity/tutorial/types';
+
 export type Style =
     | 'explosion'
     | 'gear'
@@ -60,7 +62,12 @@ export type EffectModule = {
     drawEffects?: Effect[];
 };
 
-export type Activity = 'start' | 'board' | 'board-finished' | 'shop';
+export type Activity =
+    | { type: 'start' }
+    | { type: 'board' }
+    | { type: 'board-finished' }
+    | { type: 'shop' }
+    | { type: 'tutorial'; key: TutorialKey };
 
 export type GameState = {
     bag: Chip[];
@@ -78,6 +85,7 @@ export type GameAction =
     | { type: 'trigger-effects'; effects: Effect[] }
     | { type: 'add-chip'; partialChip: Omit<Chip, 'id'> }
     | { type: 'add-module'; module: EffectModule }
+    | { type: 'finish-tutorial' }
     | { type: 'start-board' }
     | { type: 'end-board' }
     | { type: 'leave-board' }

@@ -13,22 +13,22 @@ export const GameStateManager = (state: GameState, action: GameAction): GameStat
     if (action.type === 'start-board') {
         return {
             ...state,
-            currentActivity: 'board',
+            currentActivity: { type: 'board' },
         };
     } else if (action.type === 'end-board') {
         return {
             ...state,
-            currentActivity: 'board-finished',
+            currentActivity: { type: 'board-finished' },
         };
     } else if (action.type === 'leave-board') {
         return {
             ...state,
-            currentActivity: 'shop',
+            currentActivity: { type: 'shop' },
         };
     } else if (action.type === 'leave-shop') {
         return {
             ...state,
-            currentActivity: 'board',
+            currentActivity: { type: 'board' },
         };
     } else if (action.type === 'trigger-effects') {
         const pendingState = {
@@ -47,8 +47,8 @@ export const GameStateManager = (state: GameState, action: GameAction): GameStat
                     ),
                 );
 
-                if (pendingState.hitPoints <= 0 && state.currentActivity === 'board') {
-                    pendingState.currentActivity = 'board-finished';
+                if (pendingState.hitPoints <= 0 && state.currentActivity.type === 'board') {
+                    pendingState.currentActivity = { type: 'board-finished' };
                 }
             } else if (effect.type === 'energy') {
                 pendingState.energy = Math.max(
@@ -72,6 +72,13 @@ export const GameStateManager = (state: GameState, action: GameAction): GameStat
             ...state,
             effectDeck: state.effectDeck.concat(action.module),
         };
+    } else if (action.type === 'finish-tutorial') {
+        if (state.currentActivity.type === 'tutorial') {
+            return {
+                ...state,
+                currentActivity: { type: 'board' },
+            };
+        }
     }
 
     console.error('Unexpected state and action', state, action);

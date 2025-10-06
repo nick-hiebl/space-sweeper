@@ -1,0 +1,35 @@
+.tutorial {
+    max-width: 800px;
+}
+
+.tutorial > p {
+    align-items: center;
+    display: flex;
+    align-items: end;
+    justify-items: start;
+    flex-wrap: wrap;
+}
+
+.sample-board {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.sample-board > li {
+    box-sizing: border-box;
+    width: 80px;
+    height: 80px;
+    position: relative;
+}
+
+.sample-board > li > .faux-cell {
+    border: 5px solid #3366ff;
+    box-sizing: border-box;
+    width: 80px;
+    height: 80px;
+    position: absolute;
+}

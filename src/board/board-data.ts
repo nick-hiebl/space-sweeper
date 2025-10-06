@@ -137,7 +137,7 @@ export const drawBoard = (level: Level): Board => {
             if (current.right < after.left) {
                 // Going left-to-right
                 const minY = Math.max(current.top, after.top) + 1;
-                const maxY = Math.min(current.bottom, after.bottom) - 1;
+                const maxY = Math.min(current.bottom, after.bottom) - 2;
 
                 const y = Math.round(Math.random() * (maxY - minY) + minY);
 
@@ -146,7 +146,7 @@ export const drawBoard = (level: Level): Board => {
             } else if (current.left > after.right) {
                 // Going left-to-right
                 const minY = Math.max(current.top, after.top) + 1;
-                const maxY = Math.min(current.bottom, after.bottom) - 1;
+                const maxY = Math.min(current.bottom, after.bottom) - 2;
 
                 const y = Math.round(Math.random() * (maxY - minY) + minY);
 
@@ -155,7 +155,7 @@ export const drawBoard = (level: Level): Board => {
             } else if (current.bottom < after.top) {
                 // Going top-to-bottom
                 const minX = Math.max(current.left, after.left) + 1;
-                const maxX = Math.min(current.right, after.right) - 1;
+                const maxX = Math.min(current.right, after.right) - 2;
 
                 const x = Math.round(Math.random() * (maxX - minX) + minX);
 
@@ -164,7 +164,7 @@ export const drawBoard = (level: Level): Board => {
             } else if (current.top > after.bottom) {
                 // Going bottom-to-top
                 const minX = Math.max(current.left, after.left) + 1;
-                const maxX = Math.min(current.right, after.right) - 1;
+                const maxX = Math.min(current.right, after.right) - 2;
 
                 const x = Math.round(Math.random() * (maxX - minX) + minX);
 

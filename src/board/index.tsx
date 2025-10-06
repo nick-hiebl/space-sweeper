@@ -84,6 +84,12 @@ export const Board = ({ onGameAction, state }: Props) => {
         });
     }, [boardState]);
 
+    const unplayedChips = boardState.bag.filter(chip => (
+        !boardState.played.some(([playedChip]) => chip.id === playedChip.id)
+    ));
+
+    const nothingToDraw = unplayedChips.length === 0 && boardState.weights.length === 0;
+
     const lastPlace = last(boardState.board.cells);
     const lastIndex = lastPlace.position;
 
@@ -112,7 +118,7 @@ export const Board = ({ onGameAction, state }: Props) => {
                     })}
                 </ul>
             </div>
-            {state.currentActivity === 'board' ? (
+            {state.currentActivity.type === 'board' ? (
                 <div id="action-row">
                     {boardState.action.type === 'ended' ? (
                         <div>
@@ -140,73 +146,79 @@ export const Board = ({ onGameAction, state }: Props) => {
                     ) : boardState.action.type === 'drawing' ? (
                         <div>
                             <h2>Actions</h2>
-                            {boardState.action.options.map((chip, _) => {
-                                const relevantRule = boardState.effectModules.find(module => module.style === chip.style);
+                            <div className="inline-center gap-8px">
+                                {boardState.action.options.map((chip, _) => {
+                                    const relevantRule = boardState.effectModules.find(module => module.style === chip.style);
 
-                                const willLandOn = resolvePlacementDistance(boardState, chip);
+                                    const willLandOn = resolvePlacementDistance(boardState, chip);
 
-                                return (
-                                    <button
-                                        key={chip.id}
-                                        onClick={() => {
-                                            onBoardAction({ type: 'choose', chip });
+                                    return (
+                                        <button
+                                            key={chip.id}
+                                            onClick={() => {
+                                                onBoardAction({ type: 'choose', chip });
 
-                                            if (!relevantRule) {
-                                                console.error('No relevant rule for chosen chip:', chip, boardState.effectModules);
-                                                throw new Error('No relevant rule!');
-                                            }
+                                                if (!relevantRule) {
+                                                    console.error('No relevant rule for chosen chip:', chip, boardState.effectModules);
+                                                    throw new Error('No relevant rule!');
+                                                }
 
-                                            if (relevantRule.playEffects) {
-                                                onGameAction({
-                                                    type: 'trigger-effects',
-                                                    effects: relevantRule.playEffects.map(effect => resolveEffect(effect, chip)),
-                                                });
-                                            }
+                                                if (relevantRule.playEffects) {
+                                                    onGameAction({
+                                                        type: 'trigger-effects',
+                                                        effects: relevantRule.playEffects.map(effect => resolveEffect(effect, chip)),
+                                                    });
+                                                }
 
-                                            const landedCell = boardState.board.cells.find(({ position }) => position === willLandOn);
-                                            if (landedCell && (landedCell?.effects?.length ?? 0) > 0) {
-                                                onGameAction({
-                                                    type: 'trigger-effects',
-                                                    effects: landedCell.effects,
-                                                });
-                                            }
-                                        }}
-                                    >
-                                        <ChipDisplay
-                                            onMouseEnter={() => {
-                                                setHoveredStyle(chip.style);
-                                                setHoveredPlace(willLandOn);
+                                                const landedCell = boardState.board.cells.find(({ position }) => position === willLandOn);
+                                                if (landedCell && (landedCell?.effects?.length ?? 0) > 0) {
+                                                    onGameAction({
+                                                        type: 'trigger-effects',
+                                                        effects: landedCell.effects,
+                                                    });
+                                                }
                                             }}
-                                            onMouseLeave={() => {
-                                                setHoveredStyle(undefined);
-                                                setHoveredPlace(undefined);
-                                            }}
-                                            chip={chip}
-                                        />
-                                    </button>
-                                );
-                            })}
+                                        >
+                                            <ChipDisplay
+                                                onMouseEnter={() => {
+                                                    setHoveredStyle(chip.style);
+                                                    setHoveredPlace(willLandOn);
+                                                }}
+                                                onMouseLeave={() => {
+                                                    setHoveredStyle(undefined);
+                                                    setHoveredPlace(undefined);
+                                                }}
+                                                chip={chip}
+                                            />
+                                        </button>
+                                    );
+                                })}
+                            </div>
                         </div>
                     ) : (
                         <div>
                             <h2>Actions</h2>
-                            <button
-                                disabled={state.energy <= 0 || anythingPlacedInLast}
-                                onClick={() => {
-                                    onGameAction({
-                                        type: 'trigger-effects',
-                                        effects: [DEFAULT_ENERGY_COST],
-                                    });
-                                    onBoardAction({ type: 'draw' });
-                                }}
-                            >
-                                Draw
-                            </button>
-                            <button onClick={() => onGameAction({ type: 'end-board' })}>End</button>
+                            <div className="inline-center gap-8px">
+                                <button
+                                    disabled={state.energy <= 0 || anythingPlacedInLast || nothingToDraw}
+                                    onClick={() => {
+                                        onGameAction({
+                                            type: 'trigger-effects',
+                                            effects: [DEFAULT_ENERGY_COST],
+                                        });
+                                        onBoardAction({ type: 'draw' });
+                                    }}
+                                >
+                                    Draw
+                                </button>
+                                <button onClick={() => onGameAction({ type: 'end-board' })}>
+                                    End
+                                </button>
+                            </div>
                         </div>
                     )}
                 </div>
-            ) : state.currentActivity === 'board-finished' ? (
+            ) : state.currentActivity.type === 'board-finished' ? (
                 <div>
                     <h2>Actions</h2>
                     <button onClick={() => onGameAction({ type: 'leave-board' })}>Move on</button>
