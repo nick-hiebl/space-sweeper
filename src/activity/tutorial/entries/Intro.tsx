@@ -15,6 +15,7 @@ const SAMPLE_BOARD: (Chip | undefined)[] = [
     { id: 0, style: 'asteroid', quantity: 3 },
     undefined,
     { id: 0, style: 'asteroid', quantity: 2 },
+    { id: 0, style: 'fuel', quantity: 1 },
 ];
 
 const SAMPLE_FUEL_MODULE: EffectModuleType = {
@@ -94,7 +95,7 @@ const Slide2 = (props: TutorialProps) => {
     return (
         <div className="tutorial">
             <p>
-                Each time you draw costs 1 energy. You may stop at any time, or you are forced to
+                Each time you draw costs 1 energy. You may stop at any time, but you are forced to
                 if your energy or health drops to zero.
             </p>
             <p>

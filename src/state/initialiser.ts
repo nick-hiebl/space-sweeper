@@ -16,7 +16,10 @@ const defaultBag = (): Chip[] => {
 };
 
 const getDefaultWeights = (): Weight[] => {
-	return [];
+	return [
+		{ style: 'explosion', quantity: 1 },
+		{ style: 'explosion', quantity: 1 },
+	];
 };
 
 const defaultEffectDeck = (): EffectModule[] => {

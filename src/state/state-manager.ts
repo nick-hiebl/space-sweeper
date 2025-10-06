@@ -15,11 +15,6 @@ export const GameStateManager = (state: GameState, action: GameAction): GameStat
             ...state,
             currentActivity: { type: 'board' },
         };
-    } else if (action.type === 'end-board') {
-        return {
-            ...state,
-            currentActivity: { type: 'board-finished' },
-        };
     } else if (action.type === 'leave-board') {
         return {
             ...state,
@@ -46,10 +41,6 @@ export const GameStateManager = (state: GameState, action: GameAction): GameStat
                         pendingState.hitPoints + readQuantity(effect.healthShift),
                     ),
                 );
-
-                if (pendingState.hitPoints <= 0 && state.currentActivity.type === 'board') {
-                    pendingState.currentActivity = { type: 'board-finished' };
-                }
             } else if (effect.type === 'energy') {
                 pendingState.energy = Math.max(
                     0,

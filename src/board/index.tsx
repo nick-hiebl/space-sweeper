@@ -55,6 +55,7 @@ const CellComponent = ({ cell, chip, isHovered, onMouseEnter, onMouseLeave }: Ce
 
 export const Board = ({ onGameAction, state }: Props) => {
     const [boardState, onBoardAction] = useReducer(StateManager(state), defaultBoardState(state));
+    const [hasEnded, setEnded] = useState(false);
 
     const [hoveredStyle, setHoveredStyle] = useState<Style | undefined>(undefined);
     const [hoveredPlace, setHoveredPlace] = useState<number | undefined>(undefined);
@@ -65,6 +66,14 @@ export const Board = ({ onGameAction, state }: Props) => {
             setHoveredPlace(undefined);
         }
     }, [boardState]);
+
+    const isDone = state.hitPoints <= 0 && boardState.action.type !== 'drawing';
+
+    useEffect(() => {
+        if (isDone) {
+            setEnded(true);
+        }
+    }, [isDone]);
 
     useEffect(() => {
         if (boardState.action.type !== 'drawing') {
@@ -118,7 +127,12 @@ export const Board = ({ onGameAction, state }: Props) => {
                     })}
                 </ul>
             </div>
-            {state.currentActivity.type === 'board' ? (
+            {hasEnded || isDone ? (
+                <div>
+                    <h2>Actions</h2>
+                    <button onClick={() => onGameAction({ type: 'leave-board' })}>Move on</button>
+                </div>
+            ) : (
                 <div id="action-row">
                     {boardState.action.type === 'ended' ? (
                         <div>
@@ -211,19 +225,14 @@ export const Board = ({ onGameAction, state }: Props) => {
                                 >
                                     Draw
                                 </button>
-                                <button onClick={() => onGameAction({ type: 'end-board' })}>
+                                <button onClick={() => setEnded(true)}>
                                     End
                                 </button>
                             </div>
                         </div>
                     )}
                 </div>
-            ) : state.currentActivity.type === 'board-finished' ? (
-                <div>
-                    <h2>Actions</h2>
-                    <button onClick={() => onGameAction({ type: 'leave-board' })}>Move on</button>
-                </div>
-            ) : null}
+            )}
             <h2>Rules</h2>
             <div id="effect-modules">
                 {boardState.effectModules.map((effectModule, index) => (

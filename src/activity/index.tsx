@@ -12,7 +12,7 @@ type ActivityProps = {
 export const Activity = ({ state, onAction }: ActivityProps) => {
     if (state.currentActivity.type === 'start') {
         return <button onClick={() => onAction({ type: 'start-board' })}>Start</button>;
-    } else if (state.currentActivity.type === 'board' || state.currentActivity.type === 'board-finished') {
+    } else if (state.currentActivity.type === 'board') {
         return <Board state={state} onGameAction={onAction} />;
     } else if (state.currentActivity.type === 'shop') {
         return <Shop state={state} onGameAction={onAction} />;

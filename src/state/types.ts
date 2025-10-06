@@ -1,4 +1,4 @@
-import { TutorialKey } from '../activity/tutorial/types';
+import { Activity } from './campaign';
 
 export type Style =
     | 'explosion'
@@ -61,13 +61,6 @@ export type EffectModule = {
     playEffects?: Effect[];
     drawEffects?: Effect[];
 };
-
-export type Activity =
-    | { type: 'start' }
-    | { type: 'board' }
-    | { type: 'board-finished' }
-    | { type: 'shop' }
-    | { type: 'tutorial'; key: TutorialKey };
 
 export type GameState = {
     bag: Chip[];
