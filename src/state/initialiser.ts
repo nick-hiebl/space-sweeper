@@ -1,3 +1,4 @@
+import { STARTER_GAME } from './campaigns/intro-campaign';
 import type { Chip, EffectModule, GameState, Weight } from './types';
 
 let startId = 0;
@@ -16,10 +17,7 @@ const defaultBag = (): Chip[] => {
 };
 
 const getDefaultWeights = (): Weight[] => {
-	return [
-		{ style: 'explosion', quantity: 1 },
-		{ style: 'explosion', quantity: 1 },
-	];
+	return [];
 };
 
 const defaultEffectDeck = (): EffectModule[] => {
@@ -54,6 +52,7 @@ export const initialGameState = (): GameState => {
 		money: 0,
 		effectDeck: defaultEffectDeck(),
 		weights: getDefaultWeights(),
-		currentActivity: { type: 'tutorial', key: 'intro' },
+		currentActivity: { type: 'start' },
+		campaign: STARTER_GAME,
     };
 };

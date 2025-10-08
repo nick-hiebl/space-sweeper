@@ -1,4 +1,4 @@
-import { Activity } from './campaign';
+import { Activity, ActivityManager, ActivitySignal } from './campaign';
 
 export type Style =
     | 'explosion'
@@ -72,14 +72,18 @@ export type GameState = {
     money: number;
     weights: Weight[];
     currentActivity: Activity;
+    campaign: ActivityManager;
 };
+
+type UpdatableStats = 'maxEnergy' | 'maxHitPoints' | 'energy' | 'hitPoints' | 'money';
 
 export type GameAction =
     | { type: 'trigger-effects'; effects: Effect[] }
-    | { type: 'add-chip'; partialChip: Omit<Chip, 'id'> }
-    | { type: 'add-module'; module: EffectModule }
-    | { type: 'finish-tutorial' }
-    | { type: 'start-board' }
-    | { type: 'end-board' }
-    | { type: 'leave-board' }
-    | { type: 'leave-shop' };
+    | { type: 'add-chip'; chips: Omit<Chip, 'id'>[] }
+    | { type: 'add-module'; modules: EffectModule[] }
+    | { type: 'add-weight'; weights: Weight[] }
+    | {
+        type: 'update-stats';
+        newStats: Partial<Pick<GameState, UpdatableStats>> & Partial<Record<Exclude<keyof GameState, UpdatableStats>, never>>;
+    }
+    | ActivitySignal;

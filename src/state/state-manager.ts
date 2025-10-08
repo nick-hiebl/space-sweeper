@@ -10,20 +10,12 @@ const readQuantity = (quantity: Quantity): number => {
 };
 
 export const GameStateManager = (state: GameState, action: GameAction): GameState => {
-    if (action.type === 'start-board') {
+    if (action.type === 'activity-signal') {
+        const activity = state.campaign(state.currentActivity, action);
+
         return {
             ...state,
-            currentActivity: { type: 'board' },
-        };
-    } else if (action.type === 'leave-board') {
-        return {
-            ...state,
-            currentActivity: { type: 'shop' },
-        };
-    } else if (action.type === 'leave-shop') {
-        return {
-            ...state,
-            currentActivity: { type: 'board' },
+            currentActivity: activity,
         };
     } else if (action.type === 'trigger-effects') {
         const pendingState = {
@@ -56,20 +48,23 @@ export const GameStateManager = (state: GameState, action: GameAction): GameStat
     } else if (action.type === 'add-chip') {
         return {
             ...state,
-            bag: state.bag.concat({ ...action.partialChip, id: getId() }),
+            bag: state.bag.concat(action.chips.map(chip => ({ ...chip, id: getId() }))),
         };
     } else if (action.type === 'add-module') {
         return {
             ...state,
-            effectDeck: state.effectDeck.concat(action.module),
+            effectDeck: state.effectDeck.concat(action.modules),
         };
-    } else if (action.type === 'finish-tutorial') {
-        if (state.currentActivity.type === 'tutorial') {
-            return {
-                ...state,
-                currentActivity: { type: 'board' },
-            };
-        }
+    } else if (action.type === 'add-weight') {
+        return {
+            ...state,
+            weights: state.weights.concat(action.weights),
+        };
+    } else if (action.type === 'update-stats') {
+        return {
+            ...state,
+            ...action.newStats,
+        };
     }
 
     console.error('Unexpected state and action', state, action);

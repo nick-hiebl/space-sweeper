@@ -1,10 +1,12 @@
 import { JSX } from 'react';
 
+import { Explosions } from './entries/Explosions';
 import { Intro } from './entries/Intro';
 import type { TutorialKey, TutorialProps } from './types';
 
 const TUTORIAL_MAP: Record<TutorialKey, (props: TutorialProps) => JSX.Element> = {
     intro: Intro,
+    explosions: Explosions,
 };
 
 export const Tutorial = (props: TutorialProps) => {

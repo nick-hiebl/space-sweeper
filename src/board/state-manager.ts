@@ -4,7 +4,7 @@ import { getId } from '../state/initialiser';
 import type { Chip, Effect, EffectModule, GameState, MoveEffect, Style, Weight } from '../state/types';
 
 import { BOARD_MAP } from './board-data';
-import type { Board, BoardAction, BoardState, ImmediateState, Position } from './types';
+import type { Board, BoardAction, BoardState, Cell, ImmediateState, Position } from './types';
 
 export const resolvePlacementDistance = (state: BoardState, chip: Chip): Position => {
     if (state.action.type !== 'drawing' || !state.action.options.includes(chip)) {
@@ -132,10 +132,20 @@ export const StateManager = (initialGameState: GameState) => (state: BoardState,
     throw new Error('UnacceptableAction');
 };
 
-const getDefaultBoard = (): Board => {
-    const board = BOARD_MAP.get('SMALL');
+const getDefaultBoard = (boardKey: string): Board => {
+    const board = BOARD_MAP.get(boardKey);
     if (!board) {
-        throw new Error('Cannot find SMALL level');
+        throw new Error(`Cannot find level: '${boardKey}'`);
+    }
+
+    if (boardKey === 'SMALL') {
+        return {
+            ...board,
+            cells: board.cells.map<Cell>(cell => cell.position === 5
+                ? { ...cell, effects: [{ type: 'health', healthShift: 1 }] }
+                : cell
+            ),
+        };
     }
 
     return board;
@@ -148,6 +158,10 @@ const DEFAULT_MODULE = (style: Style): EffectModule => {
 };
 
 export const defaultBoardState = (state: GameState): BoardState => {
+    if (state.currentActivity.type !== 'board') {
+        throw new Error('Constructing board when game not in board state!');
+    }
+
     const unresolvedStyles = new Set<Style>();
     state.bag.forEach(chip => {
         unresolvedStyles.add(chip.style);
@@ -176,7 +190,7 @@ export const defaultBoardState = (state: GameState): BoardState => {
     return {
         bag: state.bag,
         effectModules: effectModules,
-        board: getDefaultBoard(),
+        board: getDefaultBoard(state.currentActivity.boardKey),
         played: [],
         action: initialAction,
         weights: state.weights.slice(),

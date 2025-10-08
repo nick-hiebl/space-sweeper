@@ -130,14 +130,30 @@ export const Board = ({ onGameAction, state }: Props) => {
             {hasEnded || isDone ? (
                 <div>
                     <h2>Actions</h2>
-                    <button onClick={() => onGameAction({ type: 'leave-board' })}>Move on</button>
+                    <button
+                        onClick={() => onGameAction({
+                            type: 'activity-signal',
+                            signal: 'finish-board',
+                            boardState,
+                        })}
+                    >
+                        Move on
+                    </button>
                 </div>
             ) : (
                 <div id="action-row">
                     {boardState.action.type === 'ended' ? (
                         <div>
                             <h2>Actions</h2>
-                            <button onClick={() => onGameAction({ type: 'leave-board' })}>Leave</button>
+                            <button
+                                onClick={() => onGameAction({
+                                    type: 'activity-signal',
+                                    signal: 'finish-board',
+                                    boardState,
+                                })}
+                            >
+                                Leave
+                            </button>
                         </div>
                     ) : boardState.action.type === 'picking-modules' ? (
                         <div>

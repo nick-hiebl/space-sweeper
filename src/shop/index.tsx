@@ -70,7 +70,7 @@ export const Shop = ({ state, onGameAction }: Props) => {
                                     });
                                     onGameAction({
                                         type: 'add-chip',
-                                        partialChip: sale.chip,
+                                        chips: [sale.chip],
                                     });
                                 }}
                             >
@@ -102,7 +102,7 @@ export const Shop = ({ state, onGameAction }: Props) => {
                                     });
                                     onGameAction({
                                         type: 'add-module',
-                                        module: sale.module,
+                                        modules: [sale.module],
                                     });
                                 }}
                             >
@@ -120,7 +120,10 @@ export const Shop = ({ state, onGameAction }: Props) => {
                             type: 'trigger-effects',
                             effects: [{ type: 'energy', energyShift: state.maxEnergy }],
                         });
-                        onGameAction({ type: 'leave-shop' });
+                        onGameAction({
+                            type: 'activity-signal',
+                            signal: 'finish-shop',
+                        });
                     }}
                 >
                     Leave shop

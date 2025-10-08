@@ -1,11 +1,12 @@
+import { useState } from 'react';
+
+import { EffectModule } from '../../../board/effect-module';
 import { ChipDisplay } from '../../../common/ChipDisplay';
+import { Sprite } from '../../../common/Sprite';
 import type { Chip, EffectModule as EffectModuleType } from '../../../state/types';
 import type { TutorialProps } from '../types';
 
 import '../index.css';
-import { Sprite } from '../../../common/Sprite';
-import { EffectModule } from '../../../board/effect-module';
-import { useState } from 'react';
 
 const SAMPLE_BOARD: (Chip | undefined)[] = [
     { id: 0, style: 'asteroid', quantity: 1 },
@@ -50,7 +51,7 @@ const Slide1 = (props: TutorialProps) => {
                     (<Sprite type="ui-icon" icon="energy" size="16" />),
                 </span>
                 and that you don't have any money
-                <span  className="inline inline-end">
+                <span className="inline inline-end">
                     (<Sprite type="ui-icon" icon="no-money" size="16" />).
                 </span>
             </p>
@@ -142,6 +143,10 @@ const Slide2 = (props: TutorialProps) => {
                     </div>
                 </div>
             </div>
+            <p>
+                For this upcoming board, try to place an item at or past the space marked with a
+                heart to move on.
+            </p>
             <div>
                 <button onClick={props.onComplete}>I'm ready to go!</button>
             </div>
@@ -157,6 +162,22 @@ export const Intro = (props: TutorialProps) => {
             <Slide1 {...props} onComplete={() => setFrame('slide-2')} />
         );
     } else {
-        return <Slide2 {...props} />;
+        return (
+            <Slide2
+                {...props}
+                onComplete={() => {
+                    props.onGameAction({
+                        type: 'trigger-effects',
+                        effects: [
+                            { type: 'health', healthShift: props.gameState.maxHitPoints },
+                            { type: 'energy', energyShift: props.gameState.maxEnergy },
+                            { type: 'money', moneyShift: -props.gameState.money },
+                        ],
+                    });
+
+                    props.onComplete();
+                }}
+            />
+        );
     }
 };
