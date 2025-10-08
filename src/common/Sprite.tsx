@@ -157,3 +157,15 @@ export const Sprite = (props: SpriteProps) => {
 
     return <img src={DATA_URL_MAP.get(id)} alt={LABEL_DATA[id]} className="sprite" data-size={size} />;
 };
+
+export const JumpySprite = (props: SpriteProps & { index: number }) => {
+    return (
+        <div
+            className="jumpy-sprite"
+            key={props.type + (props.type === 'ui-icon' ? props.icon : '')}
+            style={{ animationDelay: `${props.index * 0.03}s` }}
+        >
+            <Sprite {...props} />
+        </div>
+    );
+};

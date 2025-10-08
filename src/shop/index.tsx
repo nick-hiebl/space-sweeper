@@ -113,6 +113,7 @@ export const Shop = ({ state, onGameAction }: Props) => {
                     </div>
                 </div>
             )}
+            <h2>Actions</h2>
             <div id="actions">
                 <button
                     onClick={() => {

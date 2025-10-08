@@ -11,7 +11,7 @@ const readQuantity = (quantity: Quantity): number => {
 
 export const GameStateManager = (state: GameState, action: GameAction): GameState => {
     if (action.type === 'activity-signal') {
-        const activity = state.campaign(state.currentActivity, action);
+        const activity = state.campaign(state, action);
 
         return {
             ...state,
