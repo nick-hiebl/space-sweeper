@@ -91,7 +91,7 @@ export const Board = ({ onGameAction, state }: Props) => {
             type: 'trigger-effects',
             effects: drawEffects,
         });
-    }, [boardState]);
+    }, [boardState, onGameAction]);
 
     const unplayedChips = boardState.bag.filter(chip => (
         !boardState.played.some(([playedChip]) => chip.id === playedChip.id)
@@ -108,7 +108,7 @@ export const Board = ({ onGameAction, state }: Props) => {
         <div id="board-state">
             <h2>Board</h2>
             <div id="board" style={{ height: boardState.board.dimensions.height * IMAGE_SCALE }}>
-                <img src={boardState.board.imageSrc} height={boardState.board.dimensions.height * IMAGE_SCALE} />
+                <img src={boardState.board.imageSrc} height={boardState.board.dimensions.height * IMAGE_SCALE} alt="" />
                 <ul id="cells" className="board-list">
                     {boardState.board.cells.map(cell => {
                         const placement = boardState.played.find(([_, pos]) => pos === cell.position);
