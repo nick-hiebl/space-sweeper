@@ -12,7 +12,7 @@ export const Game = () => {
 
     return (
         <div id="game">
-            <div id="player-info">
+            <div id="player-info" className="inline gap-16px wrap">
                 <div id="player-hp">
                     HP:
                     <div className="icon-bar hp">
@@ -40,10 +40,9 @@ export const Game = () => {
                             />
                         ))}
                     </div>
-                    {state.energy} / {state.maxEnergy}
                 </div>
-                <div id="player-hp">
-                    Money:
+                <div id="player-money">
+                    Money: ${state.money}
                     <div className="icon-bar money">
                         {state.money === 0 && (
                             <JumpySprite type="ui-icon" icon="no-money" size="48" index={0} />

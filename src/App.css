@@ -41,3 +41,7 @@ button {
 .gap-16px {
     gap: 16px;
 }
+
+.wrap {
+    flex-wrap: wrap;
+}
