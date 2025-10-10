@@ -2,6 +2,7 @@ import { Board } from '../board';
 import { Shop } from '../shop';
 import type { GameAction, GameState } from '../state/types';
 
+import { Combiner } from './combiner';
 import { Tutorial } from './tutorial';
 
 type ActivityProps = {
@@ -20,6 +21,8 @@ export const Activity = ({ state, onAction }: ActivityProps) => {
         return <Board state={state} onGameAction={onAction} />;
     } else if (state.currentActivity.type === 'shop') {
         return <Shop state={state} onGameAction={onAction} />;
+    } else if (state.currentActivity.type === 'combiner') {
+        return <Combiner state={state} onGameAction={onAction} />;
     } else if (state.currentActivity.type === 'tutorial') {
         return (
             <Tutorial

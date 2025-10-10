@@ -44,12 +44,11 @@ export const Game = () => {
                 <div id="player-money">
                     Money: ${state.money}
                     <div className="icon-bar money">
-                        {state.money === 0 && (
+                        {state.money > 0 ? (
+                            <JumpySprite key={state.money} type="ui-icon" icon="money" size="48" index={0} />
+                        ) : (
                             <JumpySprite type="ui-icon" icon="no-money" size="48" index={0} />
                         )}
-                        {new Array(state.money).fill(0).map((_, index) => (
-                            <JumpySprite key={index} type="ui-icon" icon="money" size="48" index={index} />
-                        ))}
                     </div>
                 </div>
             </div>
