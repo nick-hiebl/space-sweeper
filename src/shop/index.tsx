@@ -1,6 +1,7 @@
 import { useReducer } from 'react';
 
 import { EffectModule } from '../board/effect-module';
+import { Bag } from '../common/Bag';
 import { ChipDisplay } from '../common/ChipDisplay';
 import { GameAction, GameState } from '../state/types';
 
@@ -131,11 +132,7 @@ export const Shop = ({ state, onGameAction }: Props) => {
                 </button>
             </div>
             <h2>Bag</h2>
-            <div id="bag">
-                {state.bag.map(chip => (
-                    <ChipDisplay key={chip.id} chip={chip} />
-                ))}
-            </div>
+            <Bag bag={state.bag} />
             <h2>Always present in your bag</h2>
             <div id="weights">
                 {state.weights.map((weight, index) => (

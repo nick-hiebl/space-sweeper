@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { EffectModule } from '../../../board/effect-module';
+import { Bag } from '../../../common/Bag';
 import { ChipDisplay } from '../../../common/ChipDisplay';
 import { Sprite } from '../../../common/Sprite';
 import type { Chip, EffectModule as EffectModuleType } from '../../../state/types';
@@ -59,11 +60,7 @@ const Slide1 = (props: TutorialProps) => {
                 Below is your bag of items:
             </p>
             <h2>Bag</h2>
-            <div id="bag">
-                {props.gameState.bag.map(chip => (
-                    <ChipDisplay key={chip.id} chip={chip} />
-                ))}
-            </div>
+            <Bag bag={props.gameState.bag} />
             <p>
                 The game is played by repeatedly drawing three items from your bag and selecting
                 one to place on the board. Items can have different numbers on them. An item
