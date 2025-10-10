@@ -38,7 +38,6 @@ type SpriteProps = SpriteTypeProps & {
 
 type SpriteId =
     | `chip:${Style}`
-    | `number:${Quantity}`
     | `ui-icon:${IconType}`;
 
 const DATA_URL_MAP = new Map<SpriteId, string>();
@@ -59,16 +58,6 @@ const POSITION_DATA: Record<SpriteId, PositionData> = {
     'chip:gear': { x: 48, y: 0, ...COMMON },
     'chip:red': { x: 64, y: 0, ...COMMON },
     'chip:blue': { x: 80, y: 0, ...COMMON },
-    'number:1': { x: 0, y: 16, ...COMMON },
-    'number:2': { x: 16, y: 16, ...COMMON },
-    'number:3': { x: 32, y: 16, ...COMMON },
-    'number:4': { x: 48, y: 16, ...COMMON },
-    'number:-1': { x: 0, y: 32, ...COMMON },
-    'number:-2': { x: 16, y: 32, ...COMMON },
-    'number:-3': { x: 32, y: 32, ...COMMON },
-    'number:-4': { x: 48, y: 32, ...COMMON },
-    'number:-quantity': { x: 224, y: 16, ...COMMON },
-    'number:quantity': { x: 240, y: 16, ...COMMON },
     'ui-icon:forced': { x: 0, y: 96, ...COMMON },
     'ui-icon:heart': { x: 0, y: 112, ...COMMON },
     'ui-icon:heart-empty': { x: 16, y: 112, ...COMMON },
@@ -89,16 +78,6 @@ const LABEL_DATA: Record<SpriteId, string> = {
     'chip:gear': 'Wrench item',
     'chip:blue': 'Blue item',
     'chip:red': 'Red item',
-    'number:1': '1',
-    'number:2': '2',
-    'number:3': '3',
-    'number:4': '4',
-    'number:-1': '-1',
-    'number:-2': '-2',
-    'number:-3': '-3',
-    'number:-4': '-4',
-    'number:-quantity': 'Minus item quantity',
-    'number:quantity': 'Item quantity',
     'ui-icon:forced': 'Forced selection',
     'ui-icon:heart': 'Heart',
     'ui-icon:heart-empty': 'Empty heart',
@@ -113,9 +92,7 @@ const LABEL_DATA: Record<SpriteId, string> = {
 };
 
 const propsToSpriteId = (props: SpriteProps): SpriteId => {
-    if (props.type === 'number') {
-        return `number:${props.value}`;
-    } else if (props.type === 'chip') {
+    if (props.type === 'chip') {
         return `chip:${props.chip.style}`;
     } else if (props.type === 'ui-icon') {
         return `ui-icon:${props.icon}`;
