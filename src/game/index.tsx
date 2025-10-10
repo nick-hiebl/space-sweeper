@@ -1,7 +1,7 @@
 import { useReducer } from 'react';
 
 import { Activity } from '../activity';
-import { JumpySprite } from '../common/Sprite';
+import { JumpySprite, Sprite } from '../common/Sprite';
 import { initialGameState } from '../state/initialiser';
 import { GameStateManager } from '../state/state-manager';
 
@@ -45,9 +45,19 @@ export const Game = () => {
                     Money: ${state.money}
                     <div className="icon-bar money">
                         {state.money > 0 ? (
-                            <JumpySprite key={state.money} type="ui-icon" icon="money" size="48" index={0} />
+                            <div key={state.money} className="money-container">
+                                <JumpySprite type="ui-icon" icon="money" size="48" index={0} />
+                                <div className="number-overlay">
+                                    <Sprite type="number" value={state.money} size="48" />
+                                </div>
+                            </div>
                         ) : (
-                            <JumpySprite type="ui-icon" icon="no-money" size="48" index={0} />
+                            <div key={state.money} className="money-container">
+                                <JumpySprite type="ui-icon" icon="no-money" size="48" index={0} />
+                                <div className="number-overlay">
+                                    <Sprite type="number" value={state.money} size="48" />
+                                </div>
+                            </div>
                         )}
                     </div>
                 </div>

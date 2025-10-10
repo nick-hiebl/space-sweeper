@@ -145,6 +145,22 @@ const getDataURI = (id: SpriteId): string => {
 export const Sprite = (props: SpriteProps) => {
     const { size = '80' } = props;
 
+    if (props.type === 'number') {
+        const isNegative = typeof props.value === 'number' ? props.value < 0 : props.value.startsWith('-');
+
+        const text = typeof props.value === 'number'
+            ? props.value.toString()
+            : props.value === '-quantity'
+                ? '-?'
+                : '?';
+
+        return (
+            <div className="sprite-number" data-size={size} data-red={isNegative}>
+                {text}
+            </div>
+        );
+    }
+
     const id = propsToSpriteId(props);
 
     if (DATA_URL_MAP.has(id)) {
