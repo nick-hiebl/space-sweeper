@@ -1,7 +1,7 @@
 import { useReducer } from 'react';
 
 import { Activity } from '../activity';
-import { JumpySprite, Sprite } from '../common/Sprite';
+import { JumpySprite } from '../common/Sprite';
 import { initialGameState } from '../state/initialiser';
 import { GameStateManager } from '../state/state-manager';
 
