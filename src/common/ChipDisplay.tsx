@@ -8,18 +8,19 @@ type ChipDisplayProps = {
     chip: Omit<Chip, 'id'>;
     onMouseEnter?: () => void;
     onMouseLeave?: () => void;
+    size?: '64';
 }
 
-export const ChipDisplay = ({ chip, ...handlers }: ChipDisplayProps) => {
+export const ChipDisplay = ({ chip, size, ...handlers }: ChipDisplayProps) => {
     if (!chip) {
         return null;
     }
 
     return (
-        <div className="cell-chip" {...handlers}>
-            <Sprite type="chip" chip={chip} />
+        <div className="cell-chip" {...handlers} data-size={size}>
+            <Sprite type="chip" chip={chip} size={size} />
             <div className="number-overlay">
-                <Sprite type="number" value={chip.quantity} />
+                <Sprite type="number" value={chip.quantity} size={size} />
             </div>
         </div>
     );

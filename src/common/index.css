@@ -20,6 +20,10 @@
     height: 48px;
 }
 
+.sprite[data-size="64"] {
+    height: 64px;
+}
+
 .jumpy-sprite {
     animation: jump 0.2s cubic-bezier(0, .6, 1, .4);
     animation-delay: random(0s, 0.2s);
