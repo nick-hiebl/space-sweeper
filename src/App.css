@@ -1,5 +1,7 @@
 body {
     padding-inline: 16px;
+
+    --blanket-zIndex: 100;
 }
 
 button {

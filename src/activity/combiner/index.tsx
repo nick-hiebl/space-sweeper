@@ -1,7 +1,9 @@
 import { useCallback, useMemo, useState } from 'react';
 
-import { Chip, type GameAction, type GameState, type Style } from '../../state/types';
 import { ChipDisplay } from '../../common/ChipDisplay';
+import { Chip, type GameAction, type GameState, type Style } from '../../state/types';
+
+import './index.css';
 
 type Props = {
     state: GameState;
@@ -19,6 +21,8 @@ type Identity = ChipCore & {
 export const Combiner = ({ onGameAction, state }: Props) => {
     const { bag } = state;
     const [newChip, setNewChip] = useState<ChipCore | undefined>();
+    const [selectedChip, setSelectedChip] = useState<ChipCore | undefined>();
+    const [animationDismissed, setAnimationDismissed] = useState(false);
 
     const dupes = useMemo<Identity[]>(() => {
         const counts: Record<IdentityKey, number> = {};
@@ -64,53 +68,80 @@ export const Combiner = ({ onGameAction, state }: Props) => {
             effects: [{ type: 'health', healthShift: 1 }],
         });
 
+        setSelectedChip(duplicate);
         setNewChip(hybrid);
     }, [bag, onGameAction]);
 
     return (
-        <div className="stack gap-8px">
-            <h2>The Combiner</h2>
-            {newChip ? (
-                <div className="stack gap-8px">
-                    <p>
-                        Here is your new chip!
-                    </p>
-                    <div>
-                        <ChipDisplay chip={newChip} />
-                    </div>
-                </div>
-            ) : (
-                <div className="stack gap-8px">
-                    <p>
-                        Here are your items we can combine.
-                    </p>
-                    <div className="inline wrap gap-8px">
-                        {dupes.map(duplicate => (
-                            <button
-                                key={duplicate.key}
-                                onClick={() => onCombine(duplicate)}
-                            >
-                                <ChipDisplay chip={duplicate} />
-                            </button>
-                        ))}
+        <>
+            {selectedChip && newChip && !animationDismissed && (
+                <div className="blanket" onClick={() => setAnimationDismissed(true)}>
+                    <div
+                        className="anim-container"
+                        style={{
+                            left: `${(window.innerWidth - 80) / 2}px`,
+                            top: `${(window.innerHeight - 80) / 2}px`,
+                        }}
+                    >
+                        <div className="float-in-left">
+                            <ChipDisplay chip={selectedChip} />
+                        </div>
+                        <div className="float-in-right">
+                            <ChipDisplay chip={selectedChip} />
+                        </div>
+                        <div className="float-result">
+                            <ChipDisplay chip={newChip} />
+                        </div>
+                        <div className="combiner-action">
+                            <button>Dismiss</button>
+                        </div>
                     </div>
                 </div>
             )}
-            <p>Once you're ready...</p>
-            <div className="inline">
-                <button
-                    onClick={() => {
-                        onGameAction({
-                            type: 'trigger-effects',
-                            effects: [{ type: 'energy', energyShift: state.maxEnergy }],
-                        });
+            <div className="stack gap-8px">
+                <h2>The Combiner</h2>
+                {newChip ? (
+                    <div className="stack gap-8px">
+                        <p>
+                            Here is your new chip!
+                        </p>
+                        <div>
+                            <ChipDisplay chip={newChip} />
+                        </div>
+                    </div>
+                ) : (
+                    <div className="stack gap-8px">
+                        <p>
+                            Here are your items we can combine.
+                        </p>
+                        <div className="inline wrap gap-8px">
+                            {dupes.map(duplicate => (
+                                <button
+                                    key={duplicate.key}
+                                    onClick={() => onCombine(duplicate)}
+                                >
+                                    <ChipDisplay chip={duplicate} />
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                )}
+                <p>Once you're ready...</p>
+                <div className="inline">
+                    <button
+                        onClick={() => {
+                            onGameAction({
+                                type: 'trigger-effects',
+                                effects: [{ type: 'energy', energyShift: state.maxEnergy }],
+                            });
 
-                        onGameAction({ type: 'activity-signal', signal: 'finish-combiner' });
-                    }}
-                >
-                    {newChip ? 'Move on' : 'Pass for now'}
-                </button>
+                            onGameAction({ type: 'activity-signal', signal: 'finish-combiner' });
+                        }}
+                    >
+                        {newChip ? 'Move on' : 'Pass for now'}
+                    </button>
+                </div>
             </div>
-        </div>
+        </>
     );
 };
