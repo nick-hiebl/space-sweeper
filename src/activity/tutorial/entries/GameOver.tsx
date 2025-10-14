@@ -1,4 +1,5 @@
 import { EffectModule } from '../../../board/effect-module';
+import { Bag } from '../../../common/Bag';
 import { ChipDisplay } from '../../../common/ChipDisplay';
 import type { TutorialProps } from '../types';
 
@@ -17,11 +18,7 @@ export const GameOver = ({ gameState }: TutorialProps) => {
             </button>
             <p>Here was your game state:</p>
             <h2>Bag</h2>
-            <div id="bag">
-                {gameState.bag.map(chip => (
-                    <ChipDisplay key={chip.id} chip={chip} />
-                ))}
-            </div>
+            <Bag bag={gameState.bag} />
             <h2>Always present in your bag</h2>
             <div id="weights">
                 {gameState.weights.map((weight, index) => (

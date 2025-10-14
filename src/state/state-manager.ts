@@ -65,6 +65,11 @@ export const GameStateManager = (state: GameState, action: GameAction): GameStat
             ...state,
             ...action.newStats,
         };
+    } else if (action.type === 'remove-chip') {
+        return {
+            ...state,
+            bag: state.bag.filter(chip => !action.chips.includes(chip.id)),
+        };
     }
 
     console.error('Unexpected state and action', state, action);

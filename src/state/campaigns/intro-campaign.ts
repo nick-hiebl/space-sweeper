@@ -7,6 +7,7 @@ type CampaignKeys =
     | 'intro-2'
     | 'second-board'
     | 'shop-1'
+    | 'combiner'
     | 'game-over';
 
 type ActivityWithCondition = {
@@ -51,11 +52,15 @@ const ACTIVITY_MAP: Record<CampaignKeys, ActivityWithCondition> = {
                 throw new Error('Invalid signal received');
             }
 
-            if (state.hitPoints === 0 && state.money === 0) {
+            const nextUp = Math.random() < 0.5 ? 'shop-1' : 'combiner';
+
+            const canEscapeAtShop = nextUp === 'shop-1' && state.money >= 2;
+
+            if (state.hitPoints === 0 && !canEscapeAtShop) {
                 return 'game-over';
             }
 
-            return 'shop-1';
+            return nextUp;
         },
     },
     'shop-1': {
@@ -72,6 +77,11 @@ const ACTIVITY_MAP: Record<CampaignKeys, ActivityWithCondition> = {
 
             return 'second-board';
         },
+    },
+    'combiner': {
+        key: 'combiner',
+        activity: { type: 'combiner' },
+        next: 'second-board',
     },
     'game-over': {
         key: 'game-over',

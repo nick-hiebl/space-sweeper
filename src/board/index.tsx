@@ -109,11 +109,7 @@ export const Board = ({ onGameAction, state }: Props) => {
         <div id="board-state">
             <h2>Board</h2>
             <div id="board" style={{ height: boardState.board.dimensions.height * IMAGE_SCALE }}>
-                <img
-                    src={boardState.board.imageSrc}
-                    height={boardState.board.dimensions.height * IMAGE_SCALE}
-                    alt=""
-                />
+                <img src={boardState.board.imageSrc} height={boardState.board.dimensions.height * IMAGE_SCALE} alt="" />
                 <ul id="cells" className="board-list">
                     {boardState.board.cells.map(cell => {
                         const placement = boardState.played.find(([_, pos]) => pos === cell.position);

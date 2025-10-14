@@ -12,7 +12,7 @@ export const Game = () => {
 
     return (
         <div id="game">
-            <div id="player-info">
+            <div id="player-info" className="inline gap-16px wrap">
                 <div id="player-hp">
                     HP:
                     <div className="icon-bar hp">
@@ -40,17 +40,25 @@ export const Game = () => {
                             />
                         ))}
                     </div>
-                    {state.energy} / {state.maxEnergy}
                 </div>
-                <div id="player-hp">
-                    Money:
+                <div id="player-money">
+                    Money: ${state.money}
                     <div className="icon-bar money">
-                        {state.money === 0 && (
-                            <JumpySprite type="ui-icon" icon="no-money" size="48" index={0} />
+                        {state.money > 0 ? (
+                            <div key={state.money} className="money-container">
+                                <JumpySprite type="ui-icon" icon="money" size="48" index={0} />
+                                <div className="number-overlay">
+                                    <Sprite type="number" value={state.money} size="48" />
+                                </div>
+                            </div>
+                        ) : (
+                            <div key={state.money} className="money-container">
+                                <JumpySprite type="ui-icon" icon="no-money" size="48" index={0} />
+                                <div className="number-overlay">
+                                    <Sprite type="number" value={state.money} size="48" />
+                                </div>
+                            </div>
                         )}
-                        {new Array(state.money).fill(0).map((_, index) => (
-                            <JumpySprite key={index} type="ui-icon" icon="money" size="48" index={index} />
-                        ))}
                     </div>
                 </div>
             </div>

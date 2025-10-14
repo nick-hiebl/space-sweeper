@@ -3,6 +3,49 @@
     position: relative;
 }
 
+.sprite-number {
+    color: white;
+    text-shadow: 2px 2px 0 black, 2px -2px 0 black, -2px 2px 0 black, -2px -2px 0 black;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.sprite-number[data-red=true] {
+    color: red;
+}
+
+.sprite-number[data-size="16"] {
+    height: 16px;
+    width: 16px;
+    font-size: 12px;
+}
+
+.sprite-number[data-size="32"] {
+    height: 32px;
+    width: 32px;
+    font-size: 24px;
+}
+
+.sprite-number[data-size="48"] {
+    height: 48px;
+    width: 48px;
+    font-size: 36px;
+}
+
+.sprite-number[data-size="64"] {
+    height: 64px;
+    width: 64px;
+    font-size: 48px;
+}
+
+.sprite-number[data-size="80"] {
+    height: 80px;
+    width: 80px;
+    font-size: 60px;
+}
+
 .sprite {
     height: 80px;
     image-rendering: pixelated;

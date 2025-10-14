@@ -33,7 +33,7 @@ export const resolvePlacementDistance = (state: BoardState, chip: Chip): Positio
             return total + ((effect as MoveEffect).distance as number);
         }, 0);
 
-    const [_, lastPosition] = last(state.played) ?? [undefined, -1];
+    const [, lastPosition] = last(state.played) ?? [undefined, -1];
 
     console.assert(lastPosition < lastCellPosition, 'Something already placed in final cell but tried to place another!');
 

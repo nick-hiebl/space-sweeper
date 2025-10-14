@@ -82,6 +82,7 @@ export type GameAction =
     | { type: 'add-chip'; chips: Omit<Chip, 'id'>[] }
     | { type: 'add-module'; modules: EffectModule[] }
     | { type: 'add-weight'; weights: Weight[] }
+    | { type: 'remove-chip'; chips: Id[] }
     | {
         type: 'update-stats';
         newStats: Partial<Pick<GameState, UpdatableStats>> & Partial<Record<Exclude<keyof GameState, UpdatableStats>, never>>;
