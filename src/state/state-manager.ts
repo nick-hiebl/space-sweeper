@@ -1,5 +1,5 @@
 import { getId } from './initialiser';
-import type { GameAction, GameState, Quantity } from './types';
+import type { GameAction, GameStateWithCampaign, Quantity } from './types';
 
 const readQuantity = (quantity: Quantity): number => {
     if (quantity === 'quantity' || quantity === '-quantity') {
@@ -9,13 +9,14 @@ const readQuantity = (quantity: Quantity): number => {
     return quantity;
 };
 
-export const GameStateManager = (state: GameState, action: GameAction): GameState => {
+export const GameStateManager = <T>(state: GameStateWithCampaign<T>, action: GameAction): GameStateWithCampaign<T> => {
     if (action.type === 'activity-signal') {
-        const activity = state.campaign(state, action);
+        const { activity, campaignState } = state.campaign(state, action);
 
         return {
             ...state,
             currentActivity: activity,
+            campaignData: campaignState,
         };
     } else if (action.type === 'trigger-effects') {
         const pendingState = {

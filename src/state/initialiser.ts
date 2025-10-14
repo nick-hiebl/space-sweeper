@@ -1,5 +1,5 @@
-import { STARTER_GAME } from './campaigns/intro-campaign';
-import type { Chip, EffectModule, GameState, Weight } from './types';
+import type { ActivityManager } from './campaign';
+import type { Chip, EffectModule, GameStateWithCampaign, Weight } from './types';
 
 let startId = 0;
 export const getId = () => {
@@ -42,7 +42,7 @@ const defaultEffectDeck = (): EffectModule[] => {
 	];
 };
 
-export const initialGameState = (): GameState => {
+export const initialGameState = <T>(campaign: ActivityManager<T>, initialCampaign: T): GameStateWithCampaign<T> => {
     return {
 		bag: defaultBag(),
 		energy: 5,
@@ -53,6 +53,7 @@ export const initialGameState = (): GameState => {
 		effectDeck: defaultEffectDeck(),
 		weights: getDefaultWeights(),
 		currentActivity: { type: 'start' },
-		campaign: STARTER_GAME,
+		campaign,
+		campaignData: initialCampaign,
     };
 };

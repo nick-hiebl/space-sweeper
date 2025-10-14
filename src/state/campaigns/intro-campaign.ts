@@ -91,9 +91,12 @@ const ACTIVITY_MAP: Record<CampaignKeys, ActivityWithCondition> = {
     },
 };
 
-export const STARTER_GAME: ActivityManager = (gameState, signal) => {
+export const STARTER_GAME: ActivityManager<undefined> = (gameState, signal) => {
     if (signal.signal === 'finish-start') {
-        return ACTIVITY_MAP.intro.activity;
+        return {
+            activity: ACTIVITY_MAP.intro.activity,
+            campaignState: undefined,
+        };
     }
 
     const currentActivity = Array.from(Object.values(ACTIVITY_MAP)).find(act => act.activity === gameState.currentActivity);
@@ -116,5 +119,8 @@ export const STARTER_GAME: ActivityManager = (gameState, signal) => {
         nextActivity = currentActivity.next;
     }
 
-    return ACTIVITY_MAP[nextActivity].activity;
+    return {
+        activity: ACTIVITY_MAP[nextActivity].activity,
+        campaignState: undefined,
+    };
 };

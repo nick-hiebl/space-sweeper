@@ -2,13 +2,14 @@ import { useReducer } from 'react';
 
 import { Activity } from '../activity';
 import { JumpySprite, Sprite } from '../common/Sprite';
+import { STARTER_GAME } from '../state/campaigns/intro-campaign';
 import { initialGameState } from '../state/initialiser';
 import { GameStateManager } from '../state/state-manager';
 
 import './index.css';
 
 export const Game = () => {
-    const [state, signal] = useReducer(GameStateManager, initialGameState());
+    const [state, signal] = useReducer(GameStateManager, initialGameState(STARTER_GAME, undefined));
 
     return (
         <div id="game">

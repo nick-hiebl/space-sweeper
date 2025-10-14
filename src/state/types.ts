@@ -72,7 +72,11 @@ export type GameState = {
     money: number;
     weights: Weight[];
     currentActivity: Activity;
-    campaign: ActivityManager;
+};
+
+export type GameStateWithCampaign<T> = GameState & {
+    campaign: ActivityManager<T>;
+    campaignData: T;
 };
 
 type UpdatableStats = 'maxEnergy' | 'maxHitPoints' | 'energy' | 'hitPoints' | 'money';

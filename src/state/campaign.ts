@@ -1,7 +1,7 @@
 import { TutorialKey } from '../activity/tutorial/types';
 import { BoardState } from '../board/types';
 
-import { GameState } from './types';
+import type { GameStateWithCampaign } from './types';
 
 export type Activity =
     | { type: 'start' }
@@ -20,4 +20,4 @@ export type ActivitySignal = ActivitySignalCommon & (
     | { signal: 'finish-combiner' }
 );
 
-export type ActivityManager = (gameState: GameState, signal: ActivitySignal) => Activity;
+export type ActivityManager<T> = (gameState: GameStateWithCampaign<T>, signal: ActivitySignal) => { activity: Activity; campaignState: T };
