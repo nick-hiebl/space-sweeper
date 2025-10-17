@@ -115,13 +115,23 @@ export const MAIN_GAME: ActivityManager<CampaignData> = (state, signal) => {
 
         return {
             activity: {
-                type: 'hub',
-                region: newRegion,
+                type: 'board',
+                boardKey: Math.random() < 0.5 ? 'SMALL' : 'Level_0',
             },
             campaignState: {
                 currentRegion: newRegion,
                 pastRegions: state.campaignData.pastRegions.concat(currentRegion),
             },
+        };
+    } else if (signal.signal === 'finish-board') {
+        const { currentRegion } = state.campaignData;
+
+        return {
+            activity: {
+                type: 'hub',
+                region: currentRegion,
+            },
+            campaignState: state.campaignData,
         };
     }
 
