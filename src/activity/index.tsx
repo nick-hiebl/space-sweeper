@@ -3,12 +3,13 @@ import { Shop } from '../shop';
 import type { GameAction, GameState } from '../state/types';
 
 import { Combiner } from './combiner';
+import { Hub } from './hub';
 import { Tutorial } from './tutorial';
 
 type ActivityProps = {
     state: GameState;
     onAction: (action: GameAction) => void;
-}
+};
 
 export const Activity = ({ state, onAction }: ActivityProps) => {
     if (state.currentActivity.type === 'start') {
@@ -34,6 +35,8 @@ export const Activity = ({ state, onAction }: ActivityProps) => {
                 onGameAction={onAction}
             />
         );
+    } else if (state.currentActivity.type === 'hub') {
+        return <Hub state={state} onGameAction={onAction} />;
     }
 
     return null;

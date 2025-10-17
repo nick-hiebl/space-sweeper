@@ -1,0 +1,129 @@
+import type { Activity, ActivityManager, ActivitySignal } from '../campaign';
+
+type PartialRegion = {
+    activities: Activity[];
+    name: string;
+};
+
+type Region = {
+    activities: {
+        activity: Activity;
+        chosen: boolean;
+    }[];
+    name: string;
+    nextRegions: PartialRegion[];
+};
+
+export type HubActivity = { type: 'hub'; region: Region };
+
+export type CampaignData = {
+    currentRegion: Region;
+    pastRegions: Region[];
+};
+
+const randomPartialRegion = (): PartialRegion => {
+    const activities: PartialRegion['activities'] = [
+        { type: 'combiner' },
+        { type: 'shop' },
+    ];
+    return {
+        name: Math.random().toString().slice(2),
+        activities: activities.filter(() => Math.random() > 0.5),
+    };
+};
+
+const randomRegion = (partial: PartialRegion): Region => {
+    const activities: Region['activities'] = partial.activities.map(a => ({
+        activity: a,
+        chosen: false,
+    }));
+    return {
+        name: partial.name,
+        activities,
+        nextRegions: new Array(3).fill(0).map(randomPartialRegion),
+    };
+};
+
+export const initialCampaignData = (): CampaignData => {
+    const firstRegion = randomRegion(randomPartialRegion());
+
+    return {
+        currentRegion: firstRegion,
+        pastRegions: [],
+    };
+}
+
+const FINISHED_ACTIVITY_SIGNAL: ActivitySignal['signal'][] = [
+    'finish-shop',
+    'finish-combiner',
+];
+
+export const MAIN_GAME: ActivityManager<CampaignData> = (state, signal) => {
+    if (signal.signal === 'finish-start') {
+        return {
+            activity: {
+                type: 'hub',
+                region: state.campaignData.currentRegion,
+            },
+            campaignState: state.campaignData,
+        };
+    } else if (signal.signal === 'hub-activity') {
+        const currentRegion = state.campaignData.currentRegion;
+
+        if (!currentRegion.activities.some(a => signal.activity)) {
+            throw new Error('Could not find requested activity');
+        }
+
+        const region: Region = {
+            ...currentRegion,
+            activities: currentRegion.activities.map(activity => {
+                if (activity.activity === signal.activity) {
+                    return {
+                        ...activity,
+                        chosen: true,
+                    };
+                }
+
+                return activity;
+            }),
+        };
+
+        return {
+            activity: signal.activity,
+            campaignState: {
+                ...state.campaignData,
+                currentRegion: region,
+            },
+        };
+    } else if (FINISHED_ACTIVITY_SIGNAL.includes(signal.signal)) {
+        return {
+            activity: {
+                type: 'hub',
+                region: state.campaignData.currentRegion,
+            },
+            campaignState: state.campaignData,
+        };
+    } else if (signal.signal === 'next-hub') {
+        const { currentRegion } = state.campaignData;
+        const nextHub = currentRegion.nextRegions.find(hub => hub.name === signal.hub);
+
+        if (!nextHub) {
+            throw new Error('Could not find hub');
+        }
+
+        const newRegion = randomRegion(nextHub);
+
+        return {
+            activity: {
+                type: 'hub',
+                region: newRegion,
+            },
+            campaignState: {
+                currentRegion: newRegion,
+                pastRegions: state.campaignData.pastRegions.concat(currentRegion),
+            },
+        };
+    }
+
+    throw new Error('Unacceptable signal at this time');
+};

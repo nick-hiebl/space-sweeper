@@ -4,12 +4,16 @@ import { Activity } from '../activity';
 import { JumpySprite, Sprite } from '../common/Sprite';
 import { STARTER_GAME } from '../state/campaigns/intro-campaign';
 import { initialGameState } from '../state/initialiser';
+import { initialCampaignData, MAIN_GAME } from '../state/campaigns/main-campaign';
 import { GameStateManager } from '../state/state-manager';
 
 import './index.css';
 
 export const Game = () => {
-    const [state, signal] = useReducer(GameStateManager, initialGameState(STARTER_GAME, undefined));
+    const [state, signal] = useReducer(GameStateManager, initialGameState(
+        // STARTER_GAME, undefined,
+        MAIN_GAME, initialCampaignData(),
+    ));
 
     return (
         <div id="game">
