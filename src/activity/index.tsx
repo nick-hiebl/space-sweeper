@@ -2,6 +2,7 @@ import { Board } from '../board';
 import { Shop } from '../shop';
 import type { GameAction, GameState } from '../state/types';
 
+import { Choice } from './choice';
 import { Combiner } from './combiner';
 import { Hub } from './hub';
 import { Tutorial } from './tutorial';
@@ -37,6 +38,8 @@ export const Activity = ({ state, onAction }: ActivityProps) => {
         );
     } else if (state.currentActivity.type === 'hub') {
         return <Hub state={state} onGameAction={onAction} />;
+    } else if (state.currentActivity.type === 'choice') {
+        return <Choice state={state} onGameAction={onAction} />;
     }
 
     return null;

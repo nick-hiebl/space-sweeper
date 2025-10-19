@@ -2,9 +2,9 @@ import { useReducer } from 'react';
 
 import { Activity } from '../activity';
 import { JumpySprite, Sprite } from '../common/Sprite';
-import { STARTER_GAME } from '../state/campaigns/intro-campaign';
-import { initialGameState } from '../state/initialiser';
+// import { STARTER_GAME } from '../state/campaigns/intro-campaign';
 import { initialCampaignData, MAIN_GAME } from '../state/campaigns/main-campaign';
+import { initialGameState } from '../state/initialiser';
 import { GameStateManager } from '../state/state-manager';
 
 import './index.css';

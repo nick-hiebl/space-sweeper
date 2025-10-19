@@ -22,9 +22,17 @@ export type CampaignData = {
 };
 
 const randomPartialRegion = (): PartialRegion => {
-    const activities: PartialRegion['activities'] = [
+    const activities: Activity[] = [
         { type: 'combiner' },
         { type: 'shop' },
+        {
+            type: 'choice',
+            choices: [
+                { style: 'red', quantity: 1 },
+                { style: 'blue', quantity: 1 },
+                { style: 'gear', quantity: 1 },
+            ],
+        },
     ];
     return {
         name: Math.random().toString().slice(2),
