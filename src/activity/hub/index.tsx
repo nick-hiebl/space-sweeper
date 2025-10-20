@@ -42,6 +42,10 @@ export const Hub = ({ onGameAction, state }: Props) => {
                         key={index}
                         onClick={() => {
                             onGameAction({
+                                type: 'trigger-effects',
+                                effects: [{ type: 'energy', energyShift: state.maxEnergy }],
+                            });
+                            onGameAction({
                                 type: 'activity-signal',
                                 signal: 'next-hub',
                                 hub: nextRegion.name,
