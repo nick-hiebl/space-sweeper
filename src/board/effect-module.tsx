@@ -1,5 +1,5 @@
 import { Sprite } from '../common/Sprite';
-import type { Effect as EffectType, EffectModule as EffectModuleType } from '../state/types';
+import type { Effect as EffectType, EffectModule as EffectModuleType, Effect, PatternEffect, Style } from '../state/types';
 
 type EffectModuleProps = {
     module: EffectModuleType;
@@ -57,6 +57,10 @@ export const DisplayEffect = ({ effect, size }: { effect: EffectType, size?: 're
 };
 
 export const EffectModule = ({ isHighlighted, module }: EffectModuleProps) => {
+    const anyEffects = (module.playEffects ?? [] as (Effect | PatternEffect)[])
+        .concat(module.drawEffects ?? [])
+        .concat(module.patternEffects ?? []);
+
     return (
         <div className="effect-module stack-center" data-ishighlighted={isHighlighted}>
             <Sprite type="chip" chip={{ style: module.style }} />
@@ -78,7 +82,27 @@ export const EffectModule = ({ isHighlighted, module }: EffectModuleProps) => {
                     ))}
                 </div>
             )}
-            {!module.drawEffects && !module.playEffects && (
+            {module.patternEffects && (
+                <div className="stack">
+                    {module.patternEffects.map((patternEffect, index) => (
+                        <div className="inline-center" key={index}>
+                            <div className="inline-center">
+                                {patternEffect.pattern.reduce((iter: Style[], style: Style) => {
+                                    return [style].concat(iter);
+                                }, []).map((style, index) => (
+                                    <Sprite key={index} type="chip" chip={{ style }} size="32" />
+                                ))}
+                            </div>
+                            <Sprite type="ui-icon" icon="arrow" size="32" />
+                            {patternEffect.effects.map((effect, index) => (
+                                <DisplayEffect key={index} effect={effect} />
+                            ))}
+                        </div>
+
+                    ))}
+                </div>
+            )}
+            {anyEffects.length === 0 && (
                 <Sprite type="ui-icon" icon="do-nothing" />
             )}
         </div>

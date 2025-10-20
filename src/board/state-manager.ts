@@ -6,6 +6,43 @@ import type { Chip, Effect, EffectModule, GameState, MoveEffect, Style, Weight }
 import { BOARD_MAP } from './board-data';
 import type { Board, BoardAction, BoardState, Cell, ImmediateState, Position } from './types';
 
+export const getPlayEffectsFromPlacing = (state: BoardState, chip: Chip): Effect[] => {
+    const thisRule = state.effectModules.find(({ style }) => style === chip.style);
+
+    const playEffects = (thisRule?.playEffects ?? []);
+
+    const alreadyPlayed = state.played.slice().concat([[chip, 100]]);
+    alreadyPlayed.reverse();
+
+    const stack: Style[] = alreadyPlayed.map(([{ style }]) => style);
+
+    const patternEffects: Effect[] = [];
+
+    alreadyPlayed.forEach(([priorChip], index) => {
+        const relevantRule = state.effectModules.find(({ style }) => style === priorChip.style);
+
+        const triggeredPatterns = (relevantRule?.patternEffects ?? []).filter(patternEffect => {
+            const matchingFragment = stack.slice(0, patternEffect.pattern.length);
+
+            // Lengths must match
+            if (matchingFragment.length !== patternEffect.pattern.length) {
+                return false;
+            }
+
+            // Must be most recent instance of this style in the stack
+            if (index > matchingFragment.findIndex(style => style === priorChip.style)) {
+                return false;
+            }
+
+            return matchingFragment.every((style, index) => patternEffect.pattern[index] === style);
+        });
+
+        patternEffects.push(...triggeredPatterns.flatMap(patternEffect => patternEffect.effects.map(e => resolveEffect(e, priorChip))));
+    });
+
+    return playEffects.concat(patternEffects);
+};
+
 export const resolvePlacementDistance = (state: BoardState, chip: Chip): Position => {
     if (state.action.type !== 'drawing' || !state.action.options.includes(chip)) {
         console.error('Calculating placement outside of drawing phase, or with invalid chip', state, chip);
@@ -15,9 +52,7 @@ export const resolvePlacementDistance = (state: BoardState, chip: Chip): Positio
     const { cells } = state.board;
     const lastCellPosition = last(cells).position;
 
-    const thisRule = state.effectModules.find(({ style }) => style === chip.style);
-
-    const playBonusDistance = (thisRule?.playEffects ?? [])
+    const playBonusDistance = getPlayEffectsFromPlacing(state, chip)
         .filter(effect => effect.type === 'move')
         .map(effect => resolveEffect(effect, chip))
         .reduce((total, effect) => {

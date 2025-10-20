@@ -5,7 +5,7 @@ import { last, resolveEffect } from '../state/common';
 import type { Chip, Effect, GameAction, GameState, Style } from '../state/types';
 
 import { DisplayEffect, EffectModule } from './effect-module';
-import { StateManager, defaultBoardState, resolvePlacementDistance } from './state-manager';
+import { StateManager, defaultBoardState, getPlayEffectsFromPlacing, resolvePlacementDistance } from './state-manager';
 import type { Cell, PickingModuleState } from './types';
 
 import './index.css';
@@ -194,10 +194,12 @@ export const Board = ({ onGameAction, state }: Props) => {
                                                     throw new Error('No relevant rule!');
                                                 }
 
-                                                if (relevantRule.playEffects) {
+                                                const effectsFromPlay = getPlayEffectsFromPlacing(boardState, chip).map(effect => resolveEffect(effect, chip));
+
+                                                if (effectsFromPlay.length > 0) {
                                                     onGameAction({
                                                         type: 'trigger-effects',
-                                                        effects: relevantRule.playEffects.map(effect => resolveEffect(effect, chip)),
+                                                        effects: effectsFromPlay,
                                                     });
                                                 }
 

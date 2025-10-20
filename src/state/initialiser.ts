@@ -17,7 +17,9 @@ const defaultBag = (): Chip[] => {
 };
 
 const getDefaultWeights = (): Weight[] => {
-	return [];
+	return [
+		{ style: 'explosion', quantity: 1 },
+	];
 };
 
 const defaultEffectDeck = (): EffectModule[] => {
@@ -37,13 +39,23 @@ const defaultEffectDeck = (): EffectModule[] => {
 		},
 		{
 			style: 'asteroid',
-			playEffects: [{ type: 'money', moneyShift: 'quantity' }],
+			// playEffects: [{ type: 'money', moneyShift: 'quantity' }],
+			patternEffects: [
+				{
+					pattern: ['asteroid', 'fuel'],
+					effects: [{ type: 'money', moneyShift: 1 }],
+				},
+				{
+					pattern: ['asteroid', 'asteroid'],
+					effects: [{ type: 'money', moneyShift: 10 }],
+				},
+			],
 		},
 	];
 };
 
 export const initialGameState = <T>(campaign: ActivityManager<T>, initialCampaign: T): GameStateWithCampaign<T> => {
-    return {
+	return {
 		bag: defaultBag(),
 		energy: 5,
 		maxEnergy: 5,
@@ -55,5 +67,5 @@ export const initialGameState = <T>(campaign: ActivityManager<T>, initialCampaig
 		currentActivity: { type: 'start' },
 		campaign,
 		campaignData: initialCampaign,
-    };
+	};
 };

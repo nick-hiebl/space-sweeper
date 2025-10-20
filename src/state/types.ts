@@ -56,10 +56,18 @@ export type Effect =
     | ForcedEffect
     | MoveEffect;
 
+export type Pattern = Style[];
+
+export type PatternEffect = {
+    pattern: Pattern;
+    effects: Effect[];
+};
+
 export type EffectModule = {
     style: Style;
     playEffects?: Effect[];
     drawEffects?: Effect[];
+    patternEffects?: PatternEffect[];
 };
 
 export type GameState = {
