@@ -1,15 +1,29 @@
 import type { ActivityManager } from './campaign';
-import type { Chip, EffectModule, GameStateWithCampaign, Weight } from './types';
+import type { Chip, EffectModule, GameState, GameStateWithCampaign, Weight } from './types';
 
 let startId = 0;
 export const getId = () => {
 	return startId++;
 };
 
-const defaultBag = (): Chip[] => {
+const smallBag = (): Chip[] => {
 	return [
 		{ style: 'gear', quantity: 1, id: getId() },
 		{ style: 'fuel', quantity: 1, id: getId() },
+		{ style: 'asteroid', quantity: 1, id: getId() },
+		{ style: 'asteroid', quantity: 2, id: getId() },
+		{ style: 'asteroid', quantity: 3, id: getId() },
+	];
+};
+
+const bigBag = (): Chip[] => {
+	return [
+		{ style: 'gear', quantity: 1, id: getId() },
+		{ style: 'gear', quantity: 1, id: getId() },
+		{ style: 'gear', quantity: 1, id: getId() },
+		{ style: 'fuel', quantity: 1, id: getId() },
+		{ style: 'fuel', quantity: 1, id: getId() },
+		{ style: 'asteroid', quantity: 1, id: getId() },
 		{ style: 'asteroid', quantity: 1, id: getId() },
 		{ style: 'asteroid', quantity: 2, id: getId() },
 		{ style: 'asteroid', quantity: 3, id: getId() },
@@ -39,31 +53,58 @@ const defaultEffectDeck = (): EffectModule[] => {
 		},
 		{
 			style: 'asteroid',
-			// playEffects: [{ type: 'money', moneyShift: 'quantity' }],
+			playEffects: [{ type: 'money', moneyShift: 'quantity' }],
 			patternEffects: [
 				{
-					pattern: ['asteroid', 'fuel'],
-					effects: [{ type: 'money', moneyShift: 1 }],
-				},
-				{
 					pattern: ['asteroid', 'asteroid'],
-					effects: [{ type: 'money', moneyShift: 10 }],
+					effects: [
+						{ type: 'money', moneyShift: 2 },
+					],
+				},
+			],
+		},
+		{
+			style: 'blue',
+			patternEffects: [
+				{
+					pattern: ['blue', 'explosion'],
+					effects: [
+						{ type: 'move', distance: 2 },
+					],
 				},
 			],
 		},
 	];
 };
 
-export const initialGameState = <T>(campaign: ActivityManager<T>, initialCampaign: T): GameStateWithCampaign<T> => {
+type GamePrefill = Pick<GameState, 'bag' | 'maxEnergy' | 'maxHitPoints' | 'effectDeck' | 'weights'>;
+
+export const SHORT_GAME_DATA: GamePrefill = {
+	bag: smallBag(),
+	maxEnergy: 5,
+	maxHitPoints: 3,
+	effectDeck: defaultEffectDeck(),
+	weights: [],
+};
+
+const NORMAL_GAME_DATA: GamePrefill = {
+	bag: bigBag(),
+	maxEnergy: 8,
+	maxHitPoints: 4,
+	effectDeck: defaultEffectDeck(),
+	weights: getDefaultWeights(),
+};
+
+export const initialGameState = <T>(campaign: ActivityManager<T>, initialCampaign: T, gameSettings = NORMAL_GAME_DATA): GameStateWithCampaign<T> => {
 	return {
-		bag: defaultBag(),
-		energy: 5,
-		maxEnergy: 5,
-		hitPoints: 3,
-		maxHitPoints: 3,
+		bag: gameSettings.bag,
+		energy: gameSettings.maxEnergy,
+		maxEnergy: gameSettings.maxEnergy,
+		hitPoints: gameSettings.maxHitPoints,
+		maxHitPoints: gameSettings.maxHitPoints,
 		money: 0,
-		effectDeck: defaultEffectDeck(),
-		weights: getDefaultWeights(),
+		effectDeck: gameSettings.effectDeck,
+		weights: gameSettings.weights,
 		currentActivity: { type: 'start' },
 		campaign,
 		campaignData: initialCampaign,

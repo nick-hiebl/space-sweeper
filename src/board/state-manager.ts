@@ -29,7 +29,7 @@ export const getPlayEffectsFromPlacing = (state: BoardState, chip: Chip): Effect
                 return false;
             }
 
-            // Must be most recent instance of this style in the stack
+            // The chip must be most recent instance of this style in the stack
             if (index > matchingFragment.findIndex(style => style === priorChip.style)) {
                 return false;
             }
