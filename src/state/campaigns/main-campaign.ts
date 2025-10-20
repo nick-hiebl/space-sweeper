@@ -33,6 +33,25 @@ const randomPartialRegion = (): PartialRegion => {
                 { style: 'gear', quantity: 1 },
             ],
         },
+        {
+            type: 'choice',
+            modules: [
+                { style: 'fuel', playEffects: [{ type: 'energy', energyShift: 2 }] },
+                {
+                    style: 'blue',
+                    patternEffects: [
+                        {
+                            pattern: ['asteroid', 'blue'],
+                            effects: [{ type: 'health', healthShift: 1 }],
+                        },
+                        {
+                            pattern: ['fuel', 'blue'],
+                            effects: [{ type: 'money', moneyShift: 'quantity' }],
+                        },
+                    ],
+                },
+            ],
+        },
     ];
     return {
         name: Math.random().toString().slice(2),

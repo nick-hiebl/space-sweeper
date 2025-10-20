@@ -1,10 +1,9 @@
-import { TutorialKey } from '../activity/tutorial/types';
-import { BoardState } from '../board/types';
-import { SoldChip } from '../shop/types';
+import type { TutorialKey } from '../activity/tutorial/types';
+import type { BoardState } from '../board/types';
+import type { SoldChip } from '../shop/types';
 
-import { HubActivity } from './campaigns/main-campaign';
-
-import type { GameStateWithCampaign } from './types';
+import type { HubActivity } from './campaigns/main-campaign';
+import type { EffectModule, GameStateWithCampaign } from './types';
 
 export type Activity =
     | { type: 'start' }
@@ -13,7 +12,7 @@ export type Activity =
     | { type: 'tutorial'; key: TutorialKey }
     | { type: 'combiner' }
     | HubActivity
-    | { type: 'choice'; choices: SoldChip[] };
+    | { type: 'choice'; choices?: SoldChip[]; modules?: EffectModule[] };
 
 type ActivitySignalCommon = { type: 'activity-signal' };
 

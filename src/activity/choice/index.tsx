@@ -1,4 +1,6 @@
 import { useState } from 'react';
+
+import { EffectModule } from '../../board/effect-module';
 import { ChipDisplay } from '../../common/ChipDisplay';
 import type { GameAction, GameState } from '../../state/types';
 
@@ -14,7 +16,7 @@ export const Choice = ({ onGameAction, state }: Props) => {
         return null;
     }
 
-    const { choices } = state.currentActivity;
+    const { choices, modules } = state.currentActivity;
 
     return (
         <div>
@@ -22,23 +24,44 @@ export const Choice = ({ onGameAction, state }: Props) => {
             <p>
                 Choose one to add to your bag.
             </p>
-            <div>
-                {choices.map((choice, index) => (
-                    <button
-                        key={index}
-                        disabled={done}
-                        onClick={() => {
-                            onGameAction({
-                                type: 'add-chip',
-                                chips: [choice],
-                            });
-                            setDone(true);
-                        }}
-                    >
-                        <ChipDisplay chip={choice} />
-                    </button>
-                ))}
-            </div>
+            {choices && (
+                <div className="inline-center">
+                    {choices.map((choice, index) => (
+                        <button
+                            key={index}
+                            disabled={done}
+                            onClick={() => {
+                                onGameAction({
+                                    type: 'add-chip',
+                                    chips: [choice],
+                                });
+                                setDone(true);
+                            }}
+                        >
+                            <ChipDisplay chip={choice} />
+                        </button>
+                    ))}
+                </div>
+            )}
+            {modules && (
+                <div className="inline-center">
+                    {modules.map((module, index) => (
+                        <button
+                            key={index}
+                            disabled={done}
+                            onClick={() => {
+                                onGameAction({
+                                    type: 'add-module',
+                                    modules: [module],
+                                });
+                                setDone(true);
+                            }}
+                        >
+                            <EffectModule module={module} />
+                        </button>
+                    ))}
+                </div>
+            )}
             <div>
                 <button disabled={done} onClick={() => setDone(true)}>Pass</button>
             </div>
