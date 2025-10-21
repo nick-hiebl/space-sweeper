@@ -49,26 +49,26 @@ type PositionData = {
     height: number;
 };
 
-const COMMON = { width: 16, height: 16 };
+const COMMON = { width: 128, height: 128 };
 
 const POSITION_DATA: Record<SpriteId, PositionData> = {
     'chip:fuel': { x: 0, y: 0, ...COMMON },
-    'chip:explosion': { x: 16, y: 0, ...COMMON },
-    'chip:asteroid': { x: 32, y: 0, ...COMMON },
-    'chip:gear': { x: 48, y: 0, ...COMMON },
-    'chip:red': { x: 64, y: 0, ...COMMON },
-    'chip:blue': { x: 80, y: 0, ...COMMON },
-    'ui-icon:forced': { x: 0, y: 96, ...COMMON },
-    'ui-icon:heart': { x: 0, y: 112, ...COMMON },
-    'ui-icon:heart-empty': { x: 16, y: 112, ...COMMON },
-    'ui-icon:energy': { x: 32, y: 112, ...COMMON },
-    'ui-icon:energy-empty': { x: 48, y: 112, ...COMMON },
-    'ui-icon:money': { x: 64, y: 112, ...COMMON },
-    'ui-icon:no-money': { x: 80, y: 112, ...COMMON },
-    'ui-icon:draw': { x: 16, y: 96, ...COMMON },
-    'ui-icon:play': { x: 32, y: 96, ...COMMON },
-    'ui-icon:do-nothing': { x: 48, y: 96, ...COMMON },
-    'ui-icon:arrow': { x: 240, y: 112, ...COMMON },
+    'chip:explosion': { x: 128, y: 0, ...COMMON },
+    'chip:asteroid': { x: 256, y: 0, ...COMMON },
+    'chip:gear': { x: 384, y: 0, ...COMMON },
+    'chip:red': { x: 512, y: 0, ...COMMON },
+    'chip:blue': { x: 640, y: 0, ...COMMON },
+    'ui-icon:forced': { x: 0, y: 768, ...COMMON },
+    'ui-icon:heart': { x: 0, y: 896, ...COMMON },
+    'ui-icon:heart-empty': { x: 128, y: 896, ...COMMON },
+    'ui-icon:energy': { x: 256, y: 896, ...COMMON },
+    'ui-icon:energy-empty': { x: 384, y: 896, ...COMMON },
+    'ui-icon:money': { x: 512, y: 896, ...COMMON },
+    'ui-icon:no-money': { x: 640, y: 896, ...COMMON },
+    'ui-icon:draw': { x: 128, y: 768, ...COMMON },
+    'ui-icon:play': { x: 256, y: 768, ...COMMON },
+    'ui-icon:do-nothing': { x: 384, y: 768, ...COMMON },
+    'ui-icon:arrow': { x: 1920, y: 896, ...COMMON },
 };
 
 const LABEL_DATA: Record<SpriteId, string> = {

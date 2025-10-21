@@ -29,16 +29,8 @@
     justify-content: center;
 }
 
-.grid-item[data-hovered=true] > .cell::after {
-    content: '';
-    border-radius: 8px;
-    width: 52px;
-    height: 52px;
-    box-sizing: border-box;
-    border-width: 4px;
-    border-style: dashed;
-    border-color: #4cf;
-    animation: emphasisColor 2s linear infinite;
+.hover-preview {
+    opacity: 0.4;
 }
 
 @keyframes emphasisColor {

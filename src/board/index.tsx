@@ -1,6 +1,7 @@
 import { useEffect, useReducer, useState } from 'react';
 
 import { ChipDisplay } from '../common/ChipDisplay';
+import { Sprite } from '../common/Sprite';
 import { last, resolveEffect } from '../state/common';
 import type { Chip, Effect, GameAction, GameState, Style } from '../state/types';
 
@@ -26,13 +27,14 @@ type CellComponentProps = {
     onMouseEnter?: () => void;
     onMouseLeave?: () => void;
     isHovered?: boolean;
+    hoveredStyle?: Style;
 };
 
 const IMAGE_SCALE = 4;
 
-const CellComponent = ({ cell, chip, isHovered, onMouseEnter, onMouseLeave }: CellComponentProps) => {
+const CellComponent = ({ cell, chip, hoveredStyle, isHovered, onMouseEnter, onMouseLeave }: CellComponentProps) => {
     return (
-        <li className="grid-item" data-hovered={isHovered}>
+        <li className="grid-item">
             <div className="cell" style={{ top: cell.offset.y * IMAGE_SCALE, left: cell.offset.x * IMAGE_SCALE }}>
                 {cell.effects.length > 0 && (
                     <div className="cell-effects-container">
@@ -48,6 +50,11 @@ const CellComponent = ({ cell, chip, isHovered, onMouseEnter, onMouseLeave }: Ce
                         onMouseEnter={() => onMouseEnter?.()}
                         onMouseLeave={() => onMouseLeave?.()}
                     />
+                )}
+                {!chip && isHovered && hoveredStyle && (
+                    <div className="hover-preview">
+                        <Sprite type="chip" chip={{ style: hoveredStyle }} size="48" />
+                    </div>
                 )}
             </div>
         </li>
@@ -121,6 +128,7 @@ export const Board = ({ onGameAction, state }: Props) => {
                                 cell={cell}
                                 chip={chip}
                                 isHovered={cell.position === hoveredPlace}
+                                hoveredStyle={hoveredStyle}
                                 onMouseEnter={chip ? () => setHoveredStyle(chip.style) : undefined}
                                 onMouseLeave={chip ? () => setHoveredStyle(undefined) : undefined}
                             />
@@ -186,6 +194,22 @@ export const Board = ({ onGameAction, state }: Props) => {
                                     return (
                                         <button
                                             key={chip.id}
+                                            onMouseEnter={() => {
+                                                setHoveredStyle(chip.style);
+                                                setHoveredPlace(willLandOn);
+                                            }}
+                                            onMouseLeave={() => {
+                                                setHoveredStyle(undefined);
+                                                setHoveredPlace(undefined);
+                                            }}
+                                            onFocus={() => {
+                                                setHoveredStyle(chip.style);
+                                                setHoveredPlace(willLandOn);
+                                            }}
+                                            onBlur={() => {
+                                                setHoveredStyle(undefined);
+                                                setHoveredPlace(undefined);
+                                            }}
                                             onClick={() => {
                                                 onBoardAction({ type: 'choose', chip });
 
@@ -212,17 +236,7 @@ export const Board = ({ onGameAction, state }: Props) => {
                                                 }
                                             }}
                                         >
-                                            <ChipDisplay
-                                                onMouseEnter={() => {
-                                                    setHoveredStyle(chip.style);
-                                                    setHoveredPlace(willLandOn);
-                                                }}
-                                                onMouseLeave={() => {
-                                                    setHoveredStyle(undefined);
-                                                    setHoveredPlace(undefined);
-                                                }}
-                                                chip={chip}
-                                            />
+                                            <ChipDisplay chip={chip} />
                                         </button>
                                     );
                                 })}
