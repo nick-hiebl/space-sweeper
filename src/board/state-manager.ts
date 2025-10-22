@@ -1,4 +1,4 @@
-import { selectRandom } from '../common/random';
+import { selectRandom, selectRandomN } from '../common/random';
 import { last, resolveEffect } from '../state/common';
 import { getId } from '../state/initialiser';
 import type { Chip, Effect, EffectModule, GameState, MoveEffect, Style, Weight } from '../state/types';
@@ -167,13 +167,13 @@ export const StateManager = (initialGameState: GameState) => (state: BoardState,
     throw new Error('UnacceptableAction');
 };
 
-const getDefaultBoard = (boardKey: string): Board => {
+const getDefaultBoard = (boardKey: string, scatteredEffects: Effect[]): Board => {
     const board = BOARD_MAP.get(boardKey);
     if (!board) {
         throw new Error(`Cannot find level: '${boardKey}'`);
     }
 
-    if (boardKey === 'SMALL') {
+    if (boardKey === 'SMALL' && scatteredEffects.length === 0) {
         return {
             ...board,
             cells: board.cells.map<Cell>(cell => cell.position === 5
@@ -183,7 +183,22 @@ const getDefaultBoard = (boardKey: string): Board => {
         };
     }
 
-    return board;
+    const availableCells = selectRandomN(board.cells, scatteredEffects.length);
+
+    return {
+        ...board,
+        cells: board.cells.map<Cell>(cell => {
+            const specialIndex = availableCells.findIndex(c => c === cell);
+            if (specialIndex === -1) {
+                return cell;
+            }
+
+            return {
+                ...cell,
+                effects: [scatteredEffects[specialIndex]],
+            };
+        }),
+    };
 };
 
 const DEFAULT_MODULE = (style: Style): EffectModule => {
@@ -225,7 +240,7 @@ export const defaultBoardState = (state: GameState): BoardState => {
     return {
         bag: state.bag,
         effectModules: effectModules,
-        board: getDefaultBoard(state.currentActivity.boardKey),
+        board: getDefaultBoard(state.currentActivity.boardKey, state.currentActivity.scatteredEffects ?? []),
         played: [],
         action: initialAction,
         weights: state.weights.slice(),

@@ -1,5 +1,6 @@
 import type { ActivityManager, ActivitySignal } from '../campaign';
 import { selectRandom } from '../../common/random';
+import { Effect } from '../types';
 
 import { type Region, randomPartialRegion, randomRegion } from './hub-worlds';
 
@@ -26,6 +27,14 @@ const FINISHED_ACTIVITY_SIGNAL: ActivitySignal['signal'][] = [
 
 const randomBoard = () => {
     return selectRandom(['Level_0', 'SMALL', 'Swirl']);
+};
+
+const randomOnBoardEffect = () => {
+    return selectRandom<Effect>([
+        { type: 'energy', energyShift: Math.random() < 0.5 ? -1 : 1 },
+        { type: 'health', healthShift: Math.random() < 0.5 ? -1 : 1 },
+        { type: 'money', moneyShift: Math.random() < 0.5 ? -2 : 2 },
+    ]);
 };
 
 export const MAIN_GAME: ActivityManager<CampaignData> = (state, signal) => {
@@ -87,6 +96,7 @@ export const MAIN_GAME: ActivityManager<CampaignData> = (state, signal) => {
             activity: {
                 type: 'board',
                 boardKey: randomBoard(),
+                scatteredEffects: new Array(3).fill(0).map(randomOnBoardEffect),
             },
             campaignState: {
                 currentRegion: newRegion,

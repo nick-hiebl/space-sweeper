@@ -3,11 +3,11 @@ import type { BoardState } from '../board/types';
 import type { SoldChip } from '../shop/types';
 
 import type { HubActivity } from './campaigns/main-campaign';
-import type { EffectModule, GameStateWithCampaign } from './types';
+import type { Effect, EffectModule, GameStateWithCampaign } from './types';
 
 export type Activity =
     | { type: 'start' }
-    | { type: 'board'; boardKey: string }
+    | { type: 'board'; boardKey: string; scatteredEffects?: Effect[] }
     | { type: 'shop' }
     | { type: 'tutorial'; key: TutorialKey }
     | { type: 'combiner' }
