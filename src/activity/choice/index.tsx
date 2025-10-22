@@ -11,6 +11,7 @@ type Props = {
 
 export const Choice = ({ onGameAction, state }: Props) => {
     const [done, setDone] = useState(false);
+    const [initiallyOwnedModules] = useState(state.effectDeck);
 
     if (state.currentActivity.type !== 'choice') {
         return null;
@@ -47,7 +48,7 @@ export const Choice = ({ onGameAction, state }: Props) => {
                 <div className="inline-center">
                     {modules
                         .filter(module => {
-                            return !state.effectDeck.includes(module)
+                            return !initiallyOwnedModules.includes(module)
                         })
                         .map((module, index) => (
                             <button

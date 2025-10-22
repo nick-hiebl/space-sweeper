@@ -183,19 +183,19 @@ const getDefaultBoard = (boardKey: string, scatteredEffects: Effect[]): Board =>
         };
     }
 
-    const availableCells = selectRandomN(board.cells, scatteredEffects.length);
+    const effectCells = selectRandomN(board.cells, scatteredEffects.length);
+    const markerCells = selectRandomN(board.cells.filter(cell => !effectCells.includes(cell)), 3);
 
     return {
         ...board,
         cells: board.cells.map<Cell>(cell => {
-            const specialIndex = availableCells.findIndex(c => c === cell);
-            if (specialIndex === -1) {
-                return cell;
-            }
+            const specialIndex = effectCells.findIndex(c => c === cell);
+            const markerIndex = markerCells.findIndex(c => c === cell);
 
             return {
                 ...cell,
-                effects: [scatteredEffects[specialIndex]],
+                effects: specialIndex >= 0 ? cell.effects.concat([scatteredEffects[specialIndex]]) : cell.effects,
+                markerNumber: markerIndex >= 0 ? markerIndex + 1 : undefined,
             };
         }),
     };

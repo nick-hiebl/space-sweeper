@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import type { GameAction, GameState } from '../../state/types';
 
 type Props = {
@@ -12,17 +14,27 @@ export const Hub = ({ onGameAction, state }: Props) => {
 
     const { region } = state.currentActivity;
 
+    const { energy } = region;
+
+    const activitiesCompleted = region.activities.filter(a => a.chosen).length;
+
+    const disabled = activitiesCompleted >= energy;
+
     return (
         <div>
             <h1>
                 {region.name}
             </h1>
             <h2>Activities</h2>
+            <p>
+                You have energy for {energy} {energy === 1 ? 'activity' : 'activities'}.
+                You have already completed {activitiesCompleted} {activitiesCompleted === 1 ? 'activity' : 'activities'}.
+            </p>
             <div className="inline-center gap-8px">
                 {region.activities.map(({ activity, chosen }, index) => (
                     <button
                         key={index}
-                        disabled={chosen}
+                        disabled={chosen || disabled}
                         onClick={() => {
                             onGameAction({
                                 type: 'activity-signal',

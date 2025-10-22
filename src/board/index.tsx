@@ -43,6 +43,13 @@ const CellComponent = ({ cell, chip, hoveredStyle, isHovered, onMouseEnter, onMo
                         ))}
                     </div>
                 )}
+                {cell.markerNumber && (
+                    <div className="cell-effects-container">
+                        <div className="marker-number">
+                            {cell.markerNumber}
+                        </div>
+                    </div>
+                )}
                 {chip && (
                     <ChipDisplay
                         size="64"

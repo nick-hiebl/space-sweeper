@@ -10,6 +10,16 @@
     position: absolute;
 }
 
+.marker-number {
+    background-color: black;
+    color: gold;
+    font-weight: bold;
+    text-align: center;
+    display: flex;
+    line-height: 1;
+    padding: 4px;
+}
+
 .board-list {
     list-style-type: none;
     padding: 0;

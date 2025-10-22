@@ -1,4 +1,6 @@
+import { Cell } from '../../board/types';
 import type { ActivityManager, ActivitySignal } from '../campaign';
+import { last } from '../common';
 import { selectRandom } from '../../common/random';
 import { Effect } from '../types';
 
@@ -12,7 +14,7 @@ export type CampaignData = {
 };
 
 export const initialCampaignData = (): CampaignData => {
-    const firstRegion = randomRegion(randomPartialRegion());
+    const firstRegion = randomRegion(randomPartialRegion(), 2);
 
     return {
         currentRegion: firstRegion,
@@ -49,7 +51,7 @@ export const MAIN_GAME: ActivityManager<CampaignData> = (state, signal) => {
     } else if (signal.signal === 'hub-activity') {
         const currentRegion = state.campaignData.currentRegion;
 
-        if (!currentRegion.activities.some(a => signal.activity)) {
+        if (!currentRegion.activities.some(a => a.activity === signal.activity)) {
             throw new Error('Could not find requested activity');
         }
 
@@ -90,7 +92,7 @@ export const MAIN_GAME: ActivityManager<CampaignData> = (state, signal) => {
             throw new Error('Could not find hub');
         }
 
-        const newRegion = randomRegion(nextHub);
+        const newRegion = randomRegion(nextHub, 0);
 
         return {
             activity: {
@@ -106,12 +108,29 @@ export const MAIN_GAME: ActivityManager<CampaignData> = (state, signal) => {
     } else if (signal.signal === 'finish-board') {
         const { currentRegion } = state.campaignData;
 
+        const lastPlayedIndex = last(signal.boardState.played)?.[1] ?? -1;
+
+        const passedMarkers = signal.boardState.board.cells
+            .map<[Cell, number]>((cell, index) => [cell, index])
+            .filter(([cell]) => (cell.markerNumber ?? 0) > 0)
+            .filter(([, index]) => index <= lastPlayedIndex);
+
+        const greatestPassedMarker = last(passedMarkers)?.[0]?.markerNumber ?? 0;
+
+        const updatedRegion = {
+            ...currentRegion,
+            energy: greatestPassedMarker,
+        };
+
         return {
             activity: {
                 type: 'hub',
-                region: currentRegion,
+                region: updatedRegion,
             },
-            campaignState: state.campaignData,
+            campaignState: {
+                ...state.campaignData,
+                currentRegion: updatedRegion,
+            },
         };
     }
 

@@ -12,6 +12,7 @@ export type Region = {
         activity: Activity;
         chosen: boolean;
     }[];
+    energy: number;
     name: string;
     nextRegions: PartialRegion[];
 };
@@ -76,7 +77,7 @@ export const randomPartialRegion = (): PartialRegion => {
     };
 };
 
-export const randomRegion = (partial: PartialRegion): Region => {
+export const randomRegion = (partial: PartialRegion, energy: number): Region => {
     const activities: Region['activities'] = partial.activities.map(a => ({
         activity: a,
         chosen: false,
@@ -85,5 +86,6 @@ export const randomRegion = (partial: PartialRegion): Region => {
         name: partial.name,
         activities,
         nextRegions: new Array(3).fill(0).map(randomPartialRegion),
+        energy,
     };
 };

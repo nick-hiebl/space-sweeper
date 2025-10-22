@@ -6,6 +6,7 @@ export type Cell = {
     offset: { x: number; y: number };
     position: Position;
     effects: Effect[];
+    markerNumber?: number;
 };
 
 export type Board = {
