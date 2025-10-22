@@ -1,77 +1,13 @@
-import type { Activity, ActivityManager, ActivitySignal } from '../campaign';
+import type { ActivityManager, ActivitySignal } from '../campaign';
 import { selectRandom } from '../../common/random';
-import { EffectModule } from '../types';
 
-type PartialRegion = {
-    activities: Activity[];
-    name: string;
-};
-
-type Region = {
-    activities: {
-        activity: Activity;
-        chosen: boolean;
-    }[];
-    name: string;
-    nextRegions: PartialRegion[];
-};
+import { type Region, randomPartialRegion, randomRegion } from './hub-worlds';
 
 export type HubActivity = { type: 'hub'; region: Region };
 
 export type CampaignData = {
     currentRegion: Region;
     pastRegions: Region[];
-};
-
-const FUEL_2_MODULE: EffectModule = { style: 'fuel', playEffects: [{ type: 'energy', energyShift: 2 }] };
-const BLUE_CHOICE_MODULE: EffectModule = {
-    style: 'blue',
-    patternEffects: [
-        {
-            pattern: ['asteroid', 'blue'],
-            effects: [{ type: 'health', healthShift: 1 }],
-        },
-        {
-            pattern: ['fuel', 'blue'],
-            effects: [{ type: 'money', moneyShift: 'quantity' }],
-        },
-    ],
-};
-
-const randomPartialRegion = (): PartialRegion => {
-    const activities: Activity[] = [
-        { type: 'combiner' },
-        { type: 'shop' },
-        {
-            type: 'choice',
-            choices: [
-                { style: 'red', quantity: 1 },
-                { style: 'blue', quantity: 1 },
-                { style: 'gear', quantity: 1 },
-            ],
-        },
-        {
-            type: 'choice',
-            modules: [FUEL_2_MODULE, BLUE_CHOICE_MODULE],
-        },
-    ];
-
-    return {
-        name: Math.random().toString().slice(15),
-        activities: activities.filter(() => Math.random() > 0.5),
-    };
-};
-
-const randomRegion = (partial: PartialRegion): Region => {
-    const activities: Region['activities'] = partial.activities.map(a => ({
-        activity: a,
-        chosen: false,
-    }));
-    return {
-        name: partial.name,
-        activities,
-        nextRegions: new Array(3).fill(0).map(randomPartialRegion),
-    };
 };
 
 export const initialCampaignData = (): CampaignData => {
