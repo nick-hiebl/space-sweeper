@@ -18,7 +18,7 @@ export const Hub = ({ onGameAction, state }: Props) => {
                 {region.name}
             </h1>
             <h2>Activities</h2>
-            <div>
+            <div className="inline-center gap-8px">
                 {region.activities.map(({ activity, chosen }, index) => (
                     <button
                         key={index}
@@ -36,7 +36,7 @@ export const Hub = ({ onGameAction, state }: Props) => {
                 ))}
             </div>
             <h2>Next regions</h2>
-            <div>
+            <div className="inline-center gap-8px">
                 {region.nextRegions.map((nextRegion, index) => (
                     <button
                         key={index}
