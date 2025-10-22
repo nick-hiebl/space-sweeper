@@ -10,7 +10,6 @@
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    font-family: 'Brush Script MT', cursive;
 }
 
 .sprite-number[data-red=true] {

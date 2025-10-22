@@ -53,14 +53,14 @@ export const Game = () => {
                             <div key={state.money} className="money-container">
                                 <JumpySprite type="ui-icon" icon="money" size="48" index={0} />
                                 <div className="number-overlay">
-                                    <Sprite type="number" value={state.money} size="48" />
+                                    <Sprite type="number" value={state.money} size="32" />
                                 </div>
                             </div>
                         ) : (
                             <div key={state.money} className="money-container">
                                 <JumpySprite type="ui-icon" icon="no-money" size="48" index={0} />
                                 <div className="number-overlay">
-                                    <Sprite type="number" value={state.money} size="48" />
+                                    <Sprite type="number" value={state.money} size="32" />
                                 </div>
                             </div>
                         )}

@@ -1,4 +1,5 @@
 import type { Activity, ActivityManager, ActivitySignal } from '../campaign';
+import { selectRandom } from '../../common/random';
 import { EffectModule } from '../types';
 
 type PartialRegion = {
@@ -87,6 +88,10 @@ const FINISHED_ACTIVITY_SIGNAL: ActivitySignal['signal'][] = [
     'finish-combiner',
 ];
 
+const randomBoard = () => {
+    return selectRandom(['Level_0', 'SMALL', 'Swirl']);
+};
+
 export const MAIN_GAME: ActivityManager<CampaignData> = (state, signal) => {
     if (signal.signal === 'finish-start') {
         return {
@@ -145,7 +150,7 @@ export const MAIN_GAME: ActivityManager<CampaignData> = (state, signal) => {
         return {
             activity: {
                 type: 'board',
-                boardKey: Math.random() < 0.5 ? 'SMALL' : 'Level_0',
+                boardKey: randomBoard(),
             },
             campaignState: {
                 currentRegion: newRegion,
