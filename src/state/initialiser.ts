@@ -27,6 +27,9 @@ const bigBag = (): Chip[] => {
 		{ style: 'asteroid', quantity: 1, id: getId() },
 		{ style: 'asteroid', quantity: 2, id: getId() },
 		{ style: 'asteroid', quantity: 3, id: getId() },
+		{ style: 'gem', quantity: 1, id: getId() },
+		{ style: 'fruit', quantity: 1, id: getId() },
+		{ style: 'tree', quantity: 1, id: getId() },
 	];
 };
 

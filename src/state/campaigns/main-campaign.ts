@@ -1,4 +1,5 @@
 import type { Activity, ActivityManager, ActivitySignal } from '../campaign';
+import { EffectModule } from '../types';
 
 type PartialRegion = {
     activities: Activity[];
@@ -21,6 +22,21 @@ export type CampaignData = {
     pastRegions: Region[];
 };
 
+const FUEL_2_MODULE: EffectModule = { style: 'fuel', playEffects: [{ type: 'energy', energyShift: 2 }] };
+const BLUE_CHOICE_MODULE: EffectModule = {
+    style: 'blue',
+    patternEffects: [
+        {
+            pattern: ['asteroid', 'blue'],
+            effects: [{ type: 'health', healthShift: 1 }],
+        },
+        {
+            pattern: ['fuel', 'blue'],
+            effects: [{ type: 'money', moneyShift: 'quantity' }],
+        },
+    ],
+};
+
 const randomPartialRegion = (): PartialRegion => {
     const activities: Activity[] = [
         { type: 'combiner' },
@@ -35,26 +51,12 @@ const randomPartialRegion = (): PartialRegion => {
         },
         {
             type: 'choice',
-            modules: [
-                { style: 'fuel', playEffects: [{ type: 'energy', energyShift: 2 }] },
-                {
-                    style: 'blue',
-                    patternEffects: [
-                        {
-                            pattern: ['asteroid', 'blue'],
-                            effects: [{ type: 'health', healthShift: 1 }],
-                        },
-                        {
-                            pattern: ['fuel', 'blue'],
-                            effects: [{ type: 'money', moneyShift: 'quantity' }],
-                        },
-                    ],
-                },
-            ],
+            modules: [FUEL_2_MODULE, BLUE_CHOICE_MODULE],
         },
     ];
+
     return {
-        name: Math.random().toString().slice(2),
+        name: Math.random().toString().slice(15),
         activities: activities.filter(() => Math.random() > 0.5),
     };
 };

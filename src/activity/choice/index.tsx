@@ -45,21 +45,25 @@ export const Choice = ({ onGameAction, state }: Props) => {
             )}
             {modules && (
                 <div className="inline-center">
-                    {modules.map((module, index) => (
-                        <button
-                            key={index}
-                            disabled={done}
-                            onClick={() => {
-                                onGameAction({
-                                    type: 'add-module',
-                                    modules: [module],
-                                });
-                                setDone(true);
-                            }}
-                        >
-                            <EffectModule module={module} />
-                        </button>
-                    ))}
+                    {modules
+                        .filter(module => {
+                            return !state.effectDeck.includes(module)
+                        })
+                        .map((module, index) => (
+                            <button
+                                key={index}
+                                disabled={done}
+                                onClick={() => {
+                                    onGameAction({
+                                        type: 'add-module',
+                                        modules: [module],
+                                    });
+                                    setDone(true);
+                                }}
+                            >
+                                <EffectModule module={module} />
+                            </button>
+                        ))}
                 </div>
             )}
             <div>

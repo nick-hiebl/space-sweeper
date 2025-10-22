@@ -56,14 +56,33 @@ export const DisplayEffect = ({ effect, size }: { effect: EffectType, size?: 're
     return null;
 };
 
+const isEffectQuantityBased = (effect: Effect): boolean => {
+    const values = Object.values(effect);
+
+    return values.includes('quantity') || values.includes('-quantity');
+};
+
 export const EffectModule = ({ isHighlighted, module }: EffectModuleProps) => {
     const anyEffects = (module.playEffects ?? [] as (Effect | PatternEffect)[])
         .concat(module.drawEffects ?? [])
         .concat(module.patternEffects ?? []);
 
+    const someEffectIsQuantity = (module.playEffects ?? []).concat(module.drawEffects ?? [])
+        .some(isEffectQuantityBased) ||
+        module.patternEffects?.some(patternEffect => {
+            return patternEffect.effects.some(isEffectQuantityBased);
+        });
+
     return (
         <div className="effect-module stack-center" data-ishighlighted={isHighlighted}>
-            <Sprite type="chip" chip={{ style: module.style }} />
+            <div className="effect">
+                <Sprite type="chip" chip={{ style: module.style }} />
+                {someEffectIsQuantity && (
+                    <div className="number-overlay">
+                        <Sprite type="number" value="quantity" size="48" />
+                    </div>
+                )}
+            </div>
             {module.playEffects && (
                 <div className="inline-center">
                     <Sprite type="ui-icon" icon="play" />

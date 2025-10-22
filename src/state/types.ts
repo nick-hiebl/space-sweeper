@@ -6,7 +6,10 @@ export type Style =
     | 'fuel'
     | 'asteroid'
     | 'red'
-    | 'blue';
+    | 'blue'
+    | 'gem'
+    | 'fruit'
+    | 'tree';
 
 export type Id = number;
 
