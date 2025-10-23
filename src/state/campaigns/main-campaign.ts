@@ -2,9 +2,10 @@ import { Cell } from '../../board/types';
 import type { ActivityManager, ActivitySignal } from '../campaign';
 import { last } from '../common';
 import { selectRandom } from '../../common/random';
-import { Effect } from '../types';
+import { Effect, GameState, GameStateWithCampaign } from '../types';
 
-import { type Region, randomPartialRegion, randomRegion } from './hub-worlds';
+import { randomPartialRegion, randomRegion } from './hub-worlds';
+import type { Region } from './hub-worlds/types';
 
 export type HubActivity = { type: 'hub'; region: Region };
 
@@ -13,8 +14,8 @@ export type CampaignData = {
     pastRegions: Region[];
 };
 
-export const initialCampaignData = (): CampaignData => {
-    const firstRegion = randomRegion(randomPartialRegion(), 2);
+export const initialCampaignData = (state: GameState): CampaignData => {
+    const firstRegion = randomRegion(randomPartialRegion(state), 2, state);
 
     return {
         currentRegion: firstRegion,
@@ -92,7 +93,7 @@ export const MAIN_GAME: ActivityManager<CampaignData> = (state, signal) => {
             throw new Error('Could not find hub');
         }
 
-        const newRegion = randomRegion(nextHub, 0);
+        const newRegion = randomRegion(nextHub, 0, state);
 
         return {
             activity: {

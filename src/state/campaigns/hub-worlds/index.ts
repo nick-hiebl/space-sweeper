@@ -1,21 +1,10 @@
-import { Activity } from '../../campaign';
 import { selectRandom, selectRandomN } from '../../../common/random';
-import type { EffectModule } from '../../types';
+import { Activity } from '../../campaign';
+import type { EffectModule, GameState, GameStateWithCampaign } from '../../types';
+import { CampaignData } from '../main-campaign';
 
-type PartialRegion = {
-    activities: Activity[];
-    name: string;
-};
-
-export type Region = {
-    activities: {
-        activity: Activity;
-        chosen: boolean;
-    }[];
-    energy: number;
-    name: string;
-    nextRegions: PartialRegion[];
-};
+import { randomIslandRegion } from './islands';
+import type { PartialRegion, Region } from './types';
 
 const FUEL_2_MODULE: EffectModule = { style: 'fuel', playEffects: [{ type: 'energy', energyShift: 2 }] };
 const BLUE_CHOICE_MODULE: EffectModule = {
@@ -53,7 +42,7 @@ const randomPlaceName = (): string => {
     return selectRandom([codeName(), randomOfName()]);
 };
 
-export const randomPartialRegion = (): PartialRegion => {
+const genericPartialRegion = (state: GameState | GameStateWithCampaign<CampaignData>): PartialRegion => {
     const activities: Activity[] = [
         { type: 'combiner' },
         { type: 'shop' },
@@ -82,7 +71,15 @@ export const randomPartialRegion = (): PartialRegion => {
     };
 };
 
-export const randomRegion = (partial: PartialRegion, energy: number): Region => {
+export const randomPartialRegion = (state: GameState | GameStateWithCampaign<CampaignData>): PartialRegion => {
+    return selectRandom([randomIslandRegion(state), genericPartialRegion(state)]);
+};
+
+export const randomRegion = (
+    partial: PartialRegion,
+    energy: number,
+    state: GameState | GameStateWithCampaign<CampaignData>,
+): Region => {
     const activities: Region['activities'] = partial.activities.map(a => ({
         activity: a,
         chosen: false,
@@ -90,7 +87,7 @@ export const randomRegion = (partial: PartialRegion, energy: number): Region => 
     return {
         name: partial.name,
         activities,
-        nextRegions: new Array(3).fill(0).map(randomPartialRegion),
+        nextRegions: new Array(3).fill(0).map(() => randomPartialRegion(state)),
         energy,
     };
 };

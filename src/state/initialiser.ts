@@ -98,8 +98,12 @@ const NORMAL_GAME_DATA: GamePrefill = {
 	weights: getDefaultWeights(),
 };
 
-export const initialGameState = <T>(campaign: ActivityManager<T>, initialCampaign: T, gameSettings = NORMAL_GAME_DATA): GameStateWithCampaign<T> => {
-	return {
+export const initialGameState = <T>(
+	campaign: ActivityManager<T>,
+	initialCampaign: (initialState: GameState) => T,
+	gameSettings = NORMAL_GAME_DATA,
+): GameStateWithCampaign<T> => {
+	const state: GameState = {
 		bag: gameSettings.bag,
 		energy: gameSettings.maxEnergy,
 		maxEnergy: gameSettings.maxEnergy,
@@ -109,7 +113,11 @@ export const initialGameState = <T>(campaign: ActivityManager<T>, initialCampaig
 		effectDeck: gameSettings.effectDeck,
 		weights: gameSettings.weights,
 		currentActivity: { type: 'start' },
+	};
+
+	return {
+		...state,
 		campaign,
-		campaignData: initialCampaign,
+		campaignData: initialCampaign(state),
 	};
 };

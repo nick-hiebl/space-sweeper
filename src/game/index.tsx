@@ -12,7 +12,7 @@ import './index.css';
 export const Game = () => {
     const [state, signal] = useReducer(GameStateManager, initialGameState(
         // STARTER_GAME, undefined, SHORT_GAME_DATA,
-        MAIN_GAME, initialCampaignData(), undefined,
+        MAIN_GAME, initialCampaignData, undefined,
     ));
 
     return (
