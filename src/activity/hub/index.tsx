@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import type { GameAction, GameState } from '../../state/types';
 
 type Props = {

@@ -2,7 +2,7 @@ import { Cell } from '../../board/types';
 import type { ActivityManager, ActivitySignal } from '../campaign';
 import { last } from '../common';
 import { selectRandom } from '../../common/random';
-import { Effect, GameState, GameStateWithCampaign } from '../types';
+import { Effect, GameState } from '../types';
 
 import { randomPartialRegion, randomRegion } from './hub-worlds';
 import type { Region } from './hub-worlds/types';
