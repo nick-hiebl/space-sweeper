@@ -71,6 +71,11 @@ export const GameStateManager = <T>(state: GameStateWithCampaign<T>, action: Gam
             ...state,
             bag: state.bag.filter(chip => !action.chips.includes(chip.id)),
         };
+    } else if (action.type === 'remove-module') {
+        return {
+            ...state,
+            effectDeck: state.effectDeck.filter(module => !action.modules.includes(module)),
+        };
     }
 
     console.error('Unexpected state and action', state, action);

@@ -69,6 +69,9 @@ export const randomPartialRegion = (): PartialRegion => {
             type: 'choice',
             modules: [FUEL_2_MODULE, BLUE_CHOICE_MODULE],
         },
+        {
+            type: 'module-trash',
+        },
     ];
 
     return {

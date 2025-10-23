@@ -12,7 +12,8 @@ export type Activity =
     | { type: 'tutorial'; key: TutorialKey }
     | { type: 'combiner' }
     | HubActivity
-    | { type: 'choice'; choices?: SoldChip[]; modules?: EffectModule[] };
+    | { type: 'choice'; choices?: SoldChip[]; modules?: EffectModule[] }
+    | { type: 'module-trash' };
 
 type ActivitySignalCommon = { type: 'activity-signal' };
 

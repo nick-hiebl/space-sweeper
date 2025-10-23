@@ -5,6 +5,7 @@ import type { GameAction, GameState } from '../state/types';
 import { Choice } from './choice';
 import { Combiner } from './combiner';
 import { Hub } from './hub';
+import { ModuleTrash } from './module-trash';
 import { Tutorial } from './tutorial';
 
 type ActivityProps = {
@@ -40,6 +41,8 @@ export const Activity = ({ state, onAction }: ActivityProps) => {
         return <Hub state={state} onGameAction={onAction} />;
     } else if (state.currentActivity.type === 'choice') {
         return <Choice state={state} onGameAction={onAction} />;
+    } else if (state.currentActivity.type === 'module-trash') {
+        return <ModuleTrash state={state} onGameAction={onAction} />;
     }
 
     return null;

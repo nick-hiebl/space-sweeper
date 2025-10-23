@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 
 import { ChipDisplay } from '../../common/ChipDisplay';
-import { Chip, type GameAction, type GameState, type Style } from '../../state/types';
+import type { Chip, GameAction, GameState, Style } from '../../state/types';
 
 import './index.css';
 
