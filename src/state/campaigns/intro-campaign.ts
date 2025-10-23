@@ -1,3 +1,4 @@
+import { defaultShopData } from '../../shop/state-manager';
 import type { Activity, ActivityManager, ActivitySignal } from '../campaign';
 import { GameState } from '../types';
 
@@ -11,7 +12,7 @@ type CampaignKeys =
     | 'game-over';
 
 type ActivityWithCondition = {
-    activity: Activity;
+    activity: ((state: GameState) => Activity) | Activity;
     key: CampaignKeys;
 } & (
         | { next: CampaignKeys; exitCondition?: never }
@@ -65,7 +66,7 @@ const ACTIVITY_MAP: Record<CampaignKeys, ActivityWithCondition> = {
     },
     'shop-1': {
         key: 'shop-1',
-        activity: { type: 'shop' },
+        activity: (state) => ({ type: 'shop', data: defaultShopData(state) }),
         exitCondition: (signal, state) => {
             if (signal.type !== 'activity-signal' || signal.signal !== 'finish-shop') {
                 throw new Error('Invalid signal received');
@@ -93,8 +94,9 @@ const ACTIVITY_MAP: Record<CampaignKeys, ActivityWithCondition> = {
 
 export const STARTER_GAME: ActivityManager<undefined> = (gameState, signal) => {
     if (signal.signal === 'finish-start') {
+        const act = ACTIVITY_MAP.intro.activity;
         return {
-            activity: ACTIVITY_MAP.intro.activity,
+            activity: typeof act === 'function' ? act(gameState) : act,
             campaignState: undefined,
         };
     }
@@ -106,11 +108,6 @@ export const STARTER_GAME: ActivityManager<undefined> = (gameState, signal) => {
         throw new Error('Cannot find current activity!');
     }
 
-    if (gameState.currentActivity !== currentActivity.activity) {
-        console.error('Given activity, currentActivity', gameState.currentActivity, currentActivity);
-        throw new Error('Not currently at expected activity!');
-    }
-
     let nextActivity;
 
     if ('exitCondition' in currentActivity && currentActivity.exitCondition) {
@@ -119,8 +116,10 @@ export const STARTER_GAME: ActivityManager<undefined> = (gameState, signal) => {
         nextActivity = currentActivity.next;
     }
 
+    const activity = ACTIVITY_MAP[nextActivity].activity;
+
     return {
-        activity: ACTIVITY_MAP[nextActivity].activity,
+        activity: typeof activity === 'function' ? activity(gameState) : activity,
         campaignState: undefined,
     };
 };

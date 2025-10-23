@@ -1,14 +1,26 @@
 import type { TutorialKey } from '../activity/tutorial/types';
 import type { BoardState } from '../board/types';
-import type { SoldChip } from '../shop/types';
+import type { ChipForSale, SoldChip } from '../shop/types';
 
 import type { HubActivity } from './campaigns/main-campaign';
 import type { Effect, EffectModule, GameStateWithCampaign } from './types';
 
+export type ShopData = {
+    medic?: {
+        rebootPrice: number;
+        healPrice: number;
+    };
+    chips?: ChipForSale[];
+    modules?: {
+        module: EffectModule;
+        price: number;
+    }[];
+};
+
 export type Activity =
     | { type: 'start' }
     | { type: 'board'; boardKey: string; scatteredEffects?: Effect[] }
-    | { type: 'shop' }
+    | { type: 'shop'; data: ShopData }
     | { type: 'tutorial'; key: TutorialKey }
     | { type: 'combiner' }
     | HubActivity

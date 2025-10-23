@@ -1,4 +1,5 @@
 import { selectRandomN } from '../common/random';
+import type { ShopData } from '../state/campaign';
 import type { EffectModule, GameState } from '../state/types';
 
 import type { ShopAction, ShopState } from './types';
@@ -11,20 +12,41 @@ const RED_ENERGY_MODULE: EffectModule = {
     style: 'red', drawEffects: [{ type: 'energy', energyShift: 1 }],
 };
 
-export const getDefaultShop = (state: GameState): ShopState => {
+export const defaultShopData = (state: GameState): ShopData => {
     return {
-        rebootPrice: 2,
-        healPrice: 1,
-        sales: selectRandomN([
+        medic: {
+            rebootPrice: 2,
+            healPrice: 1,
+        },
+        chips: selectRandomN([
             { price: 1, remaining: 1, chip: { style: 'red', quantity: 1 } },
             { price: 2, remaining: -1, chip: { style: 'fuel', quantity: 2 } },
-            { price: 1, remaining: 2, chip: { style: 'asteroid', quantity: 1 } },
-            { price: 6, remaining: 1, chip: { style: 'blue', quantity: 4 } },
+            { price: 1, remaining: 1, chip: { style: 'asteroid', quantity: 1 } },
+            { price: 6, remaining: 1, chip: { style: 'blue', quantity: 1 } },
         ], 2),
         modules: selectRandomN([
             { price: 5, sold: false, module: DEFAULT_BETTER_FUEL_MODULE },
             { price: 6, sold: false, module: RED_ENERGY_MODULE },
         ], 1).filter(sale => !state.effectDeck.some(module => module === sale.module)),
+    };
+};
+
+export const createShop = (state: GameState): ShopState => {
+    if (state.currentActivity.type !== 'shop') {
+        throw new Error('Asked to create shop when we are not at a shop.');
+    }
+
+    const data = state.currentActivity.data;
+
+    return {
+        rebootPrice: data.medic?.rebootPrice,
+        healPrice: data.medic?.healPrice,
+        sales: data.chips ?? [],
+        modules: data.modules?.map(({ module, price }) => ({
+            price: price,
+            sold: false,
+            module: module,
+        })) ?? [],
     };
 };
 

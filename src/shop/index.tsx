@@ -5,7 +5,7 @@ import { Bag } from '../common/Bag';
 import { ChipDisplay } from '../common/ChipDisplay';
 import { GameAction, GameState } from '../state/types';
 
-import { getDefaultShop, ShopStateManager } from './state-manager';
+import { createShop, ShopStateManager } from './state-manager';
 
 import './index.css';
 
@@ -15,43 +15,53 @@ type Props = {
 };
 
 export const Shop = ({ state, onGameAction }: Props) => {
-    const [shopState, onShopAction] = useReducer(ShopStateManager, getDefaultShop(state));
+    const [shopState, onShopAction] = useReducer(ShopStateManager, createShop(state));
+
+    const hasMedic = !!(shopState.healPrice || shopState.rebootPrice);
 
     return (
         <div id="shop">
-            <h2>Heal</h2>
-            <div id="healing">
-                <button
-                    disabled={state.hitPoints > 0 || state.money < shopState.rebootPrice}
-                    onClick={() => {
-                        onGameAction({
-                            type: 'trigger-effects',
-                            effects: [
-                                { type: 'money', moneyShift: -shopState.rebootPrice },
-                                { type: 'health', healthShift: 1 },
-                            ],
-                        });
-                    }}
-                >
-                    Reboot (${shopState.rebootPrice})
-                </button>
-                <button
-                    disabled={
-                        state.hitPoints <= 0 || state.hitPoints >= state.maxHitPoints || state.money < shopState.healPrice
-                    }
-                    onClick={() => {
-                        onGameAction({
-                            type: 'trigger-effects',
-                            effects: [
-                                { type: 'money', moneyShift: -shopState.healPrice },
-                                { type: 'health', healthShift: 1 },
-                            ],
-                        });
-                    }}
-                >
-                    Heal (${shopState.healPrice})
-                </button>
-            </div>
+            {hasMedic && (
+                <>
+                    <h2>Heal</h2>
+                    <div id="healing">
+                        {!!shopState.rebootPrice && (
+                            <button
+                                disabled={state.hitPoints > 0 || state.money < shopState.rebootPrice}
+                                onClick={() => {
+                                    onGameAction({
+                                        type: 'trigger-effects',
+                                        effects: [
+                                            { type: 'money', moneyShift: -shopState.rebootPrice! },
+                                            { type: 'health', healthShift: 1 },
+                                        ],
+                                    });
+                                }}
+                            >
+                                Reboot (${shopState.rebootPrice})
+                            </button>
+                        )}
+                        {shopState.healPrice && (
+                            <button
+                                disabled={
+                                    state.hitPoints <= 0 || state.hitPoints >= state.maxHitPoints || state.money < shopState.healPrice
+                                }
+                                onClick={() => {
+                                    onGameAction({
+                                        type: 'trigger-effects',
+                                        effects: [
+                                            { type: 'money', moneyShift: -shopState.healPrice! },
+                                            { type: 'health', healthShift: 1 },
+                                        ],
+                                    });
+                                }}
+                            >
+                                Heal (${shopState.healPrice})
+                            </button>
+                        )}
+                    </div>
+                </>
+            )}
             {shopState.sales.length > 0 && (
                 <div>
                     <h2>Buy chips</h2>

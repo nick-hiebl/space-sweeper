@@ -15,8 +15,8 @@ export type ModuleForSale = {
 };
 
 export type ShopState = {
-    rebootPrice: number
-    healPrice: number;
+    rebootPrice?: number;
+    healPrice?: number;
     sales: ChipForSale[];
     modules: ModuleForSale[];
 };

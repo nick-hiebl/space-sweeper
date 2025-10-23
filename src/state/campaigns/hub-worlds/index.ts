@@ -1,4 +1,5 @@
 import { selectRandom, selectRandomN } from '../../../common/random';
+import { defaultShopData } from '../../../shop/state-manager';
 import { Activity } from '../../campaign';
 import type { EffectModule, GameState, GameStateWithCampaign } from '../../types';
 import { CampaignData } from '../main-campaign';
@@ -45,7 +46,10 @@ const randomPlaceName = (): string => {
 const genericPartialRegion = (state: GameState | GameStateWithCampaign<CampaignData>): PartialRegion => {
     const activities: Activity[] = [
         { type: 'combiner' },
-        { type: 'shop' },
+        {
+            type: 'shop',
+            data: defaultShopData(state),
+        },
         {
             type: 'choice',
             choices: [

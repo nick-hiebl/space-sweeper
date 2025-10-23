@@ -19,8 +19,8 @@ const FRUIT_MODULE: EffectModule = {
     ],
 };
 
-const GEM_MODULE: EffectModule = {
-    style: 'gem',
+const BLUE_MODULE: EffectModule = {
+    style: 'blue',
     playEffects: [
         { type: 'move', distance: 'quantity' },
     ],
@@ -42,12 +42,26 @@ export const randomIslandRegion = (state: GameState | GameStateWithCampaign<Camp
             choices: [
                 { style: 'tree', quantity: 1 },
                 { style: 'fruit', quantity: 1 },
-                { style: 'gem', quantity: 1 },
+                { style: 'blue', quantity: 1 },
             ],
         },
         {
             type: 'choice',
-            modules: [FRUIT_MODULE, GEM_MODULE],
+            modules: [FRUIT_MODULE, BLUE_MODULE],
+        },
+        {
+            type: 'shop',
+            data: {
+                medic: {
+                    healPrice: 1,
+                    rebootPrice: 4,
+                },
+                chips: [
+                    { price: 3, remaining: 2, chip: { style: 'blue', quantity: 2 } },
+                    { price: 4, remaining: 1, chip: { style: 'fruit', quantity: 1 } },
+                    { price: 2, remaining: 2, chip: { style: 'tree', quantity: 1 } },
+                ],
+            },
         },
     ];
 
