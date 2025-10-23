@@ -1,5 +1,5 @@
-import { selectRandom } from '../../../common/random';
 import { Activity } from '../../campaign';
+import { selectRandom, selectRandomN } from '../../../common/random';
 import type { EffectModule } from '../../types';
 
 type PartialRegion = {
@@ -74,9 +74,11 @@ export const randomPartialRegion = (): PartialRegion => {
         },
     ];
 
+    const numActivities = Math.floor(Math.random() * 3 + 3);
+
     return {
         name: randomPlaceName(),
-        activities: activities.filter(() => Math.random() > 0.5),
+        activities: selectRandomN(activities, numActivities),
     };
 };
 
