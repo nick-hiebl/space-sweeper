@@ -20,11 +20,11 @@ export const Choice = ({ onGameAction, state }: Props) => {
     const { choices, modules } = state.currentActivity;
 
     return (
-        <div>
+        <div className="stack gap-8px">
             <h1>Choices</h1>
-            <p>
+            <div>
                 Choose one to add to your bag.
-            </p>
+            </div>
             {choices && (
                 <div className="inline-center">
                     {choices.map((choice, index) => (
