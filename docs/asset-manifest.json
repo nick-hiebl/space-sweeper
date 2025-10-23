@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/space-sweeper/static/css/main.e639288a.css",
-    "main.js": "/space-sweeper/static/js/main.3d8be2ed.js",
+    "main.js": "/space-sweeper/static/js/main.f73db257.js",
     "index.html": "/space-sweeper/index.html",
     "main.e639288a.css.map": "/space-sweeper/static/css/main.e639288a.css.map",
-    "main.3d8be2ed.js.map": "/space-sweeper/static/js/main.3d8be2ed.js.map"
+    "main.f73db257.js.map": "/space-sweeper/static/js/main.f73db257.js.map"
   },
   "entrypoints": [
     "static/css/main.e639288a.css",
-    "static/js/main.3d8be2ed.js"
+    "static/js/main.f73db257.js"
   ]
 }
