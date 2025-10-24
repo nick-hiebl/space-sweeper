@@ -26,7 +26,7 @@ export const Choice = ({ onGameAction, state }: Props) => {
                 Choose one to add to your bag.
             </div>
             {choices && (
-                <div className="inline-center">
+                <div className="inline-center gap-8px">
                     {choices.map((choice, index) => (
                         <button
                             key={index}
@@ -45,7 +45,7 @@ export const Choice = ({ onGameAction, state }: Props) => {
                 </div>
             )}
             {modules && (
-                <div className="inline-center">
+                <div className="inline-center gap-8px">
                     {modules
                         .filter(module => {
                             return !initiallyOwnedModules.includes(module)

@@ -5,6 +5,7 @@ import type { EffectModule, GameState, GameStateWithCampaign } from '../../types
 import { CampaignData } from '../main-campaign';
 
 import { randomIslandRegion } from './islands';
+import { randomMineRegion } from './mines';
 import type { PartialRegion, Region } from './types';
 
 const FUEL_2_MODULE: EffectModule = { style: 'fuel', playEffects: [{ type: 'energy', energyShift: 2 }] };
@@ -76,7 +77,8 @@ const genericPartialRegion = (state: GameState | GameStateWithCampaign<CampaignD
 };
 
 export const randomPartialRegion = (state: GameState | GameStateWithCampaign<CampaignData>): PartialRegion => {
-    return selectRandom([randomIslandRegion(state), genericPartialRegion(state)]);
+    const generator = selectRandom([randomIslandRegion, randomMineRegion, genericPartialRegion]);
+    return generator(state);
 };
 
 export const randomRegion = (
