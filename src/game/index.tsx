@@ -24,6 +24,8 @@ export const Game = ({ campaign }: Props) => {
 	//     MAIN_GAME, initialCampaignData, undefined,
 	// ));
 
+	const currentRegion = useExternalStore(campaign.regionWatcher);
+
 	return (
 		<div id="game">
 			<div id="player-info" className="inline gap-16px wrap">
@@ -76,7 +78,8 @@ export const Game = ({ campaign }: Props) => {
 					</div>
 				</div>
 			</div>
-			<CampaignMapViewer regions={campaign.regions} />
+			<CampaignMapViewer campaign={campaign} regions={campaign.regions} />
+			<h1>{currentRegion.name}</h1>
 			{/* <Activity state={state} onAction={signal} /> */}
 		</div>
 	);

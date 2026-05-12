@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 
 import { StartActivity as StartActivityComponent } from '../../activity/start';
+import { createExternalStore, ExternalStore } from '../../common/external-store';
 import { Player } from '../player';
 
 let n = 0;
@@ -52,6 +53,8 @@ export class Campaign {
 
 	player: Player;
 
+	regionWatcher: ExternalStore<CampaignRegion>;
+
 	constructor() {
 		this.regions = createMyMap(createRegion, 11, 5);
 		this.pastRegions = [];
@@ -60,10 +63,20 @@ export class Campaign {
 		this.currentActivity = this.currentRegion.activities[0];
 
 		this.player = new Player(4, 8);
+
+		this.regionWatcher = createExternalStore(() => this.currentRegion);
 	}
 
-	getActivity(): CampaignActivity<AllActivityTypes> {
-		return this.currentActivity;
+	goTo(id: number) {
+		const target = this.regions.flatMap(t => t).find(r => r.id === id);
+
+		if (!target) {
+			return;
+		}
+
+		this.currentRegion = target;
+
+		this.regionWatcher.triggerUpdate();
 	}
 }
 

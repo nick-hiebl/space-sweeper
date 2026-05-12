@@ -1,11 +1,12 @@
-import { CampaignRegion } from './campaign';
+import type { Campaign, CampaignRegion } from './campaign';
 
 
 type Props = {
+	campaign: Campaign;
 	regions: CampaignRegion[][];
 };
 
-export const CampaignMapViewer = ({ regions }: Props) => {
+export const CampaignMapViewer = ({ campaign, regions }: Props) => {
 	return (
 		<table>
 			<tbody>
@@ -15,7 +16,13 @@ export const CampaignMapViewer = ({ regions }: Props) => {
 							{row.map(region => {
 								return (
 									<td key={region.id}>
-										<button>{region.id}</button>
+										<button
+											onClick={() => {
+												campaign.goTo(region.id);
+											}}
+										>
+											{region.id}
+										</button>
 									</td>
 								);
 							})}
