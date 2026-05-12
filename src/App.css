@@ -14,6 +14,12 @@ button {
 	border-radius: 4px;
 }
 
+button:hover {
+	padding: 15px;
+	border-width: 2px;
+	background-color: #114;
+}
+
 .stack,
 .stack-center {
     display: flex;
