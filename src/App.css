@@ -1,13 +1,13 @@
 body {
-    padding-inline: 16px;
+	padding-inline: 16px;
 
-    --blanket-zIndex: 100;
+	--blanket-zIndex: 100;
 	background-color: #333;
 	color: white;
 }
 
 button {
-    padding: 16px;
+	padding: 16px;
 	background-color: black;
 	color: white;
 	border: 1px solid #bbb;
@@ -22,40 +22,40 @@ button:hover {
 
 .stack,
 .stack-center {
-    display: flex;
-    flex-direction: column;
+	display: flex;
+	flex-direction: column;
 }
 
 .inline,
 .inline-center {
-    display: flex;
-    flex-direction: row;
+	display: flex;
+	flex-direction: row;
 }
 
 .stack-center {
-    align-items: center;
+	align-items: center;
 }
 
 .inline-center {
-    align-items: center;
+	align-items: center;
 }
 
 .inline-end {
-    align-items: end;
+	align-items: end;
 }
 
 .gap-4px {
-    gap: 4px;
+	gap: 4px;
 }
 
 .gap-8px {
-    gap: 8px;
+	gap: 8px;
 }
 
 .gap-16px {
-    gap: 16px;
+	gap: 16px;
 }
 
 .wrap {
-    flex-wrap: wrap;
+	flex-wrap: wrap;
 }
