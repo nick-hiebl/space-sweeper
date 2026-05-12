@@ -17,6 +17,7 @@ button {
 button:hover {
 	padding: 15px;
 	border-width: 2px;
+	border-color: #ddd;
 	background-color: #114;
 }
 
