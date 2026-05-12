@@ -2,10 +2,16 @@ body {
     padding-inline: 16px;
 
     --blanket-zIndex: 100;
+	background-color: #333;
+	color: white;
 }
 
 button {
     padding: 16px;
+	background-color: black;
+	color: white;
+	border: 1px solid #bbb;
+	border-radius: 4px;
 }
 
 .stack,
