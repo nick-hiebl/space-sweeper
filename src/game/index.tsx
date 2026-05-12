@@ -1,6 +1,6 @@
 import { useReducer } from 'react';
 
-import { Activity } from '../activity';
+import { Activity, RenderActivity } from '../activity';
 import { useExternalStore } from '../common/external-store';
 import { JumpySprite, Sprite } from '../common/Sprite';
 import { Campaign } from '../state/campaigns/campaign';
@@ -80,6 +80,7 @@ export const Game = () => {
 			<CampaignMapViewer />
 			<h1>{currentRegion.name}</h1>
 			{/* <Activity state={state} onAction={signal} /> */}
+			<RenderActivity />
 		</div>
 	);
 };

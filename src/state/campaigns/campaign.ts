@@ -55,6 +55,7 @@ export class Campaign {
 
 	regionWatcher: ExternalStore<CampaignRegion>;
 	mapWatcher: ExternalStore<CampaignRegion[][]>;
+	activity: ExternalStore<CampaignActivity<AllActivityTypes>>;
 
 	constructor() {
 		this.regions = createMyMap(createRegion, 11, 5);
@@ -67,6 +68,7 @@ export class Campaign {
 
 		this.regionWatcher = createExternalStore(() => this.currentRegion);
 		this.mapWatcher = createExternalStore(() => this.regions);
+		this.activity = createExternalStore(() => this.currentActivity);
 	}
 
 	goTo(id: number) {
