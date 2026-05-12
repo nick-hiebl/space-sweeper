@@ -7,26 +7,30 @@ import { Game } from './game';
 import './App.css';
 
 export const App = () => {
-  const [isSpritesheetReady, setReady] = useState(false);
+	const [isSpritesheetReady, setReady] = useState(false);
 
-  useEffect(() => {
-    const allPromises = Promise.all([
-      imageReady,
-      boardDataPromise,
-    ]);
+	useEffect(() => {
+		console.log('Effect');
+		const allPromises = Promise.all([
+			imageReady,
+			boardDataPromise,
+		]);
 
-    allPromises.then(() => {
-      setReady(true);
-    });
-  }, []);
+		imageReady.then(() => console.log('images loaded'));
+		boardDataPromise.then(() => console.log('board loaded'));
 
-  if (!isSpritesheetReady) {
-    return <div>Loading...</div>
-  }
+		allPromises.then(() => {
+			setReady(true);
+		});
+	}, []);
 
-  return (
-    <div>
-      <Game />
-    </div>
-  );
+	if (!isSpritesheetReady) {
+		return <div>Loading...</div>
+	}
+
+	return (
+		<div>
+			<Game />
+		</div>
+	);
 };
