@@ -1,13 +1,20 @@
 .icon-bar {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
 }
 
-.icon-bar.hp, .icon-bar.money {
-    gap: 4px;
+.icon-bar.hp,
+.icon-bar.money {
+	gap: 4px;
 }
 
 .money-container {
-    position: relative;
+	position: relative;
+}
+
+.number-overlay {
+	position: absolute;
+	top: 0;
+	right: 0;
 }

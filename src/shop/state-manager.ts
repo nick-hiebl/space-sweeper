@@ -12,7 +12,7 @@ const RED_ENERGY_MODULE: EffectModule = {
     style: 'red', drawEffects: [{ type: 'energy', energyShift: 1 }],
 };
 
-export const defaultShopData = (state: GameState): ShopData => {
+export const defaultShopData = (state?: GameState): ShopData => {
     return {
         medic: {
             rebootPrice: 2,
@@ -27,7 +27,7 @@ export const defaultShopData = (state: GameState): ShopData => {
         modules: selectRandomN([
             { price: 5, sold: false, module: DEFAULT_BETTER_FUEL_MODULE },
             { price: 6, sold: false, module: RED_ENERGY_MODULE },
-        ], 1).filter(sale => !state.effectDeck.some(module => module === sale.module)),
+        ], 1).filter(sale => !state || !state.effectDeck.some(module => module === sale.module)),
     };
 };
 

@@ -3,11 +3,13 @@ import { useEffect, useState } from 'react';
 import { boardDataPromise } from './board/board-data';
 import { imageReady } from './common/Sprite';
 import { Game } from './game';
+import { Campaign } from './state/campaigns/campaign';
 
 import './App.css';
 
 export const App = () => {
 	const [isSpritesheetReady, setReady] = useState(false);
+	const [campaign] = useState(new Campaign());
 
 	useEffect(() => {
 		console.log('Effect');
@@ -30,7 +32,7 @@ export const App = () => {
 
 	return (
 		<div>
-			<Game />
+			<Game campaign={campaign} />
 		</div>
 	);
 };

@@ -34,7 +34,7 @@ const randomMineName = (): string => {
     return `${descriptor} ${place} ${suffix}`;
 };
 
-export const randomMineRegion = (state: GameState | GameStateWithCampaign<CampaignData>): PartialRegion => {
+export const randomMineRegion = (_state?: GameState | GameStateWithCampaign<CampaignData>): PartialRegion => {
     const activities: Activity[] = [
         { type: 'combiner' },
         {

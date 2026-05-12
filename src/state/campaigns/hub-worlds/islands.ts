@@ -34,7 +34,7 @@ const randomIslandName = (): string => {
     return `${descriptor} ${place} of ${name}`;
 };
 
-export const randomIslandRegion = (state: GameState | GameStateWithCampaign<CampaignData>): PartialRegion => {
+export const randomIslandRegion = (_state?: GameState | GameStateWithCampaign<CampaignData>): PartialRegion => {
     const activities: Activity[] = [
         { type: 'combiner' },
         {

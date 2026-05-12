@@ -49,12 +49,6 @@
     100% { border-color: #4cf; }
 }
 
-.number-overlay {
-    position: absolute;
-    top: 0;
-    right: 0;
-}
-
 button:disabled {
     opacity: 45%;
 }

@@ -44,7 +44,7 @@ const randomPlaceName = (): string => {
     return selectRandom([codeName(), randomOfName()]);
 };
 
-const genericPartialRegion = (state: GameState | GameStateWithCampaign<CampaignData>): PartialRegion => {
+const genericPartialRegion = (state?: GameState | GameStateWithCampaign<CampaignData>): PartialRegion => {
     const activities: Activity[] = [
         { type: 'combiner' },
         {
@@ -76,7 +76,7 @@ const genericPartialRegion = (state: GameState | GameStateWithCampaign<CampaignD
     };
 };
 
-export const randomPartialRegion = (state: GameState | GameStateWithCampaign<CampaignData>): PartialRegion => {
+export const randomPartialRegion = (state?: GameState | GameStateWithCampaign<CampaignData>): PartialRegion => {
     const generator = selectRandom([randomIslandRegion, randomMineRegion, genericPartialRegion]);
     return generator(state);
 };
