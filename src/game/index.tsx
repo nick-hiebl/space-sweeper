@@ -5,6 +5,7 @@ import { useExternalStore } from '../common/external-store';
 import { JumpySprite, Sprite } from '../common/Sprite';
 import { Campaign } from '../state/campaigns/campaign';
 import { CampaignMapViewer } from '../state/campaigns/CampaignMapViewer';
+import { useCampaign } from '../state/campaigns/context';
 // import { STARTER_GAME } from '../state/campaigns/intro-campaign';
 import { initialCampaignData, MAIN_GAME } from '../state/campaigns/main-campaign';
 import { initialGameState, SHORT_GAME_DATA } from '../state/initialiser';
@@ -12,11 +13,9 @@ import { GameStateManager } from '../state/state-manager';
 
 import './index.css';
 
-type Props = {
-	campaign: Campaign;
-};
+export const Game = () => {
+	const campaign = useCampaign();
 
-export const Game = ({ campaign }: Props) => {
 	const stats = useExternalStore(campaign.player.statsWatcher);
 
 	// const [state, signal] = useReducer(GameStateManager, initialGameState(
@@ -78,7 +77,7 @@ export const Game = ({ campaign }: Props) => {
 					</div>
 				</div>
 			</div>
-			<CampaignMapViewer campaign={campaign} regions={campaign.regions} />
+			<CampaignMapViewer />
 			<h1>{currentRegion.name}</h1>
 			{/* <Activity state={state} onAction={signal} /> */}
 		</div>

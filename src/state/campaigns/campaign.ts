@@ -54,6 +54,7 @@ export class Campaign {
 	player: Player;
 
 	regionWatcher: ExternalStore<CampaignRegion>;
+	mapWatcher: ExternalStore<CampaignRegion[][]>;
 
 	constructor() {
 		this.regions = createMyMap(createRegion, 11, 5);
@@ -65,6 +66,7 @@ export class Campaign {
 		this.player = new Player(4, 8);
 
 		this.regionWatcher = createExternalStore(() => this.currentRegion);
+		this.mapWatcher = createExternalStore(() => this.regions);
 	}
 
 	goTo(id: number) {

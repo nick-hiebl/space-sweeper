@@ -1,12 +1,12 @@
-import type { Campaign, CampaignRegion } from './campaign';
+import { useExternalStore } from '../../common/external-store';
 
+import { useCampaign } from './context';
 
-type Props = {
-	campaign: Campaign;
-	regions: CampaignRegion[][];
-};
+export const CampaignMapViewer = () => {
+	const campaign = useCampaign();
 
-export const CampaignMapViewer = ({ campaign, regions }: Props) => {
+	const regions = useExternalStore(campaign.mapWatcher);
+
 	return (
 		<table>
 			<tbody>
