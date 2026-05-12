@@ -41,6 +41,10 @@ button:hover {
 	align-items: center;
 }
 
+.spread {
+	justify-content: space-between;
+}
+
 .inline-end {
 	align-items: end;
 }

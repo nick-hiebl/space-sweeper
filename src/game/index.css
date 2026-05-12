@@ -18,3 +18,11 @@
 	top: 0;
 	right: 0;
 }
+
+dialog::backdrop {
+	background-color: #00000088;
+}
+
+dialog {
+	background-color: #666;
+}

@@ -16,7 +16,7 @@ const smallBag = (): Chip[] => {
 	];
 };
 
-const bigBag = (): Chip[] => {
+export const bigBag = (): Chip[] => {
 	return [
 		{ style: 'gear', quantity: 1, id: getId() },
 		{ style: 'gear', quantity: 1, id: getId() },
