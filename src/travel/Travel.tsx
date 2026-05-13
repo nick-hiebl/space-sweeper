@@ -4,6 +4,7 @@ import { DisplayEffect, EffectModule } from '../board/effect-module';
 import { ChipDisplay } from '../common/ChipDisplay';
 import { useExternalStore } from '../common/external-store';
 import { Sprite } from '../common/Sprite';
+import { useCampaign } from '../state/campaigns/context';
 import { last } from '../state/common';
 import type { Chip, Style } from '../state/types';
 
@@ -16,6 +17,9 @@ type Props = {
 };
 
 export const TravelComponent = ({ travel }: Props) => {
+	const campaign = useCampaign();
+
+	const { hitPoints } = useExternalStore(travel.player.statsWatcher);
 	const action = useExternalStore(travel.actionWatcher);
 
 	const modules = useExternalStore(travel.moduleWatcher);
@@ -32,19 +36,29 @@ export const TravelComponent = ({ travel }: Props) => {
 				hoveredStyle={hoveredStyle}
 				setHoveredStyle={setHoveredStyle}
 			/>
-			{action.type === 'picking-modules' ? (
+			{hitPoints <= 0 ? (
+				<div>
+					<button
+						onClick={() => {
+							campaign.gameEnd();
+						}}
+					>
+						Move on
+					</button>
+				</div>
+			) : action.type === 'picking-modules' ? (
 				<ModuleSelection travel={travel} action={action} />
 			) : action.type === 'waiting' ? (
 				<Waiting travel={travel} />
-			): action.type === 'drawing' ? (
-			<Drawing
-				action={action}
-				travel={travel}
-				setHoveredStyle={setHoveredStyle}
-				setHoveredPlace={setHoveredPlace}
-			/>
+			) : action.type === 'drawing' ? (
+				<Drawing
+					action={action}
+					travel={travel}
+					setHoveredStyle={setHoveredStyle}
+					setHoveredPlace={setHoveredPlace}
+				/>
 			) : (
-			<pre>{JSON.stringify(travel.currentAction)}</pre>
+				<pre>{JSON.stringify(travel.currentAction)}</pre>
 			)}
 			<div id="effect-modules">
 				{modules.map(mod => (
@@ -101,6 +115,8 @@ type WaitingProps = {
 };
 
 const Waiting = ({ travel }: WaitingProps) => {
+	const campaign = useCampaign();
+
 	const { energy } = useExternalStore(travel.player.statsWatcher);
 	const { cells, played } = useExternalStore(travel.stateWatcher);
 	const { bag, weights } = useExternalStore(travel.sourceWatcher);
@@ -119,7 +135,9 @@ const Waiting = ({ travel }: WaitingProps) => {
 			>
 				Draw
 			</button>
-			<button>End</button>
+			<button onClick={() => travel.complete(campaign)}>
+				End
+			</button>
 		</div>
 	);
 };

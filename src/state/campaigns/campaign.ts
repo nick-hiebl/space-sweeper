@@ -125,6 +125,22 @@ export class Campaign {
 		this.activity.triggerUpdate();
 	}
 
+	gameEnd() {
+		if (this.currentActivity.type !== 'travel') {
+			throw new Error('Trying to gameEnd whilst not travelling');
+		}
+
+		window.location.reload();
+	}
+
+	completeTravel(energy: number) {
+		if (this.currentActivity.type !== 'travel') {
+			throw new Error('Not currently travelling');
+		}
+
+		this.arrive(energy);
+	}
+
 	arrive(energy = 0) {
 		if (this.currentActivity.type !== 'travel') {
 			return;
@@ -140,6 +156,10 @@ export class Campaign {
 
 		this.pastRegions = this.pastRegions.concat(this.currentRegion);
 
+		this.currentActivity = {
+			type: '@hub',
+		};
+
 		this.currentRegion = {
 			...target,
 			energy,
@@ -150,6 +170,7 @@ export class Campaign {
 
 		this.pastRegionWatcher.triggerUpdate();
 		this.regionWatcher.triggerUpdate();
+		this.activity.triggerUpdate();
 	}
 
 	completeRegion() {

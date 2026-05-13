@@ -1,6 +1,7 @@
 import { getPlayEffectsFromPlacing, selectN } from '../board/state-manager';
 import { createExternalStore, ExternalStore } from '../common/external-store';
 import { selectRandom } from '../common/random';
+import { Campaign } from '../state/campaigns/campaign';
 import { last, resolveEffect } from '../state/common';
 import { Player, Sources } from '../state/player';
 import type { Chip, Effect, EffectModule, MoveEffect, Style, Weight } from '../state/types';
@@ -302,5 +303,25 @@ export class Travel {
 		console.assert(lastPosition < lastCellPosition, 'Something already placed in final cell but tried to place another!');
 
 		return Math.min(lastPosition + chip.quantity + playBonusDistance + drawBonusDistance, lastCellPosition);
+	}
+
+	complete(campaign: Campaign) {
+		const lastPlay = last(this.state.played) ?? [undefined, -1];
+
+		const lastPlayedIndex = lastPlay[1];
+
+		const energy = this.state.cells.reduce((score, cell) => {
+			if (cell.position > lastPlayedIndex) {
+				return score;
+			}
+
+			if (!cell.markerNumber) {
+				return score;
+			}
+
+			return Math.max(score, cell.markerNumber);
+		}, 0);
+
+		campaign.completeTravel(energy);
 	}
 }
