@@ -28,7 +28,13 @@ export const Game = () => {
 
 	const activity = useExternalStore(campaign.activity);
 
-	const dialogRef = useRef<HTMLDialogElement>(null);
+	const bagDialogRef = useRef<HTMLDialogElement>(null);
+	const mapDialogRef = useRef<HTMLDialogElement>(null);
+
+	const closeAllDialogs = () => {
+		bagDialogRef.current?.close();
+		mapDialogRef.current?.close();
+	};
 
 	const { bag, weights } = useExternalStore(campaign.player.sourcesWatcher);
 
@@ -36,35 +42,67 @@ export const Game = () => {
 		<div id="game">
 			<div className="inline-center spread gap-16px wrap">
 				<PlayerInfo />
-				<div>
+				<div className="inline gap-8px">
 					<button
 						onClick={() => {
-							dialogRef.current?.showModal();
+							closeAllDialogs();
+							bagDialogRef.current?.showModal();
 						}}
 					>
 						Bag
 					</button>
+					<button
+						onClick={() => {
+							closeAllDialogs();
+							mapDialogRef.current?.showModal();
+						}}
+						disabled={activity.type === 'map'}
+					>
+						Map
+					</button>
 					<dialog
-						ref={dialogRef}
+						ref={bagDialogRef}
 						onClose={() => {
-							dialogRef.current?.close();
+							bagDialogRef.current?.close();
 						}}
 					>
 						<Bag bag={bag} weights={weights} />
 						<div className="inline inline-end">
 							<button
 								onClick={() => {
-									dialogRef.current?.close();
+									bagDialogRef.current?.close();
 								}}
 							>
 								Close
 							</button>
 						</div>
 					</dialog>
+					<dialog
+						ref={mapDialogRef}
+						onClose={() => {
+							mapDialogRef.current?.close();
+						}}
+					>
+						<div className="stack gap-16px">
+							<div className="inline gap-16px spread">
+								<h2>Map</h2>
+								<button
+									onClick={() => {
+										mapDialogRef.current?.close();
+									}}
+								>
+									Close
+								</button>
+							</div>
+							<CampaignMapViewer />
+						</div>
+					</dialog>
 				</div>
 			</div>
-			<CampaignMapViewer />
-			{activity.type !== 'travel' && (
+			{activity.type === 'map' && (
+				<CampaignMapViewer />
+			)}
+			{(activity.type === 'hub' || activity.type === '@hub') && (
 				<RegionComponent />
 			)}
 			{/* <Activity state={state} onAction={signal} /> */}

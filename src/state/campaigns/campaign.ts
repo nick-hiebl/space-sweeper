@@ -48,7 +48,8 @@ type TravelActivity = {
 type PrimaryActivity =
 	| CampaignActivity<AllActivityTypes>
 	| TravelActivity
-	| { type: '@hub' };
+	| { type: '@hub' }
+	| { type: 'map' };
 
 const createCampaignActivity = (): CampaignActivity<AllActivityTypes> => {
 	return {
@@ -97,7 +98,7 @@ export class Campaign {
 			row: this.regions.length,
 			energy: 0,
 			maxEnergy: 0,
-			completed: true,
+			completed: false,
 			validNext: this.regions[this.regions.length - 1].map(v => v.id),
 		};
 		this.currentActivity = { type: '@hub' };
@@ -111,7 +112,7 @@ export class Campaign {
 	}
 
 	goTo(id: number) {
-		if (this.currentActivity.type !== '@hub') {
+		if (this.currentActivity.type !== '@hub' && this.currentActivity.type !== 'map') {
 			return;
 		}
 
@@ -163,7 +164,12 @@ export class Campaign {
 			completed: true,
 		};
 
+		this.currentActivity = {
+			type: 'map',
+		};
+
 		this.regionWatcher.triggerUpdate();
+		this.activity.triggerUpdate();
 	}
 }
 

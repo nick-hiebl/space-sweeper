@@ -20,8 +20,8 @@ export const Bag = ({ bag, weights }: BagProps) => {
                 <>
                     <h2>Weights</h2>
                     <div className="inline wrap gap-4px">
-                        {weights.map(weight => (
-                            <ChipDisplay chip={weight} />
+                        {weights.map((weight, index) => (
+                            <ChipDisplay key={index} chip={weight} />
                         ))}
                     </div>
                 </>
