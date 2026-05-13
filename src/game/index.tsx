@@ -102,7 +102,7 @@ export const Game = () => {
 			{activity.type === 'map' && (
 				<CampaignMapViewer />
 			)}
-			{(activity.type === 'hub' || activity.type === '@hub') && (
+			{(activity.type === 'hub' || activity.type === 'browse') && (
 				<RegionComponent />
 			)}
 			{/* <Activity state={state} onAction={signal} /> */}
