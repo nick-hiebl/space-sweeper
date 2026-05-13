@@ -21,6 +21,15 @@ button:hover {
 	background-color: #114;
 }
 
+button.inverted {
+	color: black;
+	background-color: #ddd;
+}
+
+button.inverted:hover {
+	background-color: #fff;
+}
+
 .stack,
 .stack-center {
 	display: flex;
