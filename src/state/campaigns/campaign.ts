@@ -1,5 +1,6 @@
-import type { ReactNode } from 'react';
+import type { ComponentType } from 'react';
 
+import { ShopComponent } from '../../activity2/shop';
 import { StartActivity as StartActivityComponent } from '../../activity2/start';
 import { createExternalStore, ExternalStore } from '../../common/external-store';
 import { Travel } from '../../travel';
@@ -16,7 +17,7 @@ const activityId = () => {
 };
 
 export type CampaignRegion = {
-	activities: CampaignActivity<AllActivityTypes>[];
+	activities: SpecificCampaignActivity[];
 	name: string;
 	id: number;
 	row: number;
@@ -29,25 +30,29 @@ export type CurrentCampaignRegion = CampaignRegion & {
 	validNext: number[];
 };
 
-type ActivityCommon = {
+export type ActivityCommon = {
 	name: string;
 	id: number;
+	type: string;
 };
 
 export type CampaignActivity<T extends ActivityCommon> = {
 	type: 'hub',
 	data: T;
-	component: (props: T) => ReactNode;
+	Component: ComponentType<T>;
 	completed: boolean;
 };
 
-type AllActivityTypes =
-	| StartActivity;
-
 export type SpecificCampaignActivity =
-	| CampaignActivity<StartActivity>;
+	| CampaignActivity<StartActivity>
+	| CampaignActivity<ShopActivity>;
 
-type StartActivity = ActivityCommon & { type: 'start'; name: 'Start' };
+export type StartActivity = ActivityCommon & { type: 'start' };
+
+export type ShopActivity = ActivityCommon & {
+	type: 'shop';
+	healPrice: number;
+};
 
 type TravelActivity = {
 	type: 'travel';
@@ -56,18 +61,31 @@ type TravelActivity = {
 };
 
 type PrimaryActivity =
-	| CampaignActivity<AllActivityTypes>
+	| SpecificCampaignActivity
 	| TravelActivity
 	| { type: 'browse' }
 	| { type: 'map' };
 
-const createCampaignActivity = (): CampaignActivity<AllActivityTypes> => {
-	return {
-		type: 'hub',
-		data: { type: 'start', name: 'Start', id: activityId() },
-		component: StartActivityComponent,
-		completed: false,
-	};
+const createCampaignActivities = (): SpecificCampaignActivity[] => {
+	return [
+		{
+			data: { type: 'start', name: 'Start', id: activityId() },
+			Component: StartActivityComponent,
+			type: 'hub',
+			completed: false,
+		},
+		{
+			data: {
+				type: 'shop',
+				name: 'Shop',
+				id: activityId(),
+				healPrice: 3,
+			},
+			Component: ShopComponent,
+			type: 'hub',
+			completed: false,
+		},
+	];
 };
 
 const createRegion = (row: number): CampaignRegion => {
@@ -75,7 +93,7 @@ const createRegion = (row: number): CampaignRegion => {
 	return {
 		id,
 		name: `World ${id}`,
-		activities: [createCampaignActivity()],
+		activities: createCampaignActivities(),
 		row,
 	};
 };
@@ -183,7 +201,7 @@ export class Campaign {
 		this.activity.triggerUpdate();
 	}
 
-	startActivity(activity: CampaignActivity<AllActivityTypes>) {
+	startActivity(activity: SpecificCampaignActivity) {
 		if (this.currentActivity.type !== 'browse') {
 			throw new Error('Not in state to choose an activity');
 		}

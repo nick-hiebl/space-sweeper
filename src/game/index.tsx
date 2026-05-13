@@ -1,17 +1,12 @@
-import { useReducer, useRef } from 'react';
+import { useRef } from 'react';
 
-import { Activity, RenderActivity } from '../activity';
+import { RenderActivity } from '../activity';
 import { Bag } from '../common/Bag';
 import { useExternalStore } from '../common/external-store';
-import { JumpySprite, Sprite } from '../common/Sprite';
 import { RegionComponent } from '../region';
-import { Campaign } from '../state/campaigns/campaign';
 import { CampaignMapViewer } from '../state/campaigns/CampaignMapViewer';
 import { useCampaign } from '../state/campaigns/context';
 // import { STARTER_GAME } from '../state/campaigns/intro-campaign';
-import { initialCampaignData, MAIN_GAME } from '../state/campaigns/main-campaign';
-import { initialGameState, SHORT_GAME_DATA } from '../state/initialiser';
-import { GameStateManager } from '../state/state-manager';
 import { TravelComponent } from '../travel/Travel';
 
 import { PlayerInfo } from './PlayerInfo';

@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { Board } from '../board';
 import { Shop } from '../shop';
 import type { SpecificCampaignActivity } from '../state/campaigns/campaign';
@@ -19,9 +21,9 @@ type RenderActivityProps = {
 };
 
 export const RenderActivity = ({ activity }: RenderActivityProps) => {
-	const { component: Component, data } = activity;
+	const Component = activity.Component as React.ComponentType<typeof activity.data>;
 
-	return <Component {...data} />;
+	return <Component {...activity.data} />;
 };
 
 export const Activity = ({ state, onAction }: ActivityProps) => {

@@ -16,7 +16,7 @@ export const RegionComponent = () => {
 			<div className="inline gap-8px">
 				{activities.map(a => (
 					<button
-						key={a.type}
+						key={a.data.type}
 						disabled={a.completed || inHubActivity || energy <= 0}
 						onClick={() => {
 							campaign.startActivity(a);
@@ -34,7 +34,7 @@ export const RegionComponent = () => {
 							campaign.completeRegion();
 						}}
 					>
-						Finish up
+						Leave planet
 					</button>
 				</div>
 			)}
