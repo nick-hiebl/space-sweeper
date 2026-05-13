@@ -4,7 +4,7 @@ import { useExternalStore } from '../common/external-store';
 import { Sprite } from '../common/Sprite';
 import type { Chip, Style } from '../state/types';
 
-import { Cell, PickingModuleState, Travel } from '.';
+import { Cell, DrawingState, PickingModuleState, Travel } from '.';
 
 import './style.css';
 
@@ -15,19 +15,38 @@ type Props = {
 export const TravelComponent = ({ travel }: Props) => {
 	const action = useExternalStore(travel.actionWatcher);
 
+	const modules = useExternalStore(travel.moduleWatcher);
+
 	return (
-		<div className="stack">
+		<div className="stack gap-16px">
 			<h1>Travel</h1>
 			<State travel={travel} />
-			{action.type === 'picking-modules' && (
+			{action.type === 'picking-modules' ? (
 				<ModuleSelection travel={travel} action={action} />
+			) : action.type === 'waiting' ? (
+				<div className="inline gap-8px">
+					<button onClick={() => travel.draw()}>Draw</button>
+					<button>End</button>
+				</div>
+			) : action.type === 'drawing' ? (
+				<Drawing action={action} travel={travel} />
+			) : (
+				<pre>{JSON.stringify(travel.currentAction)}</pre>
 			)}
-			<pre>{JSON.stringify(travel.currentAction)}</pre>
+			<div id="effect-modules">
+				{modules.map(mod => (
+					<EffectModule key={mod.style} module={mod} />
+				))}
+			</div>
 		</div>
 	);
 };
 
-const State = ({ travel }: Props) => {
+type StateProps = {
+	travel: Travel;
+};
+
+const State = ({ travel }: StateProps) => {
 	const state = useExternalStore(travel.stateWatcher);
 
 	return (
@@ -42,12 +61,35 @@ const State = ({ travel }: Props) => {
 								key={cell.position}
 								cell={cell}
 								chip={placement?.[0]}
-							// isHovered={cell.position}
+								// isHovered={cell.position}
 							/>
-						)
+						);
 					})}
 				</ul>
 			</div>
+		</div>
+	);
+};
+
+type DrawingProps = {
+	travel: Travel;
+	action: DrawingState;
+};
+
+const Drawing = ({ action, travel }: DrawingProps) => {
+	return (
+		<div className="inline gap-8px">
+			{action.options.map(chip => (
+				<button
+					key={chip.id}
+					className="inverted"
+					onClick={() => {
+						travel.choose(chip);
+					}}
+				>
+					<ChipDisplay chip={chip} />
+				</button>
+			))}
 		</div>
 	);
 };

@@ -6,7 +6,12 @@ import type { Chip, Effect, EffectModule, GameState, MoveEffect, Style, Weight }
 import { BOARD_MAP } from './board-data';
 import type { Board, BoardAction, BoardState, Cell, ImmediateState, Position } from './types';
 
-export const getPlayEffectsFromPlacing = (state: BoardState, chip: Chip): Effect[] => {
+type getPlayEffectsFromPlacingState = {
+    effectModules: EffectModule[];
+    played: [Chip, Position][];
+};
+
+export const getPlayEffectsFromPlacing = (state: getPlayEffectsFromPlacingState, chip: Chip): Effect[] => {
     const thisRule = state.effectModules.find(({ style }) => style === chip.style);
 
     const playEffects = (thisRule?.playEffects ?? []);
@@ -75,7 +80,7 @@ export const resolvePlacementDistance = (state: BoardState, chip: Chip): Positio
     return Math.min(lastPosition + chip.quantity + playBonusDistance + drawBonusDistance, lastCellPosition);
 };
 
-function selectN(items: Chip[], count: number, weights: Weight[]): Chip[] {
+export function selectN(items: Chip[], count: number, weights: Weight[]): Chip[] {
     const bagItems = items.reduce((chosen: Chip[], current: Chip, index: number) => {
         const stillNeeded = count - chosen.length;
         const remainingOptions = items.length + weights.length - index;
