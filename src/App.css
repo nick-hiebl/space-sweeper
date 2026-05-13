@@ -37,6 +37,7 @@ button.inverted:hover {
 }
 
 .inline,
+.inline-end,
 .inline-center {
 	display: flex;
 	flex-direction: row;
@@ -56,6 +57,7 @@ button.inverted:hover {
 
 .inline-end {
 	align-items: end;
+	justify-content: end;
 }
 
 .gap-4px {

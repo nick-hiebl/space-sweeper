@@ -30,6 +30,8 @@ export const Game = () => {
 
 	const dialogRef = useRef<HTMLDialogElement>(null);
 
+	const { bag, weights } = useExternalStore(campaign.player.sourcesWatcher);
+
 	return (
 		<div id="game">
 			<div className="inline-center spread gap-16px wrap">
@@ -48,14 +50,16 @@ export const Game = () => {
 							dialogRef.current?.close();
 						}}
 					>
-						<Bag bag={campaign.player.sources.bag} />
-						<button
-							onClick={() => {
-								dialogRef.current?.close();
-							}}
-						>
-							Close
-						</button>
+						<Bag bag={bag} weights={weights} />
+						<div className="inline inline-end">
+							<button
+								onClick={() => {
+									dialogRef.current?.close();
+								}}
+							>
+								Close
+							</button>
+						</div>
 					</dialog>
 				</div>
 			</div>
