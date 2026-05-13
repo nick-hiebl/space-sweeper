@@ -101,7 +101,7 @@ export class Campaign {
 			completed: false,
 			validNext: this.regions[this.regions.length - 1].map(v => v.id),
 		};
-		this.currentActivity = { type: '@hub' };
+		this.currentActivity = { type: 'map' };
 
 		this.player = new Player(4, 8);
 

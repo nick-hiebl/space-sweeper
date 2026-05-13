@@ -36,7 +36,7 @@ export class Player {
 
 	constructor(hp: number, energy: number, sources = getDefaultSources()) {
 		this.stats = {
-			money: 10,
+			money: 0,
 			hitPoints: hp,
 			maxHitPoints: hp,
 			energy,

@@ -116,17 +116,26 @@ export class Travel {
 		const { sources } = player;
 
 		this.state = {
-			cells: new Array(20).fill(0).map((_, index) => {
+			cells: new Array(20).fill(0).map((_, index, arr) => {
 				const COLUMNS = 8;
 				const row = Math.floor(index / COLUMNS);
 				const indexInRow = index - row * COLUMNS;
+
+				const specialOffset =
+					index === 0 || index == arr.length - 1
+						? 0
+						: indexInRow === 0
+							? -4
+							: indexInRow === COLUMNS - 1
+								? 4
+								: 0;
 
 				const column = row % 2 === 0
 					? indexInRow
 					: COLUMNS - indexInRow - 1;
 
 				return {
-					offset: { x: column * (64 + 4), y: row * (64 + 4) + index },
+					offset: { x: column * (64 + 4), y: row * (64 + 12) + specialOffset },
 					position: index,
 					effects: [],
 					markerNumber: index % 5 === 0 && index > 0 ? index / 5 : undefined,
