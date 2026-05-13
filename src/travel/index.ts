@@ -124,12 +124,12 @@ export class Travel {
 					? indexInRow
 					: COLUMNS - indexInRow - 1;
 
-				return ({
+				return {
 					offset: { x: column * (64 + 4), y: row * (64 + 4) + index },
 					position: index,
 					effects: [],
 					markerNumber: index % 5 === 0 && index > 0 ? index / 5 : undefined,
-				})
+				};
 			}),
 			played: [],
 		};
