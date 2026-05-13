@@ -1,7 +1,9 @@
 import { createExternalStore, type ExternalStore } from '../common/external-store';
+import { clamp } from '../common/random';
 
 import { bigBag, defaultEffectDeck, getDefaultWeights } from './initialiser';
-import type { Chip, EffectModule, Weight } from './types';
+import { readQuantity } from './state-manager';
+import type { Chip, Effect, EffectModule, Weight } from './types';
 
 export type PlayerStats = {
 	money: number;
@@ -45,5 +47,30 @@ export class Player {
 
 		this.statsWatcher = createExternalStore(() => this.stats);
 		this.sourcesWatcher = createExternalStore(() => this.sources);
+	}
+
+	triggerEffects(effects: Effect[]) {
+		let hp = this.stats.hitPoints;
+		let energy = this.stats.energy;
+		let money = this.stats.money;
+
+		effects.forEach(effect => {
+			if (effect.type === 'money') {
+				money += readQuantity(effect.moneyShift);
+			} else if (effect.type === 'health') {
+				hp += readQuantity(effect.healthShift);
+			} else if (effect.type === 'energy') {
+				energy += readQuantity(effect.energyShift);
+			}
+		});
+
+		this.stats = {
+			...this.stats,
+			money,
+			energy: clamp(energy, 0, this.stats.maxEnergy),
+			hitPoints: clamp(hp, 0, this.stats.maxHitPoints),
+		};
+
+		this.statsWatcher.triggerUpdate();
 	}
 }

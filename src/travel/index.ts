@@ -2,7 +2,7 @@ import { getPlayEffectsFromPlacing, selectN } from '../board/state-manager';
 import { createExternalStore, ExternalStore } from '../common/external-store';
 import { selectRandom } from '../common/random';
 import { last, resolveEffect } from '../state/common';
-import { Sources } from '../state/player';
+import { Player, Sources } from '../state/player';
 import type { Chip, Effect, EffectModule, MoveEffect, Style, Weight } from '../state/types';
 
 export type Position = number;
@@ -17,7 +17,6 @@ export type Cell = {
 export type PickingModuleState = {
 	type: 'picking-modules';
 	style: Style;
-	chosen: EffectModule[];
 	available: EffectModule[];
 };
 
@@ -39,7 +38,10 @@ const DEFAULT_MODULE = (style: Style): EffectModule => {
 	};
 };
 
-const initialAction = (chosen: EffectModule[], sources: Sources): PickingModuleState | WaitingState => {
+const initialAction = (
+	chosen: EffectModule[],
+	sources: Sources,
+): [PickingModuleState | WaitingState, EffectModule[]] => {
 	const { bag, weights, effects: modules } = sources;
 
 	const unresolvedStyles = new Set<Style>();
@@ -66,21 +68,25 @@ const initialAction = (chosen: EffectModule[], sources: Sources): PickingModuleS
 		} else if (relevant.length === 0) {
 			effectModules.push(DEFAULT_MODULE(style));
 			unresolvedStyles.delete(style);
+			console.log('Adding R for', style);
 		} else {
 			available.push(...relevant);
 		}
 	});
 
 	if (unresolvedStyles.size > 0) {
-		return {
-			type: 'picking-modules',
-			style: selectRandom(Array.from(unresolvedStyles)),
-			chosen: effectModules,
-			available,
-		};
+		return [
+			{
+				type: 'picking-modules',
+				style: selectRandom(Array.from(unresolvedStyles)),
+				// chosen: effectModules,
+				available,
+			},
+			effectModules,
+		];
 	}
 
-	return { type: 'waiting' };
+	return [{ type: 'waiting' }, effectModules];
 };
 
 type State = {
@@ -91,6 +97,8 @@ type State = {
 const CHIPS_TO_CHOOSE_FROM = 3;
 
 export class Travel {
+	player: Player;
+
 	bag: Chip[];
 	modules: EffectModule[];
 	weights: Weight[];
@@ -105,7 +113,10 @@ export class Travel {
 	stateWatcher: ExternalStore<State>;
 	moduleWatcher: ExternalStore<EffectModule[]>;
 
-	constructor(sources: Sources) {
+	constructor(player: Player) {
+		this.player = player;
+		const { sources } = player;
+
 		this.bag = sources.bag.slice();
 		this.weights = sources.weights.slice();
 
@@ -134,10 +145,10 @@ export class Travel {
 			height: Math.max(...this.state.cells.map(cell => cell.offset.y)) + 64,
 		};
 
-		this.currentAction = initialAction([], sources);
-		this.modules = this.currentAction.type === 'picking-modules'
-			? this.currentAction.chosen
-			: sources.effects;
+		const [action, chosen] = initialAction([], sources);
+
+		this.currentAction = action;
+		this.modules = chosen;
 
 		this.actionWatcher = createExternalStore(() => this.currentAction);
 		this.stateWatcher = createExternalStore(() => this.state);
@@ -153,16 +164,18 @@ export class Travel {
 			throw new Error('Chose module of wrong style!');
 		}
 
-		const chosen = this.currentAction.chosen.concat(mod);
+		const chosen = this.modules.concat(mod);
 
-		this.currentAction = initialAction(
-			this.currentAction.chosen.concat(mod),
+		const [action, chosenNext] = initialAction(
+			chosen,
 			{
 				bag: this.bag,
 				weights: this.weights,
 				effects: chosen.concat(this.currentAction.available),
 			},
 		);
+
+		this.currentAction = action;
 
 		this.modules = chosen;
 
@@ -175,12 +188,29 @@ export class Travel {
 			throw new Error('Drawing out of turn!');
 		}
 
+		const drawnChips = selectN(this.bag, CHIPS_TO_CHOOSE_FROM, this.weights);
+
 		this.currentAction = {
 			type: 'drawing',
-			options: selectN(this.bag, CHIPS_TO_CHOOSE_FROM, this.weights),
+			options: drawnChips,
 		};
 
 		this.actionWatcher.triggerUpdate();
+
+		const DEFAULT_ENERGY_COST: Effect = {
+			type: 'energy',
+			energyShift: -1,
+		};
+
+		const drawEffects = drawnChips
+			.flatMap(chip => (
+				(this.modules
+					.find(module => module.style === chip.style)?.drawEffects ?? [])
+					.map(effect => resolveEffect(effect, chip))
+			))
+			.concat(DEFAULT_ENERGY_COST);
+
+		this.player.triggerEffects(drawEffects);
 	}
 
 	choose(chip: Chip) {
@@ -207,6 +237,29 @@ export class Travel {
 
 		this.stateWatcher.triggerUpdate();
 		this.actionWatcher.triggerUpdate();
+
+		const relevantRule = this.modules.find(module => module.style === chip.style);
+
+		if (!relevantRule) {
+			throw new Error('No relevant rule!');
+		}
+
+		const effectsFromPlay = getPlayEffectsFromPlacing({
+			effectModules: this.modules,
+			played: this.state.played,
+		}, chip)
+			.map(effect => resolveEffect(effect, chip));
+
+		const effects: Effect[] = effectsFromPlay;
+
+		const landedCell = this.state.cells.find(c => c.position === placedPosition);
+		if (landedCell && (landedCell?.effects?.length ?? 0) > 0) {
+			effects.push(...landedCell.effects);
+		}
+
+		if (effects.length > 0) {
+			this.player.triggerEffects(effects);
+		}
 	}
 
 	resolvePlacementDistance(chip: Chip): Position {

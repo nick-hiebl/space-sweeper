@@ -119,9 +119,7 @@ export class Campaign {
 		this.currentActivity = {
 			type: 'travel',
 			destination: id,
-			travel: new Travel(
-				this.player.sources,
-			),
+			travel: new Travel(this.player),
 		};
 
 		this.activity.triggerUpdate();
