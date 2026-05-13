@@ -30,6 +30,7 @@ export const bigBag = (): Chip[] => {
 		{ style: 'gem', quantity: 1, id: getId() },
 		{ style: 'fruit', quantity: 1, id: getId() },
 		{ style: 'tree', quantity: 1, id: getId() },
+		{ style: 'red', quantity: 1, id: getId() },
 	];
 };
 
@@ -45,6 +46,10 @@ export const defaultEffectDeck = (): EffectModule[] => {
 			style: 'explosion',
 			drawEffects: [{ type: 'health', healthShift: '-quantity' }],
 			playEffects: [{ type: 'move', distance: 1 }],
+		},
+		{
+			style: 'red',
+			drawEffects: [{ type: 'energy', energyShift: 1 }],
 		},
 		{
 			style: 'gear',
