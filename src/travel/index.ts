@@ -4,7 +4,7 @@ import { selectRandom } from '../common/random';
 import { Campaign } from '../state/campaigns/campaign';
 import { last, resolveEffect } from '../state/common';
 import { Player, Sources } from '../state/player';
-import type { Chip, Effect, EffectModule, MoveEffect, Style, Weight } from '../state/types';
+import type { Chip, Effect, EffectModule, MoveEffect, Style } from '../state/types';
 
 export type Position = number;
 
@@ -122,7 +122,7 @@ export class Travel {
 				const indexInRow = index - row * COLUMNS;
 
 				const specialOffset =
-					index === 0 || index == arr.length - 1
+					index === 0 || index === arr.length - 1
 						? 0
 						: indexInRow === 0
 							? -4

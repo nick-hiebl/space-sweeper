@@ -1,3 +1,18 @@
+import { useCampaign } from '../../state/campaigns/context';
+
 export const StartActivity = () => {
-	return <h1>Hello</h1>;
+	const campaign = useCampaign();
+
+	return (
+		<div className="stack gap-16px">
+			<h3>Hello</h3>
+			<div>
+				<button
+					onClick={() => campaign.completeCurrentActivity()}
+				>
+					Done
+				</button>
+			</div>
+		</div>
+	);
 };

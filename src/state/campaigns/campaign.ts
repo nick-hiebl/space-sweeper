@@ -6,8 +6,13 @@ import { Travel } from '../../travel';
 import { Player } from '../player';
 
 let n = 0;
-const nextId = () => {
+const regionId = () => {
 	return n++;
+};
+
+let m = 0;
+const activityId = () => {
+	return m++;
 };
 
 export type CampaignRegion = {
@@ -24,7 +29,12 @@ export type CurrentCampaignRegion = CampaignRegion & {
 	validNext: number[];
 };
 
-export type CampaignActivity<T> = {
+type ActivityCommon = {
+	name: string;
+	id: number;
+};
+
+export type CampaignActivity<T extends ActivityCommon> = {
 	type: 'hub',
 	data: T;
 	component: (props: T) => ReactNode;
@@ -37,7 +47,7 @@ type AllActivityTypes =
 export type SpecificCampaignActivity =
 	| CampaignActivity<StartActivity>;
 
-type StartActivity = { type: 'start' };
+type StartActivity = ActivityCommon & { type: 'start'; name: 'Start' };
 
 type TravelActivity = {
 	type: 'travel';
@@ -54,14 +64,14 @@ type PrimaryActivity =
 const createCampaignActivity = (): CampaignActivity<AllActivityTypes> => {
 	return {
 		type: 'hub',
-		data: { type: 'start' },
+		data: { type: 'start', name: 'Start', id: activityId() },
 		component: StartActivityComponent,
 		completed: false,
 	};
 };
 
 const createRegion = (row: number): CampaignRegion => {
-	const id = nextId();
+	const id = regionId();
 	return {
 		id,
 		name: `World ${id}`,
@@ -93,7 +103,7 @@ export class Campaign {
 
 		this.currentRegion = {
 			activities: [],
-			id: nextId(),
+			id: regionId(),
 			name: 'Start',
 			row: this.regions.length,
 			energy: 0,
@@ -169,6 +179,64 @@ export class Campaign {
 		};
 
 		this.pastRegionWatcher.triggerUpdate();
+		this.regionWatcher.triggerUpdate();
+		this.activity.triggerUpdate();
+	}
+
+	startActivity(activity: CampaignActivity<AllActivityTypes>) {
+		if (this.currentActivity.type !== 'browse') {
+			throw new Error('Not in state to choose an activity');
+		}
+
+		if (!this.currentRegion.activities.includes(activity)) {
+			throw new Error('Could not find this activity');
+		}
+
+		if (activity.completed) {
+			throw new Error('Activity already completed');
+		}
+
+		if (this.currentRegion.energy <= 0) {
+			throw new Error('No energy for these activities!');
+		}
+
+		this.currentActivity = {
+			...activity,
+		};
+		this.currentRegion = {
+			...this.currentRegion,
+			energy: this.currentRegion.energy - 1,
+		};
+
+		this.activity.triggerUpdate();
+		this.regionWatcher.triggerUpdate();
+	}
+
+	completeCurrentActivity() {
+		const currentActivity = this.currentActivity;
+
+		if (currentActivity.type !== 'hub') {
+			throw new Error('Not in an activity currently');
+		}
+
+		this.currentRegion = {
+			...this.currentRegion,
+			activities: this.currentRegion.activities.map(activity => {
+				if (activity.data.id !== currentActivity.data.id) {
+					return activity;
+				}
+
+				return {
+					...activity,
+					completed: true,
+				};
+			}),
+		};
+
+		this.currentActivity = {
+			type: 'browse',
+		};
+
 		this.regionWatcher.triggerUpdate();
 		this.activity.triggerUpdate();
 	}
