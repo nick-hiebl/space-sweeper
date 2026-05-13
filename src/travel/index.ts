@@ -6,6 +6,7 @@ import type { Chip, Effect, EffectModule, Style, Weight } from '../state/types';
 export type Position = number;
 
 export type Cell = {
+	offset: { x: number; y: number };
 	position: Position;
 	effects: Effect[];
 	markerNumber?: number;
@@ -80,31 +81,60 @@ const initialAction = (chosen: EffectModule[], sources: Sources): PickingModuleS
 	return { type: 'waiting' };
 };
 
+type State = {
+	cells: Cell[];
+	played: [Chip, Position][];
+};
+
 export class Travel {
 	bag: Chip[];
 	modules: EffectModule[];
-	cells: Cell[];
-	played: [Chip, Position][];
 	weights: Weight[];
+
+	state: State;
+
+	scale: { width: number; height: number };
 
 	currentAction: ImmediateState;
 
 	actionWatcher: ExternalStore<ImmediateState>;
+	stateWatcher: ExternalStore<State>;
 
 	constructor(sources: Sources) {
 		this.bag = sources.bag.slice();
 		this.modules = [];
-		this.cells = new Array(20).fill(0).map((_, index) => ({
-			position: index,
-			effects: [],
-			markerNumber: index % 5 === 0 && index > 0 ? index / 5 : undefined,
-		}));
-		this.played = [];
+
+		this.state = {
+			cells: new Array(20).fill(0).map((_, index) => {
+				const COLUMNS = 8;
+				const row = Math.floor(index / COLUMNS);
+				const indexInRow = index - row * COLUMNS;
+
+				const column = row % 2 === 0
+					? indexInRow
+					: COLUMNS - indexInRow - 1;
+
+				return ({
+					offset: { x: column * (64 + 4), y: row * (64 + 4) + index },
+					position: index,
+					effects: [],
+					markerNumber: index % 5 === 0 && index > 0 ? index / 5 : undefined,
+				})
+			}),
+			played: [],
+		};
+
+		this.scale = {
+			width: Math.max(...this.state.cells.map(cell => cell.offset.x)) + 64,
+			height: Math.max(...this.state.cells.map(cell => cell.offset.y)) + 64,
+		};
+
 		this.weights = sources.weights.slice();
 
 		this.currentAction = initialAction([], sources);
 
 		this.actionWatcher = createExternalStore(() => this.currentAction);
+		this.stateWatcher = createExternalStore(() => this.state);
 	}
 
 	selectModule(mod: EffectModule) {

@@ -1,0 +1,92 @@
+.cell {
+    width: 64px;
+    height: 64px;
+    display: inline-block;
+    position: absolute;
+    box-sizing: border-box;
+    border: 2px solid pink;
+}
+
+.cell-effects-container {
+    position: absolute;
+}
+
+.marker-number {
+    background-color: black;
+    color: gold;
+    font-weight: bold;
+    text-align: center;
+    display: flex;
+    line-height: 1;
+    padding: 4px;
+}
+
+.board-list {
+    margin: 0;
+    position: relative;
+    box-sizing: content-box;
+    list-style-type: none;
+    padding: 0;
+    gap: 4px;
+    display: inline-grid;
+    grid-template-columns: repeat(10, auto);
+    flex-grow: 0;
+}
+
+.grid-item {
+    line-height: 0;
+}
+
+.grid-item > .cell {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hover-preview {
+    opacity: 0.4;
+}
+
+@keyframes emphasisColor {
+    0% { border-color: #4cf; }
+    50% { border-color: #c4f; }
+    100% { border-color: #4cf; }
+}
+
+button:disabled {
+    opacity: 45%;
+}
+
+#effect-modules {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.effect-module {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 8px;
+    border: 1px solid grey;
+    border-radius: 4px;
+}
+
+.effect-module[data-ishighlighted=false] {
+    opacity: 66%;
+}
+
+.effect-module[data-ishighlighted=true] {
+    outline: 2px solid #3388ff;
+    outline-offset: 2px;
+}
+
+.effect {
+    position: relative;
+}
+
+#board {
+    display: inline-block;
+    padding: 8px;
+    border: 1px solid black;
+}
