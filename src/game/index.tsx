@@ -12,6 +12,7 @@ import { useCampaign } from '../state/campaigns/context';
 import { initialCampaignData, MAIN_GAME } from '../state/campaigns/main-campaign';
 import { initialGameState, SHORT_GAME_DATA } from '../state/initialiser';
 import { GameStateManager } from '../state/state-manager';
+import { TravelComponent } from '../travel/Travel';
 
 import { PlayerInfo } from './PlayerInfo';
 
@@ -47,7 +48,7 @@ export const Game = () => {
 							dialogRef.current?.close();
 						}}
 					>
-						<Bag bag={campaign.player.bag} />
+						<Bag bag={campaign.player.sources.bag} />
 						<button
 							onClick={() => {
 								dialogRef.current?.close();
@@ -59,11 +60,15 @@ export const Game = () => {
 				</div>
 			</div>
 			<CampaignMapViewer />
-			<RegionComponent />
-			{/* <Activity state={state} onAction={signal} /> */}
-			{activity.type === 'hub' && (
-				<RenderActivity activity={activity} />
+			{activity.type !== 'travel' && (
+				<RegionComponent />
 			)}
+			{/* <Activity state={state} onAction={signal} /> */}
+			{activity.type === 'hub' ? (
+				<RenderActivity activity={activity} />
+			) : activity.type === 'travel' ? (
+				<TravelComponent travel={activity.travel} />
+			) : null}
 		</div>
 	);
 };

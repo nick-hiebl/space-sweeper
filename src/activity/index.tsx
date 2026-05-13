@@ -1,5 +1,4 @@
 import { Board } from '../board';
-import { useExternalStore } from '../common/external-store';
 import { Shop } from '../shop';
 import type { SpecificCampaignActivity } from '../state/campaigns/campaign';
 import type { GameAction, GameState } from '../state/types';

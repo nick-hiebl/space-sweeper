@@ -1,7 +1,7 @@
 import { createExternalStore, type ExternalStore } from '../common/external-store';
 
-import { bigBag } from './initialiser';
-import { Chip } from './types';
+import { bigBag, defaultEffectDeck, getDefaultWeights } from './initialiser';
+import type { Chip, EffectModule, Weight } from './types';
 
 export type PlayerStats = {
 	money: number;
@@ -11,14 +11,28 @@ export type PlayerStats = {
 	maxEnergy: number;
 };
 
+export type Sources = {
+	bag: Chip[];
+	weights: Weight[];
+	effects: EffectModule[];
+};
+
+const getDefaultSources = (): Sources => {
+	return {
+		bag: bigBag(),
+		weights: getDefaultWeights(),
+		effects: defaultEffectDeck(),
+	};
+};
+
 export class Player {
 	stats: PlayerStats;
-	bag: Chip[];
+	sources: Sources;
 
 	statsWatcher: ExternalStore<PlayerStats>;
-	bagWatcher: ExternalStore<Chip[]>;
+	sourcesWatcher: ExternalStore<Sources>;
 
-	constructor(hp: number, energy: number, bag = bigBag()) {
+	constructor(hp: number, energy: number, sources = getDefaultSources()) {
 		this.stats = {
 			money: 10,
 			hitPoints: hp,
@@ -27,9 +41,9 @@ export class Player {
 			maxEnergy: energy,
 		};
 
-		this.bag = bag;
+		this.sources = sources;
 
 		this.statsWatcher = createExternalStore(() => this.stats);
-		this.bagWatcher = createExternalStore(() => this.bag);
+		this.sourcesWatcher = createExternalStore(() => this.sources);
 	}
 }

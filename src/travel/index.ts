@@ -1,4 +1,5 @@
 import { selectRandom } from '../common/random';
+import { Sources } from '../state/player';
 import type { Chip, Effect, EffectModule, Style, Weight } from '../state/types';
 
 export type Position = number;
@@ -25,7 +26,9 @@ const DEFAULT_MODULE = (style: Style): EffectModule => {
 	};
 };
 
-const initialAction = (chosen: EffectModule[], modules: EffectModule[], bag: Chip[], weights: Weight[]): PickingModuleState | WaitingState => {
+const initialAction = (chosen: EffectModule[], sources: Sources): PickingModuleState | WaitingState => {
+	const { bag, weights, effects: modules } = sources;
+
 	const unresolvedStyles = new Set<Style>();
 	bag.forEach(chip => {
 		unresolvedStyles.add(chip.style);
@@ -71,17 +74,17 @@ export class Travel {
 
 	currentAction: ImmediateState;
 
-	constructor(startingBag: Chip[], modules: EffectModule[], weights: Weight[]) {
-		this.bag = startingBag.slice();
-		this.modules = modules;
+	constructor(sources: Sources) {
+		this.bag = sources.bag.slice();
+		this.modules = sources.effects.slice();
 		this.cells = new Array(20).fill(0).map((_, index) => ({
 			position: index,
 			effects: [],
 			markerNumber: index % 5 === 0 && index > 0 ? index / 5 : undefined,
 		}));
 		this.played = [];
-		this.weights = weights;
+		this.weights = sources.weights.slice();
 
-		this.currentAction = initialAction([], modules, startingBag, weights);
+		this.currentAction = initialAction([], sources);
 	}
 }

@@ -42,6 +42,7 @@ type StartActivity = { type: 'start' };
 type TravelActivity = {
 	type: 'travel';
 	travel: Travel;
+	destination: number;
 };
 
 type PrimaryActivity =
@@ -109,8 +110,30 @@ export class Campaign {
 		this.pastRegionWatcher = createExternalStore(() => this.pastRegions);
 	}
 
-	goTo(id: number, energy = 0) {
-		const target = this.regions.flatMap(t => t).find(r => r.id === id);
+	goTo(id: number) {
+		if (this.currentActivity.type !== '@hub') {
+			return;
+		}
+
+		this.currentActivity = {
+			type: 'travel',
+			destination: id,
+			travel: new Travel(
+				this.player.sources,
+			),
+		};
+
+		this.activity.triggerUpdate();
+	}
+
+	arrive(energy = 0) {
+		if (this.currentActivity.type !== 'travel') {
+			return;
+		}
+
+		const targetId = this.currentActivity.destination;
+
+		const target = this.regions.flatMap(t => t).find(r => r.id === targetId);
 
 		if (!target) {
 			return;

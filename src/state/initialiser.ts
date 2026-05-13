@@ -33,13 +33,13 @@ export const bigBag = (): Chip[] => {
 	];
 };
 
-const getDefaultWeights = (): Weight[] => {
+export const getDefaultWeights = (): Weight[] => {
 	return [
 		{ style: 'explosion', quantity: 1 },
 	];
 };
 
-const defaultEffectDeck = (): EffectModule[] => {
+export const defaultEffectDeck = (): EffectModule[] => {
 	return [
 		{
 			style: 'explosion',
