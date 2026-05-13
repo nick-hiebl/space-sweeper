@@ -1,7 +1,7 @@
 import { Board } from '../board';
 import { useExternalStore } from '../common/external-store';
 import { Shop } from '../shop';
-import { useCampaign } from '../state/campaigns/context';
+import type { SpecificCampaignActivity } from '../state/campaigns/campaign';
 import type { GameAction, GameState } from '../state/types';
 
 import { Choice } from './choice';
@@ -15,16 +15,12 @@ type ActivityProps = {
     onAction: (action: GameAction) => void;
 };
 
-export const RenderActivity = () => {
-	const campaign = useCampaign();
+type RenderActivityProps = {
+	activity: SpecificCampaignActivity;
+};
 
-	const currentActivity = useExternalStore(campaign.activity);
-
-	if (!currentActivity) {
-		return null;
-	}
-
-	const { component: Component, data } = currentActivity;
+export const RenderActivity = ({ activity }: RenderActivityProps) => {
+	const { component: Component, data } = activity;
 
 	return <Component {...data} />;
 };

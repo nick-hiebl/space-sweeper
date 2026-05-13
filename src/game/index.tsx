@@ -25,7 +25,7 @@ export const Game = () => {
 	//     MAIN_GAME, initialCampaignData, undefined,
 	// ));
 
-	const currentRegion = useExternalStore(campaign.regionWatcher);
+	const activity = useExternalStore(campaign.activity);
 
 	const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -61,7 +61,9 @@ export const Game = () => {
 			<CampaignMapViewer />
 			<RegionComponent />
 			{/* <Activity state={state} onAction={signal} /> */}
-			<RenderActivity />
+			{activity.type === 'hub' && (
+				<RenderActivity activity={activity} />
+			)}
 		</div>
 	);
 };

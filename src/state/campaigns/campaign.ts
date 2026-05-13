@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 
 import { StartActivity as StartActivityComponent } from '../../activity2/start';
 import { createExternalStore, ExternalStore } from '../../common/external-store';
+import { Travel } from '../../travel';
 import { Player } from '../player';
 
 let n = 0;
@@ -24,6 +25,7 @@ export type CurrentCampaignRegion = CampaignRegion & {
 };
 
 export type CampaignActivity<T> = {
+	type: 'hub',
 	data: T;
 	component: (props: T) => ReactNode;
 	completed: boolean;
@@ -32,10 +34,24 @@ export type CampaignActivity<T> = {
 type AllActivityTypes =
 	| StartActivity;
 
+export type SpecificCampaignActivity =
+	| CampaignActivity<StartActivity>;
+
 type StartActivity = { type: 'start' };
 
-const createActivity = (): CampaignActivity<AllActivityTypes> => {
+type TravelActivity = {
+	type: 'travel';
+	travel: Travel;
+};
+
+type PrimaryActivity =
+	| CampaignActivity<AllActivityTypes>
+	| TravelActivity
+	| { type: '@hub' };
+
+const createCampaignActivity = (): CampaignActivity<AllActivityTypes> => {
 	return {
+		type: 'hub',
 		data: { type: 'start' },
 		component: StartActivityComponent,
 		completed: false,
@@ -47,7 +63,7 @@ const createRegion = (row: number): CampaignRegion => {
 	return {
 		id,
 		name: `World ${id}`,
-		activities: [createActivity()],
+		activities: [createCampaignActivity()],
 		row,
 	};
 };
@@ -58,7 +74,7 @@ const createRegion = (row: number): CampaignRegion => {
 export class Campaign {
 	regions: CampaignRegion[][];
 	currentRegion: CurrentCampaignRegion;
-	currentActivity: CampaignActivity<AllActivityTypes> | null;
+	currentActivity: PrimaryActivity;
 
 	pastRegions: CurrentCampaignRegion[];
 
@@ -66,7 +82,7 @@ export class Campaign {
 
 	regionWatcher: ExternalStore<CurrentCampaignRegion>;
 	mapWatcher: ExternalStore<CampaignRegion[][]>;
-	activity: ExternalStore<CampaignActivity<AllActivityTypes> | null>;
+	activity: ExternalStore<PrimaryActivity>;
 	pastRegionWatcher: ExternalStore<CurrentCampaignRegion[]>;
 
 	constructor() {
@@ -83,7 +99,7 @@ export class Campaign {
 			completed: true,
 			validNext: this.regions[this.regions.length - 1].map(v => v.id),
 		};
-		this.currentActivity = this.currentRegion.activities[0];
+		this.currentActivity = { type: '@hub' };
 
 		this.player = new Player(4, 8);
 
