@@ -73,4 +73,13 @@ export class Player {
 
 		this.statsWatcher.triggerUpdate();
 	}
+
+	restoreEnergy() {
+		this.stats = {
+			...this.stats,
+			energy: this.stats.maxEnergy,
+		};
+
+		this.statsWatcher.triggerUpdate();
+	}
 }

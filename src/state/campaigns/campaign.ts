@@ -257,6 +257,8 @@ export class Campaign {
 
 		this.regionWatcher.triggerUpdate();
 		this.activity.triggerUpdate();
+
+		this.player.restoreEnergy();
 	}
 }
 
