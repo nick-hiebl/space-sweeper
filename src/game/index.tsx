@@ -1,8 +1,10 @@
 import { useReducer, useRef } from 'react';
 
 import { Activity, RenderActivity } from '../activity';
+import { Bag } from '../common/Bag';
 import { useExternalStore } from '../common/external-store';
 import { JumpySprite, Sprite } from '../common/Sprite';
+import { RegionComponent } from '../region';
 import { Campaign } from '../state/campaigns/campaign';
 import { CampaignMapViewer } from '../state/campaigns/CampaignMapViewer';
 import { useCampaign } from '../state/campaigns/context';
@@ -11,14 +13,12 @@ import { initialCampaignData, MAIN_GAME } from '../state/campaigns/main-campaign
 import { initialGameState, SHORT_GAME_DATA } from '../state/initialiser';
 import { GameStateManager } from '../state/state-manager';
 
-import './index.css';
-import { Bag } from '../common/Bag';
 import { PlayerInfo } from './PlayerInfo';
+
+import './index.css';
 
 export const Game = () => {
 	const campaign = useCampaign();
-
-	const stats = useExternalStore(campaign.player.statsWatcher);
 
 	// const [state, signal] = useReducer(GameStateManager, initialGameState(
 	//     // STARTER_GAME, undefined, SHORT_GAME_DATA,
@@ -59,7 +59,7 @@ export const Game = () => {
 				</div>
 			</div>
 			<CampaignMapViewer />
-			<h1>{currentRegion.name}</h1>
+			<RegionComponent />
 			{/* <Activity state={state} onAction={signal} /> */}
 			<RenderActivity />
 		</div>

@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import { StartActivity as StartActivityComponent } from '../../activity/start';
+import { StartActivity as StartActivityComponent } from '../../activity2/start';
 import { createExternalStore, ExternalStore } from '../../common/external-store';
 import { Player } from '../player';
 
@@ -13,11 +13,20 @@ export type CampaignRegion = {
 	activities: CampaignActivity<AllActivityTypes>[];
 	name: string;
 	id: number;
+	row: number;
+};
+
+export type CurrentCampaignRegion = CampaignRegion & {
+	energy: number;
+	maxEnergy: number;
+	completed: boolean;
+	validNext: number[];
 };
 
 export type CampaignActivity<T> = {
 	data: T;
 	component: (props: T) => ReactNode;
+	completed: boolean;
 };
 
 type AllActivityTypes =
@@ -29,15 +38,17 @@ const createActivity = (): CampaignActivity<AllActivityTypes> => {
 	return {
 		data: { type: 'start' },
 		component: StartActivityComponent,
+		completed: false,
 	};
 };
 
-const createRegion = (): CampaignRegion => {
+const createRegion = (row: number): CampaignRegion => {
 	const id = nextId();
 	return {
 		id,
 		name: `World ${id}`,
 		activities: [createActivity()],
+		row,
 	};
 };
 
@@ -46,22 +57,32 @@ const createRegion = (): CampaignRegion => {
  */
 export class Campaign {
 	regions: CampaignRegion[][];
-	currentRegion: CampaignRegion;
-	currentActivity: CampaignActivity<AllActivityTypes>;
+	currentRegion: CurrentCampaignRegion;
+	currentActivity: CampaignActivity<AllActivityTypes> | null;
 
-	pastRegions: number[];
+	pastRegions: CurrentCampaignRegion[];
 
 	player: Player;
 
-	regionWatcher: ExternalStore<CampaignRegion>;
+	regionWatcher: ExternalStore<CurrentCampaignRegion>;
 	mapWatcher: ExternalStore<CampaignRegion[][]>;
-	activity: ExternalStore<CampaignActivity<AllActivityTypes>>;
+	activity: ExternalStore<CampaignActivity<AllActivityTypes> | null>;
+	pastRegionWatcher: ExternalStore<CurrentCampaignRegion[]>;
 
 	constructor() {
 		this.regions = createMyMap(createRegion, 11, 5);
 		this.pastRegions = [];
 
-		this.currentRegion = this.regions[0][0];
+		this.currentRegion = {
+			activities: [],
+			id: nextId(),
+			name: 'Start',
+			row: this.regions.length,
+			energy: 0,
+			maxEnergy: 0,
+			completed: true,
+			validNext: this.regions[this.regions.length - 1].map(v => v.id),
+		};
 		this.currentActivity = this.currentRegion.activities[0];
 
 		this.player = new Player(4, 8);
@@ -69,16 +90,39 @@ export class Campaign {
 		this.regionWatcher = createExternalStore(() => this.currentRegion);
 		this.mapWatcher = createExternalStore(() => this.regions);
 		this.activity = createExternalStore(() => this.currentActivity);
+		this.pastRegionWatcher = createExternalStore(() => this.pastRegions);
 	}
 
-	goTo(id: number) {
+	goTo(id: number, energy = 0) {
 		const target = this.regions.flatMap(t => t).find(r => r.id === id);
 
 		if (!target) {
 			return;
 		}
 
-		this.currentRegion = target;
+		this.pastRegions = this.pastRegions.concat(this.currentRegion);
+
+		this.currentRegion = {
+			...target,
+			energy,
+			maxEnergy: energy,
+			validNext: this.regions[target.row - 1].map(v => v.id),
+			completed: false,
+		};
+
+		this.pastRegionWatcher.triggerUpdate();
+		this.regionWatcher.triggerUpdate();
+	}
+
+	completeRegion() {
+		if (this.currentRegion.completed) {
+			return;
+		}
+
+		this.currentRegion = {
+			...this.currentRegion,
+			completed: true,
+		};
 
 		this.regionWatcher.triggerUpdate();
 	}

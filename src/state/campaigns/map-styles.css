@@ -1,0 +1,3 @@
+button[data-visited="true"] {
+	border-color: red;
+}

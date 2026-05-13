@@ -20,6 +20,10 @@ export const RenderActivity = () => {
 
 	const currentActivity = useExternalStore(campaign.activity);
 
+	if (!currentActivity) {
+		return null;
+	}
+
 	const { component: Component, data } = currentActivity;
 
 	return <Component {...data} />;
