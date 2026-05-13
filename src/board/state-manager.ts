@@ -16,7 +16,7 @@ export const getPlayEffectsFromPlacing = (state: getPlayEffectsFromPlacingState,
 
     const playEffects = (thisRule?.playEffects ?? []);
 
-    const alreadyPlayed = state.played.slice().concat([[chip, 100]]);
+    const alreadyPlayed = state.played.slice();
     alreadyPlayed.reverse();
 
     const stack: Style[] = alreadyPlayed.map(([{ style }]) => style);

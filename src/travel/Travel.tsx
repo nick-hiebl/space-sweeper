@@ -1,7 +1,10 @@
+import { useState } from 'react';
+
 import { DisplayEffect, EffectModule } from '../board/effect-module';
 import { ChipDisplay } from '../common/ChipDisplay';
 import { useExternalStore } from '../common/external-store';
 import { Sprite } from '../common/Sprite';
+import { last } from '../state/common';
 import type { Chip, Style } from '../state/types';
 
 import { Cell, DrawingState, PickingModuleState, Travel } from '.';
@@ -17,25 +20,39 @@ export const TravelComponent = ({ travel }: Props) => {
 
 	const modules = useExternalStore(travel.moduleWatcher);
 
+	const [hoveredStyle, setHoveredStyle] = useState<Style | undefined>(undefined);
+	const [hoveredPlace, setHoveredPlace] = useState<number | undefined>(undefined);
+
 	return (
 		<div className="stack gap-16px">
 			<h1>Travel</h1>
-			<State travel={travel} />
+			<State
+				travel={travel}
+				hoveredPlace={hoveredPlace}
+				hoveredStyle={hoveredStyle}
+				setHoveredStyle={setHoveredStyle}
+			/>
 			{action.type === 'picking-modules' ? (
 				<ModuleSelection travel={travel} action={action} />
 			) : action.type === 'waiting' ? (
-				<div className="inline gap-8px">
-					<button onClick={() => travel.draw()}>Draw</button>
-					<button>End</button>
-				</div>
-			) : action.type === 'drawing' ? (
-				<Drawing action={action} travel={travel} />
+				<Waiting travel={travel} />
+			): action.type === 'drawing' ? (
+			<Drawing
+				action={action}
+				travel={travel}
+				setHoveredStyle={setHoveredStyle}
+				setHoveredPlace={setHoveredPlace}
+			/>
 			) : (
-				<pre>{JSON.stringify(travel.currentAction)}</pre>
+			<pre>{JSON.stringify(travel.currentAction)}</pre>
 			)}
 			<div id="effect-modules">
 				{modules.map(mod => (
-					<EffectModule key={mod.style} module={mod} />
+					<EffectModule
+						key={mod.style}
+						module={mod}
+						isHighlighted={!hoveredStyle ? undefined : mod.style === hoveredStyle}
+					/>
 				))}
 			</div>
 		</div>
@@ -44,9 +61,12 @@ export const TravelComponent = ({ travel }: Props) => {
 
 type StateProps = {
 	travel: Travel;
+	hoveredStyle: Style | undefined;
+	hoveredPlace: number | undefined;
+	setHoveredStyle: (style: Style | undefined) => void;
 };
 
-const State = ({ travel }: StateProps) => {
+const State = ({ hoveredPlace, hoveredStyle, setHoveredStyle, travel }: StateProps) => {
 	const state = useExternalStore(travel.stateWatcher);
 
 	return (
@@ -56,12 +76,17 @@ const State = ({ travel }: StateProps) => {
 					{state.cells.map(cell => {
 						const placement = state.played.find(([, pos]) => pos === cell.position);
 
+						const chip = placement?.[0];
+
 						return (
 							<CellComponent
 								key={cell.position}
 								cell={cell}
-								chip={placement?.[0]}
-								// isHovered={cell.position}
+								chip={chip}
+								hoveredStyle={hoveredStyle}
+								isHovered={cell.position === hoveredPlace}
+								onMouseEnter={chip ? () => setHoveredStyle(chip.style) : undefined}
+								onMouseLeave={chip ? () => setHoveredStyle(undefined) : undefined}
 							/>
 						);
 					})}
@@ -71,25 +96,73 @@ const State = ({ travel }: StateProps) => {
 	);
 };
 
+type WaitingProps = {
+	travel: Travel;
+};
+
+const Waiting = ({ travel }: WaitingProps) => {
+	const { energy } = useExternalStore(travel.player.statsWatcher);
+	const { cells, played } = useExternalStore(travel.stateWatcher);
+	const { bag, weights } = useExternalStore(travel.sourceWatcher);
+
+	const nothingToDraw = bag.length === 0 && weights.length === 0;
+
+	const lastPlace = last(cells);
+
+	const anythingPlacedInLast = played.some(([_, index]) => index === lastPlace.position);
+
+	return (
+		<div className="inline gap-8px">
+			<button
+				onClick={() => travel.draw()}
+				disabled={energy <= 0 || anythingPlacedInLast || nothingToDraw}
+			>
+				Draw
+			</button>
+			<button>End</button>
+		</div>
+	);
+};
+
 type DrawingProps = {
 	travel: Travel;
 	action: DrawingState;
+	setHoveredStyle: (style: Style | undefined) => void;
+	setHoveredPlace: (number: number | undefined) => void;
 };
 
-const Drawing = ({ action, travel }: DrawingProps) => {
+const Drawing = ({ action, travel, setHoveredStyle, setHoveredPlace }: DrawingProps) => {
 	return (
 		<div className="inline gap-8px">
-			{action.options.map(chip => (
-				<button
-					key={chip.id}
-					className="inverted"
-					onClick={() => {
-						travel.choose(chip);
-					}}
-				>
-					<ChipDisplay chip={chip} />
-				</button>
-			))}
+			{action.options.map(chip => {
+				const willLandOn = travel.resolvePlacementDistance(chip);
+
+				const onFocus = () => {
+					setHoveredStyle(chip.style);
+					setHoveredPlace(willLandOn);
+				};
+
+				const onBlur = () => {
+					setHoveredStyle(undefined);
+					setHoveredPlace(undefined);
+				};
+
+				return (
+					<button
+						key={chip.id}
+						className="inverted"
+						onClick={() => {
+							travel.choose(chip);
+						}}
+						onMouseEnter={onFocus}
+						onMouseLeave={onBlur}
+						onFocus={onFocus}
+						onBlur={onBlur}
+					>
+						<ChipDisplay chip={chip} />
+					</button>
+				);
+			})}
 		</div>
 	);
 };

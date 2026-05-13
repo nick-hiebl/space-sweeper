@@ -134,8 +134,8 @@ export const Sprite = (props: SpriteProps) => {
         const text = typeof props.value === 'number'
             ? props.value.toString()
             : props.value === '-quantity'
-                ? '-?'
-                : '?';
+                ? '-X'
+                : 'X';
 
         return (
             <div className="sprite-number" data-size={size} data-red={isNegative}>

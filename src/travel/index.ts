@@ -68,7 +68,6 @@ const initialAction = (
 		} else if (relevant.length === 0) {
 			effectModules.push(DEFAULT_MODULE(style));
 			unresolvedStyles.delete(style);
-			console.log('Adding R for', style);
 		} else {
 			available.push(...relevant);
 		}
@@ -79,7 +78,6 @@ const initialAction = (
 			{
 				type: 'picking-modules',
 				style: selectRandom(Array.from(unresolvedStyles)),
-				// chosen: effectModules,
 				available,
 			},
 			effectModules,
@@ -99,9 +97,7 @@ const CHIPS_TO_CHOOSE_FROM = 3;
 export class Travel {
 	player: Player;
 
-	bag: Chip[];
-	modules: EffectModule[];
-	weights: Weight[];
+	sources: Sources;
 
 	state: State;
 
@@ -112,13 +108,11 @@ export class Travel {
 	actionWatcher: ExternalStore<ImmediateState>;
 	stateWatcher: ExternalStore<State>;
 	moduleWatcher: ExternalStore<EffectModule[]>;
+	sourceWatcher: ExternalStore<Sources>;
 
 	constructor(player: Player) {
 		this.player = player;
 		const { sources } = player;
-
-		this.bag = sources.bag.slice();
-		this.weights = sources.weights.slice();
 
 		this.state = {
 			cells: new Array(20).fill(0).map((_, index) => {
@@ -148,11 +142,17 @@ export class Travel {
 		const [action, chosen] = initialAction([], sources);
 
 		this.currentAction = action;
-		this.modules = chosen;
+
+		this.sources = {
+			effects: chosen,
+			bag: sources.bag.slice(),
+			weights: sources.weights.slice(),
+		};
 
 		this.actionWatcher = createExternalStore(() => this.currentAction);
 		this.stateWatcher = createExternalStore(() => this.state);
-		this.moduleWatcher = createExternalStore(() => this.modules);
+		this.moduleWatcher = createExternalStore(() => this.sources.effects);
+		this.sourceWatcher = createExternalStore(() => this.sources);
 	}
 
 	selectModule(mod: EffectModule) {
@@ -164,23 +164,27 @@ export class Travel {
 			throw new Error('Chose module of wrong style!');
 		}
 
-		const chosen = this.modules.concat(mod);
+		const chosen = this.sources.effects.concat(mod);
 
-		const [action, chosenNext] = initialAction(
+		const [action] = initialAction(
 			chosen,
 			{
-				bag: this.bag,
-				weights: this.weights,
+				bag: this.sources.bag,
+				weights: this.sources.weights,
 				effects: chosen.concat(this.currentAction.available),
 			},
 		);
 
 		this.currentAction = action;
 
-		this.modules = chosen;
+		this.sources = {
+			...this.sources,
+			effects: chosen,
+		};
 
 		this.actionWatcher.triggerUpdate();
 		this.moduleWatcher.triggerUpdate();
+		this.sourceWatcher.triggerUpdate();
 	}
 
 	draw() {
@@ -188,7 +192,7 @@ export class Travel {
 			throw new Error('Drawing out of turn!');
 		}
 
-		const drawnChips = selectN(this.bag, CHIPS_TO_CHOOSE_FROM, this.weights);
+		const drawnChips = selectN(this.sources.bag, CHIPS_TO_CHOOSE_FROM, this.sources.weights);
 
 		this.currentAction = {
 			type: 'drawing',
@@ -204,7 +208,7 @@ export class Travel {
 
 		const drawEffects = drawnChips
 			.flatMap(chip => (
-				(this.modules
+				(this.sources.effects
 					.find(module => module.style === chip.style)?.drawEffects ?? [])
 					.map(effect => resolveEffect(effect, chip))
 			))
@@ -231,21 +235,25 @@ export class Travel {
 		this.state.played = this.state.played.concat([[chip, placedPosition]]);
 		this.state = { ...this.state };
 
-		this.bag = this.bag.filter(c => c !== chip);
+		this.sources = {
+			...this.sources,
+			bag: this.sources.bag.filter(c => c !== chip),
+		};
 
 		this.currentAction = { type: 'waiting' };
 
 		this.stateWatcher.triggerUpdate();
 		this.actionWatcher.triggerUpdate();
+		this.sourceWatcher.triggerUpdate();
 
-		const relevantRule = this.modules.find(module => module.style === chip.style);
+		const relevantRule = this.sources.effects.find(module => module.style === chip.style);
 
 		if (!relevantRule) {
 			throw new Error('No relevant rule!');
 		}
 
 		const effectsFromPlay = getPlayEffectsFromPlacing({
-			effectModules: this.modules,
+			effectModules: this.sources.effects,
 			played: this.state.played,
 		}, chip)
 			.map(effect => resolveEffect(effect, chip));
@@ -271,7 +279,7 @@ export class Travel {
 		const lastCellPosition = last(cells).position;
 
 		const playBonusDistance = getPlayEffectsFromPlacing({
-			effectModules: this.modules,
+			effectModules: this.sources.effects,
 			played: this.state.played,
 		}, chip)
 			.filter(effect => effect.type === 'move')
@@ -281,7 +289,7 @@ export class Travel {
 			}, 0);
 
 		const drawBonusDistance = this.currentAction.options
-			.map<[Chip, Effect[]]>(chip => [chip, this.modules.find(module => module.style === chip.style)?.drawEffects ?? []])
+			.map<[Chip, Effect[]]>(chip => [chip, this.sources.effects.find(module => module.style === chip.style)?.drawEffects ?? []])
 			.filter(([_, effects]) => effects.length > 0)
 			.map<[Chip, Effect[]]>(([chip, effects]) => [chip, effects.filter(effect => effect.type === 'move')])
 			.flatMap(([chip, effects]) => effects.map(effect => resolveEffect(effect, chip)))
