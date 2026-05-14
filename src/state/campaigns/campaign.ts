@@ -5,10 +5,9 @@ import { StartActivity as StartActivityComponent } from '../../activity2/start';
 import { createExternalStore, ExternalStore } from '../../common/external-store';
 import { createMyMap } from '../../common/grid-functions';
 import { Travel } from '../../travel';
-import { Player } from '../player';
-import { selectRandom, selectRandomN } from '../../common/random';
-import { Region } from './hub-worlds/types';
+import { selectRandom } from '../../common/random';
 import { last } from '../common';
+import { Player } from '../player';
 
 let n = 0;
 const regionId = () => {
@@ -95,8 +94,13 @@ const createCampaignActivities = (): SpecificCampaignActivity[] => {
 	];
 };
 
+const WIGGLE = 0.2;
+export const X_SCALE = 100;
+export const Y_SCALE = 70;
+
 const createRegion = (row: number, column: number): CampaignRegion => {
 	const id = regionId();
+
 	return {
 		id,
 		name: `World ${id}`,
@@ -104,8 +108,8 @@ const createRegion = (row: number, column: number): CampaignRegion => {
 		row,
 		column,
 		validNext: [],
-		x: column * 80 + 40,
-		y: row * 80 + 40,
+		x: Math.round((column + 1/2 + Math.random() * WIGGLE - WIGGLE / 2) * X_SCALE),
+		y: Math.round((row + 1/2 + Math.random() * WIGGLE - WIGGLE / 2) * Y_SCALE),
 	};
 };
 
@@ -293,8 +297,12 @@ const candidateAbove = <T>(index: number, above: T[]): T => {
 	return selectRandom(above.slice(Math.max(0, index - 1), index + 2));
 };
 
+const WIDTH = 7;
+const HEIGHT = 15;
+const EDGES = 6;
+
 const setupMap = (): { regions: CampaignRegion[][]; initialRegion: CurrentCampaignRegion } => {
-	const map = createMyMap(createRegion, 15, 7);
+	const map = createMyMap(createRegion, HEIGHT, WIDTH);
 
 	const regionMap = new Map<number, CampaignRegion>();
 
@@ -308,7 +316,15 @@ const setupMap = (): { regions: CampaignRegion[][]; initialRegion: CurrentCampai
 
 		const edges: Edge[] = [];
 
-		while (edges.length < 6) {
+		let trials = 0;
+
+		while (edges.length < EDGES) {
+			trials++;
+
+			if (trials > 1000) {
+				throw new Error('Could not create map');
+			}
+
 			const regionBelow = selectRandom(below);
 
 			if (!regionBelow) {
@@ -381,7 +397,7 @@ const setupMap = (): { regions: CampaignRegion[][]; initialRegion: CurrentCampai
 		completed: true,
 		validNext: finalParents.map(r => r.id),
 		x: Math.floor((finalParents[0].x + last(finalParents).x) / 2),
-		y: map.length * 80 + 40,
+		y: (map.length + 1/2) * Y_SCALE,
 	};
 
 	map.push([initialRegion]);

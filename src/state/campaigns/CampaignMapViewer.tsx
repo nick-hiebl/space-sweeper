@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 
 import { useExternalStore } from '../../common/external-store';
 
+import { X_SCALE, Y_SCALE } from './campaign';
 import { useCampaign } from './context';
 import { drawCampaignMap } from './drawCampaignMap';
 
@@ -19,8 +20,8 @@ export const CampaignMapViewer = () => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const mapRef = useRef<HTMLCanvasElement>(null);
 
-	const width = regions[0].length * 80;
-	const height = regions.length * 80;
+	const width = regions[0].length * X_SCALE;
+	const height = regions.length * Y_SCALE;
 
 	useEffect(() => {
 		if (!mapRef.current || !containerRef.current) {
