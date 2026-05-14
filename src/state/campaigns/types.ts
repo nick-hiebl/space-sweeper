@@ -34,9 +34,12 @@ export type CampaignActivity<T extends ActivityCommon> = {
 
 export type SpecificCampaignActivity =
 	| CampaignActivity<StartActivity>
-	| CampaignActivity<ShopActivity>;
+	| CampaignActivity<ShopActivity>
+	| CampaignActivity<CombinerActivity>;
 
 export type StartActivity = ActivityCommon & { type: 'start' };
+
+export type CombinerActivity = ActivityCommon & { type: 'combiner' };
 
 export type ShopActivity = ActivityCommon & {
 	type: 'shop';

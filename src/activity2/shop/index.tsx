@@ -1,6 +1,6 @@
 import { useExternalStore } from '../../common/external-store';
-import type { ShopActivity } from '../../state/campaigns/types';
 import { useCampaign } from '../../state/campaigns/context';
+import type { ShopActivity } from '../../state/campaigns/types';
 
 type ShopProps = ShopActivity;
 

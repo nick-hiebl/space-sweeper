@@ -16,16 +16,6 @@ type ActivityProps = {
     onAction: (action: GameAction) => void;
 };
 
-type RenderActivityProps = {
-	activity: SpecificCampaignActivity;
-};
-
-export const RenderActivity = ({ activity }: RenderActivityProps) => {
-	const Component = activity.Component as React.ComponentType<typeof activity.data>;
-
-	return <Component {...activity.data} />;
-};
-
 export const Activity = ({ state, onAction }: ActivityProps) => {
     if (state.currentActivity.type === 'start') {
         return (

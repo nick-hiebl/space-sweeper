@@ -1,7 +1,7 @@
 import { createExternalStore, type ExternalStore } from '../common/external-store';
 import { clamp } from '../common/random';
 
-import { bigBag, defaultEffectDeck, getDefaultWeights } from './initialiser';
+import { bigBag, defaultEffectDeck, getDefaultWeights, getId } from './initialiser';
 import { readQuantity } from './state-manager';
 import type { Chip, Effect, EffectModule, Weight } from './types';
 
@@ -81,5 +81,25 @@ export class Player {
 		};
 
 		this.statsWatcher.triggerUpdate();
+	}
+
+	removeChips(ids: number[]) {
+		const newBag = this.sources.bag.filter(chip => !ids.includes(chip.id));
+
+		this.sources = {
+			...this.sources,
+			bag: newBag,
+		};
+
+		this.sourcesWatcher.triggerUpdate();
+	}
+
+	addChips(chips: Omit<Chip, 'id'>[]) {
+		this.sources = {
+			...this.sources,
+			bag: this.sources.bag.concat(chips.map(chip => ({ ...chip, id: getId() }))),
+		};
+
+		this.sourcesWatcher.triggerUpdate();
 	}
 }

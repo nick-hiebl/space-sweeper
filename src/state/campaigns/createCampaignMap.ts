@@ -1,3 +1,4 @@
+import { CombinerComponent } from '../../activity2/combiner';
 import { ShopComponent } from '../../activity2/shop';
 import { StartActivity as StartActivityComponent } from '../../activity2/start';
 import { createMyMap } from '../../common/grid-functions';
@@ -37,6 +38,16 @@ const createCampaignActivities = (): SpecificCampaignActivity[] => {
 				healPrice: 3,
 			},
 			Component: ShopComponent,
+			type: 'hub',
+			completed: false,
+		},
+		{
+			data: {
+				type: 'combiner',
+				name: 'Combiner',
+				id: activityId(),
+			},
+			Component: CombinerComponent,
 			type: 'hub',
 			completed: false,
 		},
@@ -148,20 +159,13 @@ export const setupMap = (): { regions: CampaignRegion[][]; initialRegion: Curren
 	const finalParents = map[map.length - 1].filter(r => included.has(r));
 
 	const initialRegion: CurrentCampaignRegion = {
-		activities: [
-			{
-				data: { type: 'start', name: 'Start', id: activityId() },
-				Component: StartActivityComponent,
-				type: 'hub',
-				completed: false,
-			},
-		],
+		activities: createCampaignActivities(),
 		id: regionId(),
 		name: 'Start',
 		row: map.length,
 		column: 0,
-		energy: 0,
-		maxEnergy: 0,
+		energy: 1,
+		maxEnergy: 1,
 		completed: false,
 		validNext: finalParents.map(r => r.id),
 		x: Math.floor((finalParents[0].x + last(finalParents).x) / 2),

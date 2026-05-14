@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 
-import { RenderActivity } from '../activity';
+import { RenderActivity } from '../activity2';
 import { Bag } from '../common/Bag';
 import { useExternalStore } from '../common/external-store';
 import { RegionComponent } from '../region';
