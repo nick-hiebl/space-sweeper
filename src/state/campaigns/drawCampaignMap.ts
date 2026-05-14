@@ -1,4 +1,4 @@
-import { CampaignRegion } from './campaign';
+import type { CampaignRegion } from './types';
 
 export const drawCampaignMap = (canvas: HTMLCanvasElement, regions: CampaignRegion[][]) => {
     const ctx = canvas.getContext('2d');

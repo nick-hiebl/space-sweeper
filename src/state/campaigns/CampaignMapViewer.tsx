@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 
 import { useExternalStore } from '../../common/external-store';
 
-import { X_SCALE, Y_SCALE } from './campaign';
+import { X_SCALE, Y_SCALE } from './constants';
 import { useCampaign } from './context';
 import { drawCampaignMap } from './drawCampaignMap';
 
