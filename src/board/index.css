@@ -49,8 +49,9 @@
     100% { border-color: #4cf; }
 }
 
-button:disabled {
-    opacity: 45%;
+button.disable-able-button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
 }
 
 #effect-modules {

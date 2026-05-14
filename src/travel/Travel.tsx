@@ -130,6 +130,7 @@ const Waiting = ({ travel }: WaitingProps) => {
 	return (
 		<div className="inline gap-8px">
 			<button
+				className="disable-able-button"
 				onClick={() => travel.draw()}
 				disabled={energy <= 0 || anythingPlacedInLast || nothingToDraw}
 			>

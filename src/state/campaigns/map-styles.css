@@ -1,3 +1,35 @@
-button[data-visited="true"] {
-	border-color: red;
+button:disabled[data-visited="true"] {
+	/* border-color: red; */
+	background-color: red;
+}
+
+.map-cell {
+	width: 80px;
+	height: 80px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.map-container {
+	position: relative;
+	width: fit-content;
+}
+
+canvas.map-background {
+	z-index: -1;
+
+	background-color: white;
+	position: absolute;
+
+	width: 100%;
+	height: 100%;
+}
+
+.map-table {
+	border-spacing: 0;
+}
+
+.map-table-cell {
+	padding: 0;
 }

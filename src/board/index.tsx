@@ -254,6 +254,7 @@ export const Board = ({ onGameAction, state }: Props) => {
                             <h2>Actions</h2>
                             <div className="inline-center gap-8px">
                                 <button
+                                    className="disable-able-button"
                                     disabled={state.energy <= 0 || anythingPlacedInLast || nothingToDraw}
                                     onClick={() => {
                                         onGameAction({

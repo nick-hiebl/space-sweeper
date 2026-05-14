@@ -3,8 +3,10 @@ import type { ComponentType } from 'react';
 import { ShopComponent } from '../../activity2/shop';
 import { StartActivity as StartActivityComponent } from '../../activity2/start';
 import { createExternalStore, ExternalStore } from '../../common/external-store';
+import { createMyMap } from '../../common/grid-functions';
 import { Travel } from '../../travel';
 import { Player } from '../player';
+import { selectRandomN } from '../../common/random';
 
 let n = 0;
 const regionId = () => {
@@ -21,13 +23,15 @@ export type CampaignRegion = {
 	name: string;
 	id: number;
 	row: number;
+	validNext: number[];
+	x: number;
+	y: number;
 };
 
 export type CurrentCampaignRegion = CampaignRegion & {
 	energy: number;
 	maxEnergy: number;
 	completed: boolean;
-	validNext: number[];
 };
 
 export type ActivityCommon = {
@@ -88,13 +92,16 @@ const createCampaignActivities = (): SpecificCampaignActivity[] => {
 	];
 };
 
-const createRegion = (row: number): CampaignRegion => {
+const createRegion = (row: number, column: number): CampaignRegion => {
 	const id = regionId();
 	return {
 		id,
 		name: `World ${id}`,
 		activities: createCampaignActivities(),
 		row,
+		validNext: [],
+		x: column * 80 + 40,
+		y: row * 80 + 40,
 	};
 };
 
@@ -116,7 +123,7 @@ export class Campaign {
 	pastRegionWatcher: ExternalStore<CurrentCampaignRegion[]>;
 
 	constructor() {
-		this.regions = createMyMap(createRegion, 11, 5);
+		this.regions = setupMap();
 		this.pastRegions = [];
 
 		this.currentRegion = {
@@ -128,6 +135,8 @@ export class Campaign {
 			maxEnergy: 0,
 			completed: false,
 			validNext: this.regions[this.regions.length - 1].map(v => v.id),
+			x: this.regions[0].length * 40 + 40,
+			y: this.regions.length * 80 + 40,
 		};
 		this.currentActivity = { type: 'map' };
 
@@ -192,7 +201,6 @@ export class Campaign {
 			...target,
 			energy,
 			maxEnergy: energy,
-			validNext: this.regions[target.row - 1].map(v => v.id),
 			completed: false,
 		};
 
@@ -280,18 +288,14 @@ export class Campaign {
 	}
 }
 
-const createMyMap = <T>(fillSlot: (row: number) => T, rows: number, columns: number): T[][] => {
-	const allRows = [];
+const setupMap = (): CampaignRegion[][] => {
+	const map = createMyMap(createRegion, 11, 5);
 
-	for (let i = 0; i < rows; i++) {
-		const row = [];
-
-		for (let j = 0; j < columns; j++) {
-			row.push(fillSlot(i));
+	for (let i = 1; i < map.length; i++) {
+		for (let j = 0; j < map[i].length; j++) {
+			map[i][j].validNext = selectRandomN(map[i - 1], 2).map(r => r.id);
 		}
-
-		allRows.push(row);
 	}
 
-	return allRows;
+	return map;
 };
