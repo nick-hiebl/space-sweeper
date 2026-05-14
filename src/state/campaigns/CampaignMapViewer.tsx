@@ -1,10 +1,11 @@
 import { useEffect, useRef } from 'react';
+
 import { useExternalStore } from '../../common/external-store';
 
 import { useCampaign } from './context';
+import { drawCampaignMap } from './drawCampaignMap';
 
 import './map-styles.css';
-import { drawCampaignMap } from './drawCampaignMap';
 
 export const CampaignMapViewer = () => {
 	const campaign = useCampaign();
@@ -18,44 +19,46 @@ export const CampaignMapViewer = () => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const mapRef = useRef<HTMLCanvasElement>(null);
 
+	const width = regions[0].length * 80;
+	const height = regions.length * 80;
+
 	useEffect(() => {
 		if (!mapRef.current || !containerRef.current) {
 			return;
 		}
 
-		mapRef.current.width = regions[0].length * 80;
-		mapRef.current.height = regions.length * 80;
+		mapRef.current.width = width;
+		mapRef.current.height = height;
 
 		drawCampaignMap(mapRef.current, regions);
-	}, [regions]);
+	}, [height, width, regions]);
 
 	return (
 		<div className="map-container" ref={containerRef}>
 			<canvas className="map-background" ref={mapRef} />
-			<table className="map-table">
-				<tbody>
+			<div className="map-table" role="table" style={{ width, height }}>
+				<div role="rowgroup">
 					{regions.map((row, index) => (
-						<tr key={index}>
-							{row.map(region => (
-								<td key={region.id} className="map-table-cell">
-									<div className="map-cell">
-										<button
-											data-visited={region.id === id || pastRegions.some(v => v.id === region.id)}
-											onClick={() => {
-												campaign.goTo(region.id);
-											}}
-											disabled={!validNext.includes(region.id)}
-										>
-											{region.id}
-										</button>
-									</div>
-								</td>
+						<div role="row" key={index}>
+							{row.filter(r => r.activities.length > 0).map(region => (
+								<div role="cell" key={region.id} className="map-table-cell" style={{ top: region.y, left: region.x }}>
+									<button
+										className="map-cell"
+										data-visited={region.id === id || pastRegions.some(v => v.id === region.id)}
+										onClick={() => {
+											campaign.goTo(region.id);
+										}}
+										disabled={!validNext.includes(region.id)}
+									>
+										{region.id}
+									</button>
+								</div>
 							)
 							)}
-						</tr>
+						</div>
 					))}
-				</tbody>
-			</table>
+				</div>
+			</div>
 		</div>
 	);
 };

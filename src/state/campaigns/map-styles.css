@@ -1,14 +1,16 @@
 button:disabled[data-visited="true"] {
-	/* border-color: red; */
 	background-color: red;
 }
 
 .map-cell {
-	width: 80px;
-	height: 80px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	position: absolute;
+	top: -24px;
+	left: -24px;
+	width: 48px;
+	height: 48px;
 }
 
 .map-container {
@@ -32,4 +34,5 @@ canvas.map-background {
 
 .map-table-cell {
 	padding: 0;
+	position: absolute;
 }

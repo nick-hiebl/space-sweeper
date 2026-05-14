@@ -10,7 +10,7 @@ import './App.css';
 
 export const App = () => {
 	const [isSpritesheetReady, setReady] = useState(false);
-	const [campaign] = useState(new Campaign());
+	const [campaign] = useState(() => new Campaign());
 
 	useEffect(() => {
 		const allPromises = Promise.all([
