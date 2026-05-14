@@ -162,7 +162,7 @@ export const setupMap = (): { regions: CampaignRegion[][]; initialRegion: Curren
 		column: 0,
 		energy: 0,
 		maxEnergy: 0,
-		completed: true,
+		completed: false,
 		validNext: finalParents.map(r => r.id),
 		x: Math.floor((finalParents[0].x + last(finalParents).x) / 2),
 		y: (map.length + 1/2) * Y_SCALE,

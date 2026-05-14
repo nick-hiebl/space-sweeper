@@ -29,7 +29,7 @@ export class Campaign {
 		this.pastRegions = [];
 
 		this.currentRegion = initialRegion;
-		this.currentActivity = { type: 'map' };
+		this.currentActivity = { type: 'browse' };
 
 		this.player = new Player(4, 8);
 
