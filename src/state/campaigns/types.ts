@@ -1,6 +1,9 @@
 import type { ComponentType } from 'react';
 
-import { Travel } from '../../travel';
+import type { Travel } from '../../travel';
+import type { Chip, EffectModule } from '../types';
+
+import { Campaign } from './campaign';
 
 export type CampaignRegion = {
 	activities: SpecificCampaignActivity[];
@@ -35,11 +38,24 @@ export type CampaignActivity<T extends ActivityCommon> = {
 export type SpecificCampaignActivity =
 	| CampaignActivity<StartActivity>
 	| CampaignActivity<ShopActivity>
-	| CampaignActivity<CombinerActivity>;
+	| CampaignActivity<CombinerActivity>
+	| CampaignActivity<ChoiceActivity>;
 
 export type StartActivity = ActivityCommon & { type: 'start' };
 
 export type CombinerActivity = ActivityCommon & { type: 'combiner' };
+
+export type ChoiceActivity = ActivityCommon & {
+	type: 'choice';
+	choices: IndividualChoice[];
+};
+
+export type IndividualChoice = {
+	onSelect: (campaign: Campaign) => void;
+	text: string;
+	chips?: Omit<Chip, 'id'>[];
+	modules?: EffectModule[];
+};
 
 export type ShopActivity = ActivityCommon & {
 	type: 'shop';

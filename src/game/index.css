@@ -25,4 +25,5 @@ dialog::backdrop {
 
 dialog {
 	background-color: #666;
+	max-width: 80vw;
 }

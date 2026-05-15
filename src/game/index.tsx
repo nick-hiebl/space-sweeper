@@ -6,7 +6,6 @@ import { useExternalStore } from '../common/external-store';
 import { RegionComponent } from '../region';
 import { CampaignMapViewer } from '../state/campaigns/CampaignMapViewer';
 import { useCampaign } from '../state/campaigns/context';
-// import { STARTER_GAME } from '../state/campaigns/intro-campaign';
 import { TravelComponent } from '../travel/Travel';
 
 import { PlayerInfo } from './PlayerInfo';

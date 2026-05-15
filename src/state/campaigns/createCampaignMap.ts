@@ -1,9 +1,12 @@
+import { ChoiceComponent } from '../../activity2/choice';
 import { CombinerComponent } from '../../activity2/combiner';
 import { ShopComponent } from '../../activity2/shop';
 import { StartActivity as StartActivityComponent } from '../../activity2/start';
 import { createMyMap } from '../../common/grid-functions';
 import { selectRandom } from '../../common/random';
 import { last } from '../common';
+
+import type { Campaign } from './campaign';
 
 import { X_SCALE, Y_SCALE } from './constants';
 import type { CampaignRegion, CurrentCampaignRegion, SpecificCampaignActivity } from './types';
@@ -19,8 +22,6 @@ let m = 0;
 const activityId = () => {
 	return m++;
 };
-
-const WIGGLE = 0.2;
 
 const createCampaignActivities = (): SpecificCampaignActivity[] => {
 	return [
@@ -51,8 +52,37 @@ const createCampaignActivities = (): SpecificCampaignActivity[] => {
 			type: 'hub',
 			completed: false,
 		},
+		{
+			data: {
+				type: 'choice',
+				choices: [
+					{
+						text: 'Take a red chip',
+						chips: [{ style: 'red', quantity: 1 }],
+						onSelect: (campaign: Campaign) => {
+							campaign.player.addChips([{ style: 'red', quantity: 1 }]);
+						},
+					},
+					{
+						text: 'Take a blue chip',
+						chips: [{ style: 'blue', quantity: 1 }],
+						onSelect: (campaign: Campaign) => {
+							campaign.player.addChips([{ style: 'blue', quantity: 1 }]);
+						},
+					},
+				],
+				name: 'Choice',
+				id: activityId(),
+			},
+			Component: ChoiceComponent,
+			type: 'hub',
+			completed: false,
+		},
 	];
 };
+
+const WIGGLE = 0.2;
+
 const createRegion = (row: number, column: number): CampaignRegion => {
 	const id = regionId();
 
