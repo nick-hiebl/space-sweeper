@@ -102,4 +102,15 @@ export class Player {
 
 		this.sourcesWatcher.triggerUpdate();
 	}
+
+	removeModules(modules: EffectModule[]) {
+		const newModules = this.sources.effects.filter(mod => !modules.includes(mod));
+
+		this.sources = {
+			...this.sources,
+			effects: newModules,
+		};
+
+		this.sourcesWatcher.triggerUpdate();
+	}
 }

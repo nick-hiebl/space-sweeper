@@ -39,7 +39,8 @@ export type SpecificCampaignActivity =
 	| CampaignActivity<StartActivity>
 	| CampaignActivity<ShopActivity>
 	| CampaignActivity<CombinerActivity>
-	| CampaignActivity<ChoiceActivity>;
+	| CampaignActivity<ChoiceActivity>
+	| CampaignActivity<ModuleTrashActivity>;
 
 export type StartActivity = ActivityCommon & { type: 'start' };
 
@@ -55,6 +56,10 @@ export type IndividualChoice = {
 	text: string;
 	chips?: Omit<Chip, 'id'>[];
 	modules?: EffectModule[];
+};
+
+export type ModuleTrashActivity = ActivityCommon & {
+	type: 'module-trash';
 };
 
 export type ShopActivity = ActivityCommon & {

@@ -1,5 +1,6 @@
 import { ChoiceComponent } from '../../activity2/choice';
 import { CombinerComponent } from '../../activity2/combiner';
+import { ModuleTrashComponent } from '../../activity2/module-trash';
 import { ShopComponent } from '../../activity2/shop';
 import { StartActivity as StartActivityComponent } from '../../activity2/start';
 import { createMyMap } from '../../common/grid-functions';
@@ -75,6 +76,16 @@ const createCampaignActivities = (): SpecificCampaignActivity[] => {
 				id: activityId(),
 			},
 			Component: ChoiceComponent,
+			type: 'hub',
+			completed: false,
+		},
+		{
+			data: {
+				type: 'module-trash',
+				id: activityId(),
+				name: 'Module bin',
+			},
+			Component: ModuleTrashComponent,
 			type: 'hub',
 			completed: false,
 		},
