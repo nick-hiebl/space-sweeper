@@ -1,8 +1,5 @@
-import React from 'react';
-
 import { Board } from '../board';
 import { Shop } from '../shop';
-import type { SpecificCampaignActivity } from '../state/campaigns/types';
 import type { GameAction, GameState } from '../state/types';
 
 import { Choice } from './choice';
