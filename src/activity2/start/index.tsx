@@ -8,6 +8,7 @@ export const StartActivity = () => {
 			<h3>Hello</h3>
 			<div>
 				<button
+					className="button"
 					onClick={() => campaign.completeCurrentActivity()}
 				>
 					Done

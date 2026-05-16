@@ -16,6 +16,7 @@ export const ShopComponent = (props: ShopProps) => {
             <h2>Shop: {props.name}</h2>
             <div>
                 <button
+					className="button"
                     disabled={stats.money < healPrice || stats.hitPoints >= stats.maxHitPoints}
                     onClick={() => {
                         campaign.player.triggerEffects([
@@ -29,6 +30,7 @@ export const ShopComponent = (props: ShopProps) => {
             </div>
             <div>
                 <button
+					className="button"
                     onClick={() => {
                         campaign.completeCurrentActivity();
                     }}

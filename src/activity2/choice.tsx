@@ -16,7 +16,7 @@ export const ChoiceComponent = (props: Props) => {
 			<h2>Choice: {props.name}</h2>
 			{done ? (
 				<div>
-					<button onClick={() => campaign.completeCurrentActivity()}>Proceed</button>
+					<button className="button" onClick={() => campaign.completeCurrentActivity()}>Proceed</button>
 				</div>
 			) : (
 				<ul className="stack gap-8px">
@@ -35,7 +35,7 @@ const SingleChoice = ({ choice, onSelect }: { choice: IndividualChoice; onSelect
 	return (
 		<li>
 			<button
-				className="inline gap-16px inline-center"
+				className="button inline gap-16px inline-center"
 				onClick={() => {
 					choice.onSelect(campaign);
 

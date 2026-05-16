@@ -41,6 +41,7 @@ export const ModuleTrashComponent = (props: Props) => {
 				)}
 				<div>
 					<button
+						className="button"
 						onClick={() => {
 							campaign.completeCurrentActivity();
 						}}
@@ -60,7 +61,7 @@ export const ModuleTrashComponent = (props: Props) => {
 				{duplicateModules.map((module, index) => (
 					<li key={index}>
 						<button
-							className="inverted"
+							className="button inverted"
 							onClick={() => {
 								campaign.player.removeModules([module]);
 

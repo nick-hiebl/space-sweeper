@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { RenderActivity } from '../activity2';
 import { Bag } from '../common/Bag';
@@ -15,20 +15,26 @@ import './index.css';
 export const Game = () => {
 	const campaign = useCampaign();
 
-	// const [state, signal] = useReducer(GameStateManager, initialGameState(
-	//     // STARTER_GAME, undefined, SHORT_GAME_DATA,
-	//     MAIN_GAME, initialCampaignData, undefined,
-	// ));
+	const [openDialog, setOpenDialog] = useState<'map' | 'bag' | undefined>(undefined);
 
 	const activity = useExternalStore(campaign.activity);
 
 	const bagDialogRef = useRef<HTMLDialogElement>(null);
 	const mapDialogRef = useRef<HTMLDialogElement>(null);
 
-	const closeAllDialogs = () => {
-		bagDialogRef.current?.close();
-		mapDialogRef.current?.close();
-	};
+	useEffect(() => {
+		if (openDialog === 'bag') {
+			bagDialogRef.current?.showModal();
+		} else {
+			bagDialogRef.current?.close();
+		}
+
+		if (openDialog === 'map') {
+			mapDialogRef.current?.showModal();
+		} else {
+			mapDialogRef.current?.close();
+		}
+	}, [openDialog])
 
 	const { bag, weights } = useExternalStore(campaign.player.sourcesWatcher);
 
@@ -38,17 +44,17 @@ export const Game = () => {
 				<PlayerInfo />
 				<div className="inline gap-8px">
 					<button
+						className="button"
 						onClick={() => {
-							closeAllDialogs();
-							bagDialogRef.current?.showModal();
+							setOpenDialog('bag');
 						}}
 					>
 						Bag
 					</button>
 					<button
+						className="button"
 						onClick={() => {
-							closeAllDialogs();
-							mapDialogRef.current?.showModal();
+							setOpenDialog('map');
 						}}
 						disabled={activity.type === 'map'}
 					>
@@ -57,14 +63,15 @@ export const Game = () => {
 					<dialog
 						ref={bagDialogRef}
 						onClose={() => {
-							bagDialogRef.current?.close();
+							setOpenDialog(undefined);
 						}}
 					>
 						<Bag bag={bag} weights={weights} />
 						<div className="inline inline-end">
 							<button
+								className="button"
 								onClick={() => {
-									bagDialogRef.current?.close();
+									setOpenDialog(undefined);
 								}}
 							>
 								Close
@@ -74,21 +81,22 @@ export const Game = () => {
 					<dialog
 						ref={mapDialogRef}
 						onClose={() => {
-							mapDialogRef.current?.close();
+							setOpenDialog(undefined);
 						}}
 					>
 						<div className="stack gap-16px">
 							<div className="inline gap-16px spread">
 								<h2>Map</h2>
 								<button
+									className="button"
 									onClick={() => {
-										mapDialogRef.current?.close();
+										setOpenDialog(undefined);
 									}}
 								>
 									Close
 								</button>
 							</div>
-							<CampaignMapViewer />
+							<CampaignMapViewer hidden={openDialog !== 'map'} />
 						</div>
 					</dialog>
 				</div>

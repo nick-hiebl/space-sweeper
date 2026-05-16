@@ -83,6 +83,7 @@ export const CombinerComponent = (props: Props) => {
 					<p>Once you're ready...</p>
 					<div>
 						<button
+							className="button"
 							onClick={() => {
 								campaign.completeCurrentActivity();
 							}}
@@ -98,6 +99,7 @@ export const CombinerComponent = (props: Props) => {
 						{dupes.map(duplicate => (
 							<button
 								key={duplicate.key}
+								className="button"
 								onClick={() => onCombine(duplicate)}
 							>
 								<ChipDisplay chip={duplicate} />
@@ -133,7 +135,7 @@ export const CombinerComponent = (props: Props) => {
 						)}
 					</div>
 					<div className="combiner-action">
-						<button onClick={() => setAnimating(false)}>Dismiss</button>
+						<button className="button" onClick={() => setAnimating(false)}>Dismiss</button>
 					</div>
 				</dialog>
 			)}

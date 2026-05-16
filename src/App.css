@@ -6,7 +6,7 @@ body {
 	color: white;
 }
 
-button {
+button.button {
 	cursor: pointer;
 	padding: 16px;
 	background-color: black;
@@ -15,23 +15,23 @@ button {
 	border-radius: 4px;
 }
 
-button:disabled {
+button.button:disabled {
 	cursor: not-allowed;
 	background-color: #444;
 }
 
-button:hover {
+button.button:hover:not(:disabled) {
 	border-color: #ddd;
 	background-color: #114;
 	outline: 1px solid #ddd;
 }
 
-button.inverted {
+button.button.inverted {
 	color: black;
 	background-color: #ddd;
 }
 
-button.inverted:hover {
+button.button.inverted:hover {
 	background-color: #fff;
 }
 

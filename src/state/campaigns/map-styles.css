@@ -1,7 +1,3 @@
-button:disabled[data-visited="true"] {
-	background-color: red;
-}
-
 .map-cell {
 	display: flex;
 	align-items: center;
@@ -11,6 +7,28 @@ button:disabled[data-visited="true"] {
 	left: -24px;
 	width: 48px;
 	height: 48px;
+	background: none;
+	border-width: 0;
+	cursor: pointer;
+}
+
+.map-cell:disabled {
+	background: none;
+	border-width: 0;
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+.map-cell:hover:not(:disabled) {
+	transform: scale(1.08);
+	background: none;
+	border-width: 0;
+}
+
+.map-cell:hover {
+	background: none;
+	border-width: 0;
+	outline: none;
 }
 
 .map-container {

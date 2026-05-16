@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 
+import { Sprite } from '../../common/Sprite';
 import { useExternalStore } from '../../common/external-store';
 
 import { X_SCALE, Y_SCALE } from './constants';
@@ -8,14 +9,18 @@ import { drawCampaignMap } from './drawCampaignMap';
 
 import './map-styles.css';
 
-export const CampaignMapViewer = () => {
+type Props = {
+	hidden?: boolean;
+};
+
+export const CampaignMapViewer = ({ hidden }: Props) => {
 	const campaign = useCampaign();
+	const currentRef = useRef<HTMLButtonElement>(null);
 
 	const regions = useExternalStore(campaign.mapWatcher);
-	const { validNext } = useExternalStore(campaign.regionWatcher);
+	const { id: currentId, validNext } = useExternalStore(campaign.regionWatcher);
 
 	const pastRegions = useExternalStore(campaign.pastRegionWatcher);
-	const { id } = useExternalStore(campaign.regionWatcher);
 
 	const containerRef = useRef<HTMLDivElement>(null);
 	const mapRef = useRef<HTMLCanvasElement>(null);
@@ -31,8 +36,18 @@ export const CampaignMapViewer = () => {
 		mapRef.current.width = width;
 		mapRef.current.height = height;
 
-		drawCampaignMap(mapRef.current, regions);
-	}, [height, width, regions]);
+		drawCampaignMap(mapRef.current, regions, pastRegions.map(v => v.id), currentId);
+	}, [currentId, height, width, pastRegions, regions]);
+
+	useEffect(() => {
+		if (hidden) {
+			return;
+		}
+
+		setTimeout(() => {
+			currentRef.current?.scrollIntoView({ behavior: 'smooth' });
+		}, 100);
+	}, [hidden]);
 
 	return (
 		<div className="map-container" ref={containerRef}>
@@ -45,13 +60,14 @@ export const CampaignMapViewer = () => {
 								<div role="cell" key={region.id} className="map-table-cell" style={{ top: region.y, left: region.x }}>
 									<button
 										className="map-cell"
-										data-visited={region.id === id || pastRegions.some(v => v.id === region.id)}
+										ref={currentId === region.id ? currentRef : undefined}
+										data-visited={region.id === currentId || pastRegions.some(v => v.id === region.id)}
 										onClick={() => {
 											campaign.goTo(region.id);
 										}}
 										disabled={!validNext.includes(region.id)}
 									>
-										{region.id}
+										<Sprite type="chip" chip={{ style: 'red' }} size="48" />
 									</button>
 								</div>
 							)

@@ -130,13 +130,13 @@ const Waiting = ({ travel }: WaitingProps) => {
 	return (
 		<div className="inline gap-8px">
 			<button
-				className="disable-able-button"
+				className="button disable-able-button"
 				onClick={() => travel.draw()}
 				disabled={energy <= 0 || anythingPlacedInLast || nothingToDraw}
 			>
 				Draw
 			</button>
-			<button onClick={() => travel.complete(campaign)}>
+			<button className="button" onClick={() => travel.complete(campaign)}>
 				End
 			</button>
 		</div>
@@ -169,7 +169,7 @@ const Drawing = ({ action, travel, setHoveredStyle, setHoveredPlace }: DrawingPr
 				return (
 					<button
 						key={chip.id}
-						className="inverted"
+						className="button inverted"
 						onClick={() => {
 							travel.choose(chip);
 						}}
@@ -247,7 +247,7 @@ const ModuleSelection = ({ action, travel }: ModuleSelectionProps) => {
 					.map((mod, index) => (
 						<button
 							key={index}
-							className="inverted"
+							className="button inverted"
 							onClick={() => {
 								travel.selectModule(mod);
 							}}
