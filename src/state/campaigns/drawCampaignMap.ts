@@ -81,7 +81,7 @@ export const drawCampaignMap = (
 				return;
 			}
 
-			const trail = closerLineCoords(region, upperRegion, 28);
+			const trail = closerLineCoords(region, upperRegion, 20);
 
 			ctx.strokeStyle = 'white';
 
