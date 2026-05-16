@@ -1,5 +1,6 @@
 import type { ComponentType } from 'react';
 
+import { PlanetIcon } from '../../common/Sprite';
 import type { Travel } from '../../travel';
 import type { Chip, EffectModule } from '../types';
 
@@ -14,6 +15,7 @@ export type CampaignRegion = {
 	validNext: number[];
 	x: number;
 	y: number;
+	icon: PlanetIcon;
 };
 
 export type CurrentCampaignRegion = CampaignRegion & {

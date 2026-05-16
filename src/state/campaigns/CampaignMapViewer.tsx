@@ -67,7 +67,7 @@ export const CampaignMapViewer = ({ hidden }: Props) => {
 										}}
 										disabled={!validNext.includes(region.id)}
 									>
-										<Sprite type="chip" chip={{ style: 'red' }} size="48" />
+										<Sprite type="planet" icon={region.icon} size="64" />
 									</button>
 								</div>
 							)

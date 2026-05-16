@@ -104,6 +104,7 @@ const createRegion = (row: number, column: number): CampaignRegion => {
 		row,
 		column,
 		validNext: [],
+		icon: selectRandom(['earth', 'black-hole']),
 		x: Math.round((column + 1/2 + Math.random() * WIGGLE - WIGGLE / 2) * X_SCALE),
 		y: Math.round((row + 1/2 + Math.random() * WIGGLE - WIGGLE / 2) * Y_SCALE),
 	};
@@ -209,6 +210,7 @@ export const setupMap = (): { regions: CampaignRegion[][]; initialRegion: Curren
 		maxEnergy: 1,
 		completed: false,
 		validNext: finalParents.map(r => r.id),
+		icon: 'earth',
 		x: Math.floor((finalParents[0].x + last(finalParents).x) / 2),
 		y: (map.length + 1/2) * Y_SCALE,
 	};

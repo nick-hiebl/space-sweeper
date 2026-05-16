@@ -3,18 +3,18 @@
 	align-items: center;
 	justify-content: center;
 	position: absolute;
-	top: -24px;
-	left: -24px;
-	width: 48px;
-	height: 48px;
+	top: -16px;
+	left: -16px;
+	width: 32px;
+	height: 32px;
 	background: none;
 	border-width: 0;
 	cursor: pointer;
+
+	border-radius: 50%;
 }
 
 .map-cell:disabled {
-	background: none;
-	border-width: 0;
 	opacity: 0.6;
 	cursor: not-allowed;
 }
@@ -26,8 +26,6 @@
 }
 
 .map-cell:hover {
-	background: none;
-	border-width: 0;
 	outline: none;
 }
 
