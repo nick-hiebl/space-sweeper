@@ -3,6 +3,7 @@ import { createExternalStore, ExternalStore } from '../common/external-store';
 import { selectRandom } from '../common/random';
 import { Campaign } from '../state/campaigns/campaign';
 import { last, resolveEffect } from '../state/common';
+import { getId } from '../state/initialiser';
 import { Player, Sources } from '../state/player';
 import type { Chip, Effect, EffectModule, MoveEffect, Style } from '../state/types';
 
@@ -224,7 +225,7 @@ export class Travel {
 			))
 			.concat(DEFAULT_ENERGY_COST);
 
-		this.player.triggerEffects(drawEffects);
+		this.triggerEffects(drawEffects);
 	}
 
 	choose(chip: Chip) {
@@ -276,7 +277,29 @@ export class Travel {
 		}
 
 		if (effects.length > 0) {
-			this.player.triggerEffects(effects);
+			this.triggerEffects(effects);
+		}
+	}
+
+	triggerEffects(effects: Effect[]) {
+		this.player.triggerEffects(effects);
+
+		let anySourceChanges = false;
+
+		effects.forEach(effect => {
+			if (effect.type === 'add-to-bag') {
+				anySourceChanges = true;
+
+				this.sources.bag = this.sources.bag.concat(effect.chips.map(c => ({ ...c, id: getId() })));
+			}
+		});
+
+		if (anySourceChanges) {
+			this.sources = {
+				...this.sources,
+			};
+
+			this.sourceWatcher.triggerUpdate();
 		}
 	}
 

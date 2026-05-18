@@ -31,6 +31,7 @@ export const bigBag = (): Chip[] => {
 		{ style: 'fruit', quantity: 1, id: getId() },
 		{ style: 'tree', quantity: 1, id: getId() },
 		{ style: 'red', quantity: 1, id: getId() },
+		{ style: 'ice', quantity: 1, id: getId() },
 	];
 };
 
@@ -42,6 +43,10 @@ export const getDefaultWeights = (): Weight[] => {
 
 export const defaultEffectDeck = (): EffectModule[] => {
 	return [
+		{
+			style: 'ice',
+			drawEffects: [{ type: 'add-to-bag', chips: [{ style: 'ice', quantity: 2 }] }],
+		},
 		{
 			style: 'explosion',
 			drawEffects: [{ type: 'health', healthShift: '-quantity' }],

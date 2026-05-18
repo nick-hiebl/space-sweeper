@@ -35,16 +35,20 @@ type SpriteTypeProps =
     | { type: 'planet'; icon: PlanetIcon };
 
 type IconType =
+    | 'transform'
+    | 'forced'
+    | 'draw'
+    | 'play'
+    | 'do-nothing'
+    | 'bag'
+    | 'return-to-bag'
+    | 'add-to-bag'
     | 'heart'
     | 'heart-empty'
     | 'energy'
     | 'energy-empty'
     | 'money'
     | 'no-money'
-    | 'forced'
-    | 'draw'
-    | 'play'
-    | 'do-nothing'
     | 'arrow';
 
 export type PlanetIcon =
@@ -87,6 +91,9 @@ const planetDetails = (x: number, y: number) => ({
     x: x * 256, y: y * 256, width: 256, height: 256,
 });
 
+const ICON_BOTTOM_2 = 6;
+const ICON_BOTTOM = 7;
+
 const POSITION_DATA: Record<SpriteId, PositionData> = {
     // Chips
     'chip:fuel': commonDetails(0, 0),
@@ -98,18 +105,24 @@ const POSITION_DATA: Record<SpriteId, PositionData> = {
     'chip:gem': commonDetails(6, 0),
     'chip:fruit': commonDetails(7, 0),
     'chip:tree': commonDetails(8, 0),
+    'chip:ice': commonDetails(9, 0),
     // UI icons
-    'ui-icon:forced': commonDetails(0, 6),
-    'ui-icon:heart': commonDetails(0, 7),
-    'ui-icon:heart-empty': commonDetails(1, 7),
-    'ui-icon:energy': commonDetails(2, 7),
-    'ui-icon:energy-empty': commonDetails(3, 7),
-    'ui-icon:money': commonDetails(4, 7),
-    'ui-icon:no-money': commonDetails(5, 7),
-    'ui-icon:draw': commonDetails(1, 6),
-    'ui-icon:play': commonDetails(2, 6),
-    'ui-icon:do-nothing': commonDetails(3, 6),
-    'ui-icon:arrow': commonDetails(15, 7),
+    'ui-icon:transform': commonDetails(0, ICON_BOTTOM_2 - 1),
+    'ui-icon:forced': commonDetails(0, ICON_BOTTOM_2),
+    'ui-icon:draw': commonDetails(1, ICON_BOTTOM_2),
+    'ui-icon:play': commonDetails(2, ICON_BOTTOM_2),
+    'ui-icon:do-nothing': commonDetails(3, ICON_BOTTOM_2),
+    'ui-icon:bag': commonDetails(4, ICON_BOTTOM_2),
+    'ui-icon:return-to-bag': commonDetails(5, ICON_BOTTOM_2),
+    'ui-icon:add-to-bag': commonDetails(6, ICON_BOTTOM_2),
+
+    'ui-icon:heart': commonDetails(0, ICON_BOTTOM),
+    'ui-icon:heart-empty': commonDetails(1, ICON_BOTTOM),
+    'ui-icon:energy': commonDetails(2, ICON_BOTTOM),
+    'ui-icon:energy-empty': commonDetails(3, ICON_BOTTOM),
+    'ui-icon:money': commonDetails(4, ICON_BOTTOM),
+    'ui-icon:no-money': commonDetails(5, ICON_BOTTOM),
+    'ui-icon:arrow': commonDetails(15, ICON_BOTTOM),
     // Planets
     'earth': planetDetails(0, 0),
     'black-hole': planetDetails(1, 0),
@@ -131,17 +144,23 @@ const LABEL_DATA: Record<SpriteId, string> = {
     'chip:gem': 'Gem item',
     'chip:fruit': 'Fruit item',
     'chip:tree': 'Tree item',
+    'chip:ice': 'Ice item',
     // UI icon
+    'ui-icon:transform': 'Transform',
     'ui-icon:forced': 'Forced selection',
+    'ui-icon:draw': 'When drawing an item',
+    'ui-icon:play': 'When playing an item',
+    'ui-icon:do-nothing': 'Do nothing',
+    'ui-icon:bag': 'Bag',
+    'ui-icon:return-to-bag': 'Return to bag',
+    'ui-icon:add-to-bag': 'Add to bag',
+
     'ui-icon:heart': 'Heart',
     'ui-icon:heart-empty': 'Empty heart',
     'ui-icon:energy': 'Energy',
     'ui-icon:energy-empty': 'Empty energy',
     'ui-icon:money': 'Money',
     'ui-icon:no-money': 'No money',
-    'ui-icon:draw': 'When drawing an item',
-    'ui-icon:play': 'When playing an item',
-    'ui-icon:do-nothing': 'Do nothing',
     'ui-icon:arrow': 'causes',
     // Planets
     'earth': 'Earth-like planet',

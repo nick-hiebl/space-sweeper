@@ -63,6 +63,7 @@ export class Player {
 			} else if (effect.type === 'energy') {
 				energy += readQuantity(effect.energyShift);
 			}
+			// Other types of effects can be ignored as they may not apply to the player
 		});
 
 		this.stats = {

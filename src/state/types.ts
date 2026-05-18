@@ -9,7 +9,8 @@ export type Style =
     | 'blue'
     | 'gem'
     | 'fruit'
-    | 'tree';
+    | 'tree'
+    | 'ice';
 
 export type Id = number;
 
@@ -46,6 +47,14 @@ export type ForcedEffect = {
     type: 'forced';
 };
 
+export type AddToBagEffect = {
+    type: 'add-to-bag';
+    /**
+     * These are notated as a weight, but that is just used as a placeholder for a chip without an id
+     */
+    chips: Weight[];
+};
+
 export type MoveEffect = {
     type: 'move';
     distance: Quantity;
@@ -57,7 +66,8 @@ export type Effect =
     | EnergyEffect
     | DiscardEffect
     | ForcedEffect
-    | MoveEffect;
+    | MoveEffect
+    | AddToBagEffect;
 
 export type Pattern = Style[];
 
