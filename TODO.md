@@ -12,5 +12,4 @@
 # Small picture
 
 - Chip that increases in number when drawn.
-- Shop where you can buy things other than heals.
 - Ability to reboot after death at the next planet instead of just refreshing the page.
