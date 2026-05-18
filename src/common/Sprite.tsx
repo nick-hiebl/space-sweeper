@@ -49,7 +49,12 @@ type IconType =
 
 export type PlanetIcon =
     | 'earth'
-    | 'black-hole';
+    | 'black-hole'
+    | 'ice'
+    | 'gas-giant'
+    | 'moon'
+    | 'quasar'
+    | 'belt';
 
 type SpriteProps = SpriteTypeProps & {
     /**
@@ -74,32 +79,45 @@ type PositionData = {
 
 const COMMON = { width: 128, height: 128 };
 
+const commonDetails = (x: number, y: number) => ({
+    x: x * 128, y: y * 128, ...COMMON,
+});
+
+const planetDetails = (x: number, y: number) => ({
+    x: x * 256, y: y * 256, width: 256, height: 256,
+});
+
 const POSITION_DATA: Record<SpriteId, PositionData> = {
     // Chips
-    'chip:fuel': { x: 0, y: 0, ...COMMON },
-    'chip:explosion': { x: 128, y: 0, ...COMMON },
-    'chip:asteroid': { x: 256, y: 0, ...COMMON },
-    'chip:gear': { x: 384, y: 0, ...COMMON },
-    'chip:red': { x: 512, y: 0, ...COMMON },
-    'chip:blue': { x: 640, y: 0, ...COMMON },
-    'chip:gem': { x: 768, y: 0, ...COMMON },
-    'chip:fruit': { x: 896, y: 0, ...COMMON },
-    'chip:tree': { x: 1024, y: 0, ...COMMON },
+    'chip:fuel': commonDetails(0, 0),
+    'chip:explosion': commonDetails(1, 0),
+    'chip:asteroid': commonDetails(2, 0),
+    'chip:gear': commonDetails(3, 0),
+    'chip:red': commonDetails(4, 0),
+    'chip:blue': commonDetails(5, 0),
+    'chip:gem': commonDetails(6, 0),
+    'chip:fruit': commonDetails(7, 0),
+    'chip:tree': commonDetails(8, 0),
     // UI icons
-    'ui-icon:forced': { x: 0, y: 768, ...COMMON },
-    'ui-icon:heart': { x: 0, y: 896, ...COMMON },
-    'ui-icon:heart-empty': { x: 128, y: 896, ...COMMON },
-    'ui-icon:energy': { x: 256, y: 896, ...COMMON },
-    'ui-icon:energy-empty': { x: 384, y: 896, ...COMMON },
-    'ui-icon:money': { x: 512, y: 896, ...COMMON },
-    'ui-icon:no-money': { x: 640, y: 896, ...COMMON },
-    'ui-icon:draw': { x: 128, y: 768, ...COMMON },
-    'ui-icon:play': { x: 256, y: 768, ...COMMON },
-    'ui-icon:do-nothing': { x: 384, y: 768, ...COMMON },
-    'ui-icon:arrow': { x: 1920, y: 896, ...COMMON },
+    'ui-icon:forced': commonDetails(0, 6),
+    'ui-icon:heart': commonDetails(0, 7),
+    'ui-icon:heart-empty': commonDetails(1, 7),
+    'ui-icon:energy': commonDetails(2, 7),
+    'ui-icon:energy-empty': commonDetails(3, 7),
+    'ui-icon:money': commonDetails(4, 7),
+    'ui-icon:no-money': commonDetails(5, 7),
+    'ui-icon:draw': commonDetails(1, 6),
+    'ui-icon:play': commonDetails(2, 6),
+    'ui-icon:do-nothing': commonDetails(3, 6),
+    'ui-icon:arrow': commonDetails(15, 7),
     // Planets
-    'earth': { x: 0, y: 0, width: 256, height: 256 },
-    'black-hole': { x: 256, y: 0, width: 256, height: 256 },
+    'earth': planetDetails(0, 0),
+    'black-hole': planetDetails(1, 0),
+    'ice': planetDetails(2, 0),
+    'gas-giant': planetDetails(3, 0),
+    'moon': planetDetails(4, 0),
+    'quasar': planetDetails(5, 0),
+    'belt': planetDetails(6, 0),
 };
 
 const LABEL_DATA: Record<SpriteId, string> = {
@@ -128,6 +146,11 @@ const LABEL_DATA: Record<SpriteId, string> = {
     // Planets
     'earth': 'Earth-like planet',
     'black-hole': 'Black hole',
+    'ice': 'Ice planet',
+    'gas-giant': 'Gas giant',
+    'moon': 'Moon',
+    'quasar': 'Quasar',
+    'belt': 'Asteroid belt',
 };
 
 const propsToSpriteId = (props: SpriteProps): SpriteId => {

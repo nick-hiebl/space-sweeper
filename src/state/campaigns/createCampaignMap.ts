@@ -104,7 +104,7 @@ const createRegion = (row: number, column: number): CampaignRegion => {
 		row,
 		column,
 		validNext: [],
-		icon: selectRandom(['earth', 'black-hole']),
+		icon: selectRandom(['earth', 'black-hole', 'ice', 'gas-giant', 'moon', 'quasar', 'belt']),
 		x: Math.round((column + 1/2 + Math.random() * WIGGLE - WIGGLE / 2) * X_SCALE),
 		y: Math.round((row + 1/2 + Math.random() * WIGGLE - WIGGLE / 2) * Y_SCALE),
 	};
