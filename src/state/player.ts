@@ -1,4 +1,3 @@
-import { ChipDisplay } from '../common/ChipDisplay';
 import { createExternalStore, type ExternalStore } from '../common/external-store';
 import { clamp } from '../common/random';
 
