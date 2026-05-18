@@ -67,6 +67,12 @@ export type ModuleTrashActivity = ActivityCommon & {
 export type ShopActivity = ActivityCommon & {
 	type: 'shop';
 	healPrice: number;
+	sales: {
+		cost: number;
+		repeats: number;
+		chips?: Pick<Chip, 'quantity' | 'style'>[];
+		modules?: EffectModule[];
+	}[];
 };
 
 export type TravelActivity = {

@@ -38,6 +38,10 @@ const createCampaignActivities = (): SpecificCampaignActivity[] => {
 				name: 'Shop',
 				id: activityId(),
 				healPrice: 3,
+				sales: [
+					{ cost: 5, repeats: 99, chips: [{ style: 'red', quantity: 1 }] },
+					{ cost: 8, repeats: 2, chips: [{ style: 'blue', quantity: 1 }] },
+				],
 			},
 			Component: ShopComponent,
 			type: 'hub',

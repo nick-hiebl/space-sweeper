@@ -1,3 +1,4 @@
+import { ChipDisplay } from '../common/ChipDisplay';
 import { createExternalStore, type ExternalStore } from '../common/external-store';
 import { clamp } from '../common/random';
 
@@ -109,6 +110,15 @@ export class Player {
 		this.sources = {
 			...this.sources,
 			effects: newModules,
+		};
+
+		this.sourcesWatcher.triggerUpdate();
+	}
+
+	addModules(modules: EffectModule[]) {
+		this.sources = {
+			...this.sources,
+			effects: this.sources.effects.concat(modules),
 		};
 
 		this.sourcesWatcher.triggerUpdate();
