@@ -1,3 +1,4 @@
+import { ChipDisplay } from '../common/ChipDisplay';
 import { Sprite } from '../common/Sprite';
 import type { Effect as EffectType, EffectModule as EffectModuleType, Effect, PatternEffect, Style } from '../state/types';
 
@@ -7,12 +8,14 @@ type EffectModuleProps = {
 };
 
 export const DisplayEffect = ({ effect, size }: { effect: EffectType, size?: 'regular' | 'small' }) => {
+    const iSize = size === 'regular' ? '80' : '48';
+
     if (effect.type === 'discard') {
         return <div className="effect">discard</div>;
     } else if (effect.type === 'energy') {
         return (
             <div className="effect">
-                <Sprite type="ui-icon" icon="energy" size={size === 'regular' ? '80' : '48'} />
+                <Sprite type="ui-icon" icon="energy" size={iSize} />
                 <div className="number-overlay">
                     <Sprite type="number" value={effect.energyShift} size={size === 'regular' ? '48' : '32'} />
                 </div>
@@ -21,7 +24,7 @@ export const DisplayEffect = ({ effect, size }: { effect: EffectType, size?: 're
     } else if (effect.type === 'health') {
         return (
             <div className="effect">
-                <Sprite type="ui-icon" icon="heart" size={size === 'regular' ? '80' : '48'} />
+                <Sprite type="ui-icon" icon="heart" size={iSize} />
                 <div className="number-overlay">
                     <Sprite type="number" value={effect.healthShift} size={size === 'regular' ? '48' : '32'} />
                 </div>
@@ -30,7 +33,7 @@ export const DisplayEffect = ({ effect, size }: { effect: EffectType, size?: 're
     } else if (effect.type === 'money') {
         return (
             <div className="effect">
-                <Sprite type="ui-icon" icon="money" size={size === 'regular' ? '80' : '48'} />
+                <Sprite type="ui-icon" icon="money" size={iSize} />
                 <div className="number-overlay">
                     <Sprite type="number" value={effect.moneyShift} size={size === 'regular' ? '48' : '32'} />
                 </div>
@@ -39,16 +42,25 @@ export const DisplayEffect = ({ effect, size }: { effect: EffectType, size?: 're
     } else if (effect.type === 'forced') {
         return (
             <div className="effect">
-                <Sprite type="ui-icon" icon="forced" size={size === 'regular' ? '80' : '48'} />
+                <Sprite type="ui-icon" icon="forced" size={iSize} />
             </div>
         );
     } else if (effect.type === 'move') {
         return (
             <div className="effect">
-                <Sprite type="ui-icon" icon="arrow" size={size === 'regular' ? '80' : '48'} />
+                <Sprite type="ui-icon" icon="arrow" size={iSize} />
                 <div className="number-overlay">
                     <Sprite type="number" value={effect.distance} size={size === 'regular' ? '48' : '32'} />
                 </div>
+            </div>
+        )
+    } else if (effect.type === 'add-to-bag') {
+        return (
+            <div className="inline-center">
+                <Sprite type="ui-icon" icon="add-to-bag" size={iSize} />
+                {effect.chips.map((chip, index) => (
+                    <ChipDisplay key={index} chip={chip} size="64" />
+                ))}
             </div>
         )
     }

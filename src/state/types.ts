@@ -39,6 +39,9 @@ export type EnergyEffect = {
     energyShift: Quantity;
 };
 
+/**
+ * I have no idea what this is for.
+ */
 export type DiscardEffect = {
     type: 'discard';
 };
