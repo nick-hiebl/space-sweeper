@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { DisplayEffect, EffectModule } from '../board/effect-module';
+import { Bag } from '../common/Bag';
 import { ChipDisplay } from '../common/ChipDisplay';
 import { useExternalStore } from '../common/external-store';
 import { Sprite } from '../common/Sprite';
@@ -27,9 +28,12 @@ export const TravelComponent = ({ travel }: Props) => {
 	const [hoveredStyle, setHoveredStyle] = useState<Style | undefined>(undefined);
 	const [hoveredPlace, setHoveredPlace] = useState<number | undefined>(undefined);
 
+	const { bag, weights } = useExternalStore(travel.sourceWatcher);
+
 	return (
 		<div className="stack gap-16px">
 			<h1>Travel</h1>
+			{window.location.hash.includes('debug') && <Bag bag={bag} weights={weights} />}
 			<State
 				travel={travel}
 				hoveredPlace={hoveredPlace}

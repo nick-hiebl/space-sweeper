@@ -14,7 +14,14 @@ export type Style =
 
 export type Id = number;
 
-export type Quantity = number | 'Y' | '-Y' | { type: 'add'; args: Quantity[] };
+/**
+ * 'Y' was chosen as the placeholder in types for 'X' in order to make it easier to find in code.
+ */
+export type Quantity =
+    | number
+    | 'Y' | '-Y'
+    | { type: 'add'; args: Quantity[] }
+    | { type: 'multiply'; args: Quantity[] };
 
 export type Chip = {
     id: Id;
@@ -54,6 +61,7 @@ export type ForcedEffect = {
 
 export type AddToBagEffect<T = number | Quantity> = {
     type: 'add-to-bag';
+    transform?: boolean;
     /**
      * These are notated as a weight, but that is just used as a placeholder for a chip without an id
      */

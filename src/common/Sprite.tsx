@@ -204,16 +204,35 @@ const getDataURI = (id: SpriteId, type: SpriteTypeProps['type']): string => {
     return canvas.toDataURL();
 };
 
-const quantityToString = (quantity: Quantity): string => {
+type QuantityStringData = {
+    text: string;
+    needsParens: boolean;
+};
+
+const quantityToString = (quantity: Quantity): QuantityStringData => {
     if (typeof quantity === 'number') {
-        return quantity.toString();
+        return {
+            text: quantity.toString(),
+            needsParens: false,
+        };
     }
 
-    if (quantity === 'Y') return 'X';
-    if (quantity === '-Y') return '-X';
+    if (quantity === 'Y') return { text: 'X', needsParens: false };
+    if (quantity === '-Y') return { text: '-X', needsParens: false };
 
     if (quantity.type === 'add') {
-        return quantity.args.map(quantityToString).join('+');
+        return {
+            text: quantity.args.map(quantityToString).map(v => v.text).join('+'),
+            needsParens: true,
+        };
+    } else if (quantity.type === 'multiply') {
+        return {
+            text: quantity.args
+                .map(quantityToString)
+                .map(({ text, needsParens}) => needsParens ? `(${text})` : text)
+                .join(''),
+            needsParens: false,
+        }
     }
 
     throw new Error('Unexpected quantity type!');
@@ -229,7 +248,7 @@ export const Sprite = (props: SpriteProps) => {
                 ? props.value.startsWith('-')
                 : false;
 
-        const text = quantityToString(props.value);
+        const { text } = quantityToString(props.value);
 
         return (
             <div

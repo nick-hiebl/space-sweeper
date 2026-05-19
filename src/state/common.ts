@@ -11,6 +11,10 @@ const readQuantity = (quantity: Quantity, chip: Chip): number => {
         return quantity.args
             .map(q => readQuantity(q, chip))
             .reduce((a, b) => a + b, 0);
+    } else if (quantity.type === 'multiply') {
+        return quantity.args
+            .map(q => readQuantity(q, chip))
+            .reduce((a, b) => a * b, 1);
     }
 
     throw new Error('Unexpected type of quantity received');

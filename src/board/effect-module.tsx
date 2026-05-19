@@ -59,7 +59,7 @@ export const DisplayEffect = ({ effect, size }: { effect: EffectType, size?: 're
     } else if (effect.type === 'add-to-bag') {
         return (
             <div className="inline-center">
-                <Sprite type="ui-icon" icon="add-to-bag" size={iSize} />
+                <Sprite type="ui-icon" icon={effect.transform ? 'transform' : 'add-to-bag'} size={iSize} />
                 {effect.chips.map((chip, index) => (
                     <ChipDisplay key={index} chip={chip} size="64" />
                 ))}

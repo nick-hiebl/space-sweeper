@@ -71,17 +71,18 @@ export const defaultEffectDeck = (): EffectModule[] => {
 		{
 			style: 'fruit',
 			drawEffects: [{ type: 'money', moneyShift: 100 }],
+			playEffects: [{ type: 'energy', energyShift: 'Y' }],
 			returnToBagEffects: [
-				{ type: 'discard' },
 				{
 					type: 'add-to-bag',
+					transform: true,
 					chips: [{
 						style: 'fruit',
-						quantity: { type: 'add', args: ['Y', 1] }
+						quantity: { type: 'add', args: [{ type: 'multiply', args: [2, 'Y'] }, 1] }
 					}],
 				},
 			],
-			text: 'When drawn, gain $100. Increment number by 1 when returning to bag.',
+			text: 'Gain X energy. When drawn, gain $100. Increment number by 1 when returning to bag.',
 		},
 		{
 			style: 'explosion',

@@ -290,8 +290,12 @@ export class Travel {
 
 				effects.push(...returnToBagEffects);
 
+				const isDeletingEffect = (effect: Effect) =>
+					effect.type === 'discard' ||
+					(effect.type === 'add-to-bag' && effect.transform);
+
 				// Need to discard in this case
-				if (returnToBagEffects.some(effect => effect.type === 'discard')) {
+				if (returnToBagEffects.some(isDeletingEffect)) {
 					this.sources = {
 						...this.sources,
 						bag: this.sources.bag.filter(c => c !== option),
