@@ -11,7 +11,7 @@ type getPlayEffectsFromPlacingState = {
     played: [Chip, Position][];
 };
 
-export const getPlayEffectsFromPlacing = (state: getPlayEffectsFromPlacingState, chip: Chip): Effect[] => {
+export const getPlayEffectsFromPlacing = (state: getPlayEffectsFromPlacingState, chip: Omit<Chip, 'id'>): Effect[] => {
     const thisRule = state.effectModules.find(({ style }) => style === chip.style);
 
     const playEffects = (thisRule?.playEffects ?? []);

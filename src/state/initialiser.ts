@@ -39,7 +39,7 @@ export const bigBag = (): Chip[] => {
 
 export const getDefaultWeights = (): Weight[] => {
 	return [
-		// { style: 'explosion', quantity: 1 },
+		{ style: 'explosion', quantity: 1 },
 	];
 };
 

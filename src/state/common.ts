@@ -1,6 +1,6 @@
 import type { Chip, Effect, Quantity } from './types';
 
-const readQuantity = (quantity: Quantity, chip: Chip): number => {
+const readQuantity = (quantity: Quantity, chip: Omit<Chip, 'id'>): number => {
     if (typeof quantity === 'number') {
         return quantity;
     } else if (quantity === 'Y') {
@@ -20,7 +20,7 @@ const readQuantity = (quantity: Quantity, chip: Chip): number => {
     throw new Error('Unexpected type of quantity received');
 };
 
-export const resolveEffect = (effect: Effect<number | Quantity>, chip: Chip): Effect<number> => {
+export const resolveEffect = (effect: Effect<number | Quantity>, chip: Omit<Chip, 'id'>): Effect<number> => {
     if (effect.type === 'energy') {
         return {
             ...effect,

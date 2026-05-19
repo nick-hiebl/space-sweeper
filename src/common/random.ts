@@ -17,3 +17,7 @@ export function selectRandomN<T>(items: T[], count: number): T[] {
 export function clamp(value: number, low: number, high: number): number {
 	return Math.max(low, Math.min(value, high));
 }
+
+export const randRange = (low: number, high: number): number => {
+	return Math.random() * (high - low) + low;
+};

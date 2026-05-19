@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { DisplayEffect, EffectModule } from '../board/effect-module';
 import { Bag } from '../common/Bag';
@@ -86,14 +86,44 @@ type StateProps = {
 };
 
 const State = ({ hoveredPlace, hoveredStyle, setHoveredStyle, travel }: StateProps) => {
-	const state = useExternalStore(travel.stateWatcher);
+	const { cells, played } = useExternalStore(travel.stateWatcher);
+	const [furthestCellIndex, setFurthestCellIndex] = useState(Math.min(cells.length - 1, 0));
+
+	const { bag, weights } = useExternalStore(travel.sourceWatcher);
+
+	const lastPlayed = last(played)?.[1] ?? -1;
+
+	const farthestReachableCell = useMemo(() => {
+		const lastMarkerCell = last(cells.filter(x => x.markerNumber)).position;
+
+		return Math.max(
+			lastMarkerCell,
+			...weights
+				.concat(bag)
+				.map(chip => travel.resolvePlacementDistance(chip)),
+		);
+	}, [bag, lastPlayed, weights]);
+
+	useEffect(() => {
+		if (farthestReachableCell > furthestCellIndex) {
+			setFurthestCellIndex(farthestReachableCell);
+		}
+	}, [furthestCellIndex, farthestReachableCell]);
+
+	const continueToIndex = useMemo(() => {
+		const actualY = cells[farthestReachableCell].offset.y;
+
+		return last(cells.filter(c => c.offset.y <= actualY).map((_, index) => index));
+	}, [farthestReachableCell]);
+
+	const height = (cells[continueToIndex] ?? last(cells)).offset.y + 64;
 
 	return (
 		<div>
 			<div id="board">
-				<ul id="cells" className="board-list" style={{ width: travel.scale.width, height: travel.scale.height }}>
-					{state.cells.map(cell => {
-						const placement = state.played.find(([, pos]) => pos === cell.position);
+				<ul id="cells" className="board-list" style={{ width: travel.scale.width, height }}>
+					{cells.slice(0, continueToIndex + 1).map(cell => {
+						const placement = played.find(([, pos]) => pos === cell.position);
 
 						const chip = placement?.[0];
 

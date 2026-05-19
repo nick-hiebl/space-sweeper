@@ -31,7 +31,7 @@ export class Campaign {
 		this.currentRegion = initialRegion;
 		this.player = new Player(4, 8);
 		
-		this.currentActivity = { type: 'travel', travel: new Travel(this.player), destination: initialRegion.id };
+		this.currentActivity = { type: 'travel', travel: new Travel(this.player, 1), destination: initialRegion.id };
 
 		this.regionWatcher = createExternalStore(() => this.currentRegion);
 		this.mapWatcher = createExternalStore(() => this.regions);
@@ -40,14 +40,21 @@ export class Campaign {
 	}
 
 	goTo(id: number) {
+
 		if (this.currentActivity.type !== 'browse' && this.currentActivity.type !== 'map') {
 			return;
+		}
+
+		const destination = this.regions.flatMap(t => t).find(r => r.id === id);
+
+		if (!destination) {
+			throw new Error('Could not find destination of travel');
 		}
 
 		this.currentActivity = {
 			type: 'travel',
 			destination: id,
-			travel: new Travel(this.player),
+			travel: new Travel(this.player, destination.row),
 		};
 
 		this.activity.triggerUpdate();

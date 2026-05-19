@@ -100,6 +100,55 @@ type State = {
 
 const CHIPS_TO_CHOOSE_FROM = 3;
 
+const getTargetFor = (level: number) => {
+	return Math.round(7 + 1.4 * level);
+};
+
+const getSpreadFor = (level: number) => {
+	return Math.round(5 + 0.3 * level);
+};
+
+const createCells = (level: number): Cell[] => {
+	const columns = 10;
+	const n = 100;
+
+	const target = getTargetFor(level);
+	const spread = getSpreadFor(level);
+
+	return new Array(n).fill(0).map((_, index, arr) => {
+		const row = Math.floor(index / columns);
+		const indexInRow = index - row * columns;
+
+		const specialOffset =
+			index === 0 || index === arr.length - 1
+				? 0
+				: indexInRow === 0
+					? 0
+					: indexInRow === columns - 1
+						? 8
+						: 0;
+
+		const column = row % 2 === 0
+			? indexInRow
+			: columns - indexInRow - 1;
+
+		const marker = index === target
+			? 1
+			: index === target + spread
+				? 2
+				: index === target + 2 * spread
+					? 3
+					: undefined;
+
+		return {
+			offset: { x: column * (64 + 4), y: row * (64 + 12) + specialOffset },
+			position: index,
+			effects: [],
+			markerNumber: marker,
+		};
+	})
+};
+
 export class Travel {
 	player: Player;
 
@@ -116,36 +165,12 @@ export class Travel {
 	moduleWatcher: ExternalStore<EffectModule[]>;
 	sourceWatcher: ExternalStore<Sources>;
 
-	constructor(player: Player) {
+	constructor(player: Player, layer: number) {
 		this.player = player;
 		const { sources } = player;
 
 		this.state = {
-			cells: new Array(20).fill(0).map((_, index, arr) => {
-				const COLUMNS = 8;
-				const row = Math.floor(index / COLUMNS);
-				const indexInRow = index - row * COLUMNS;
-
-				const specialOffset =
-					index === 0 || index === arr.length - 1
-						? 0
-						: indexInRow === 0
-							? -4
-							: indexInRow === COLUMNS - 1
-								? 4
-								: 0;
-
-				const column = row % 2 === 0
-					? indexInRow
-					: COLUMNS - indexInRow - 1;
-
-				return {
-					offset: { x: column * (64 + 4), y: row * (64 + 12) + specialOffset },
-					position: index,
-					effects: [],
-					markerNumber: index % 5 === 0 && index > 0 ? index / 5 : undefined,
-				};
-			}),
+			cells: createCells(layer),
 			played: [],
 		};
 
@@ -257,6 +282,10 @@ export class Travel {
 
 		const placedPosition = this.resolvePlacementDistance(chip);
 
+		if (this.state.played.some(([, index]) => index === placedPosition)) {
+			throw new Error('Trying to place new chip on top of an existing one!');
+		}
+
 		this.state.played = this.state.played.concat([[chip, placedPosition]]);
 		this.state = { ...this.state };
 
@@ -342,11 +371,7 @@ export class Travel {
 		}
 	}
 
-	resolvePlacementDistance(chip: Chip): Position {
-		if (this.currentAction.type !== 'drawing' || !this.currentAction.options.includes(chip)) {
-			throw new Error('Calculating placement distance outside of intended resolution phase');
-		}
-
+	resolvePlacementDistance(chip: Omit<Chip, 'id'>): Position {
 		const { cells } = this.state;
 		const lastCellPosition = last(cells).position;
 
@@ -360,7 +385,7 @@ export class Travel {
 				return total + ((effect as MoveEffect).distance as number);
 			}, 0);
 
-		const drawBonusDistance = this.currentAction.options
+		const drawBonusDistance = (this.currentAction.type === 'drawing' ? this.currentAction.options : [])
 			.map<[Chip, Effect[]]>(chip => [chip, this.sources.effects.find(module => module.style === chip.style)?.drawEffects ?? []])
 			.filter(([_, effects]) => effects.length > 0)
 			.map<[Chip, Effect[]]>(([chip, effects]) => [chip, effects.filter(effect => effect.type === 'move')])
@@ -370,8 +395,6 @@ export class Travel {
 			}, 0);
 
 		const [, lastPosition] = last(this.state.played) ?? [undefined, -1];
-
-		console.assert(lastPosition < lastCellPosition, 'Something already placed in final cell but tried to place another!');
 
 		return Math.min(lastPosition + chip.quantity + playBonusDistance + drawBonusDistance, lastCellPosition);
 	}
