@@ -34,7 +34,7 @@ const SAMPLE_BLUE_MODULE: EffectModuleType = {
 const SAMPLE_ASTEROID_MODULE: EffectModuleType = {
     style: 'asteroid',
     playEffects: [
-        { type: 'money', moneyShift: 'quantity' },
+        { type: 'money', moneyShift: 'Y' },
     ],
 };
 

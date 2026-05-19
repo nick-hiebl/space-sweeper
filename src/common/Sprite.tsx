@@ -204,20 +204,40 @@ const getDataURI = (id: SpriteId, type: SpriteTypeProps['type']): string => {
     return canvas.toDataURL();
 };
 
+const quantityToString = (quantity: Quantity): string => {
+    if (typeof quantity === 'number') {
+        return quantity.toString();
+    }
+
+    if (quantity === 'Y') return 'X';
+    if (quantity === '-Y') return '-X';
+
+    if (quantity.type === 'add') {
+        return quantity.args.map(quantityToString).join('+');
+    }
+
+    throw new Error('Unexpected quantity type!');
+};
+
 export const Sprite = (props: SpriteProps) => {
     const { size = '80' } = props;
 
     if (props.type === 'number') {
-        const isNegative = typeof props.value === 'number' ? props.value < 0 : props.value.startsWith('-');
+        const isNegative = typeof props.value === 'number'
+            ? props.value < 0
+            : typeof props.value === 'string'
+                ? props.value.startsWith('-')
+                : false;
 
-        const text = typeof props.value === 'number'
-            ? props.value.toString()
-            : props.value === '-quantity'
-                ? '-X'
-                : 'X';
+        const text = quantityToString(props.value);
 
         return (
-            <div className="sprite-number" data-size={size} data-red={isNegative}>
+            <div
+                className="sprite-number"
+                data-small={typeof props.value === 'object'}
+                data-size={size}
+                data-red={isNegative}
+            >
                 {text}
             </div>
         );

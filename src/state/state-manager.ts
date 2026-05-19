@@ -2,7 +2,7 @@ import { getId } from './initialiser';
 import type { GameAction, GameStateWithCampaign, Quantity } from './types';
 
 export const readQuantity = (quantity: Quantity): number => {
-    if (quantity === 'quantity' || quantity === '-quantity') {
+    if (typeof quantity !== 'number') {
         throw new Error('Game state manager should not receive quantity');
     }
 

@@ -27,11 +27,13 @@ export const bigBag = (): Chip[] => {
 		{ style: 'asteroid', quantity: 1, id: getId() },
 		{ style: 'asteroid', quantity: 2, id: getId() },
 		{ style: 'asteroid', quantity: 3, id: getId() },
-		{ style: 'gem', quantity: 1, id: getId() },
-		{ style: 'fruit', quantity: 1, id: getId() },
-		{ style: 'tree', quantity: 1, id: getId() },
-		{ style: 'red', quantity: 1, id: getId() },
-		{ style: 'ice', quantity: 1, id: getId() },
+		// { style: 'gem', quantity: 1, id: getId() },
+		// { style: 'fruit', quantity: 1, id: getId() },
+		// { style: 'tree', quantity: 1, id: getId() },
+		// { style: 'red', quantity: 1, id: getId() },
+		// { style: 'ice', quantity: 1, id: getId() },
+		// { style: 'ice', quantity: 2, id: getId() },
+		// { style: 'ice', quantity: 5, id: getId() },
 	];
 };
 
@@ -45,11 +47,18 @@ export const defaultEffectDeck = (): EffectModule[] => {
 	return [
 		{
 			style: 'ice',
-			drawEffects: [{ type: 'add-to-bag', chips: [{ style: 'ice', quantity: 2 }] }],
+			// drawEffects: [{ type: 'add-to-bag', chips: [{ style: 'ice', quantity: 2 }] }],
+			drawEffects: [{
+				type: 'add-to-bag',
+				chips: [{
+					style: 'ice',
+					quantity: { type: 'add', args: ['Y', 1] },
+				}],
+			}],
 		},
 		{
 			style: 'explosion',
-			drawEffects: [{ type: 'health', healthShift: '-quantity' }],
+			drawEffects: [{ type: 'health', healthShift: '-Y' }],
 			playEffects: [{ type: 'move', distance: 1 }],
 		},
 		{
@@ -66,7 +75,11 @@ export const defaultEffectDeck = (): EffectModule[] => {
 		},
 		{
 			style: 'asteroid',
-			playEffects: [{ type: 'money', moneyShift: 'quantity' }],
+			playEffects: [{ type: 'money', moneyShift: { type: 'add', args: ['Y', 2] } }],
+		},
+		{
+			style: 'asteroid',
+			playEffects: [{ type: 'money', moneyShift: 'Y' }],
 			patternEffects: [
 				{
 					pattern: ['asteroid', 'asteroid'],

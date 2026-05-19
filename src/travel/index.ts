@@ -212,7 +212,7 @@ export class Travel {
 
 		this.actionWatcher.triggerUpdate();
 
-		const DEFAULT_ENERGY_COST: Effect = {
+		const DEFAULT_ENERGY_COST: Effect<number> = {
 			type: 'energy',
 			energyShift: -1,
 		};
@@ -269,11 +269,11 @@ export class Travel {
 		}, chip)
 			.map(effect => resolveEffect(effect, chip));
 
-		const effects: Effect[] = effectsFromPlay;
+		const effects: Effect<number>[] = effectsFromPlay;
 
 		const landedCell = this.state.cells.find(c => c.position === placedPosition);
 		if (landedCell && (landedCell?.effects?.length ?? 0) > 0) {
-			effects.push(...landedCell.effects);
+			effects.concat(landedCell.effects.map(effect => resolveEffect(effect, chip)));
 		}
 
 		if (effects.length > 0) {
@@ -281,7 +281,7 @@ export class Travel {
 		}
 	}
 
-	triggerEffects(effects: Effect[]) {
+	triggerEffects(effects: Effect<number>[]) {
 		this.player.triggerEffects(effects);
 
 		let anySourceChanges = false;

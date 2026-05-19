@@ -19,6 +19,11 @@
 	cursor: not-allowed;
 }
 
+.map-cell[data-visited="true"]:disabled {
+	opacity: 1;
+	cursor: not-allowed;
+}
+
 .map-cell:hover:not(:disabled) {
 	transform: scale(1.08);
 	background: none;

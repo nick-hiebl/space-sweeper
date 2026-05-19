@@ -7,7 +7,7 @@ import { EffectModule } from '../../../board/effect-module';
 const SAMPLE_EXPLOSION_MODULE: EffectModuleType = {
     style: 'explosion',
     playEffects: [{ type: 'move', distance: 1 }],
-    drawEffects: [{ type: 'health', healthShift: '-quantity' }],
+    drawEffects: [{ type: 'health', healthShift: '-Y' }],
 };
 
 const SAMPLE_GEAR_MODULE: EffectModuleType = {

@@ -12,6 +12,10 @@
     font-weight: bold;
 }
 
+.sprite-number[data-small=true] {
+    transform: scale(0.75);
+}
+
 .sprite-number[data-red=true] {
     color: red;
 }

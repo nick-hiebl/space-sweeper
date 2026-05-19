@@ -18,7 +18,7 @@ const BLUE_CHOICE_MODULE: EffectModule = {
         },
         {
             pattern: ['fuel', 'blue'],
-            effects: [{ type: 'money', moneyShift: 'quantity' }],
+            effects: [{ type: 'money', moneyShift: 'Y' }],
         },
     ],
 };

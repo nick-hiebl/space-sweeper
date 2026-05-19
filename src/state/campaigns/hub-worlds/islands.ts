@@ -22,7 +22,7 @@ const FRUIT_MODULE: EffectModule = {
 const BLUE_MODULE: EffectModule = {
     style: 'blue',
     playEffects: [
-        { type: 'move', distance: 'quantity' },
+        { type: 'move', distance: 'Y' },
     ],
 };
 

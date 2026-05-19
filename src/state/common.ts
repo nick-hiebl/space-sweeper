@@ -1,16 +1,22 @@
 import type { Chip, Effect, Quantity } from './types';
 
 const readQuantity = (quantity: Quantity, chip: Chip): number => {
-    if (quantity === 'quantity') {
+    if (typeof quantity === 'number') {
+        return quantity;
+    } else if (quantity === 'Y') {
         return chip.quantity;
-    } else if (quantity === '-quantity') {
+    } else if (quantity === '-Y') {
         return -chip.quantity;
+    } else if (quantity.type === 'add') {
+        return quantity.args
+            .map(q => readQuantity(q, chip))
+            .reduce((a, b) => a + b, 0);
     }
 
-    return quantity;
+    throw new Error('Unexpected type of quantity received');
 };
 
-export const resolveEffect = (effect: Effect, chip: Chip): Effect => {
+export const resolveEffect = (effect: Effect<number | Quantity>, chip: Chip): Effect<number> => {
     if (effect.type === 'energy') {
         return {
             ...effect,
@@ -31,6 +37,20 @@ export const resolveEffect = (effect: Effect, chip: Chip): Effect => {
             ...effect,
             distance: readQuantity(effect.distance, chip),
         };
+    } else if (effect.type === 'add-to-bag') {
+        return {
+            ...effect,
+            chips: effect.chips.map(effectChip => {
+                if (typeof effectChip.quantity === 'number') {
+                    return effectChip as Omit<Chip, 'id'>;
+                }
+
+                return {
+                    ...effectChip,
+                    quantity: readQuantity(effectChip.quantity, chip),
+                };
+            }),
+        }
     }
 
     return effect;

@@ -14,7 +14,7 @@ export type Style =
 
 export type Id = number;
 
-export type Quantity = number | 'quantity' | '-quantity';
+export type Quantity = number | 'Y' | '-Y' | { type: 'add'; args: Quantity[] };
 
 export type Chip = {
     id: Id;
@@ -24,19 +24,21 @@ export type Chip = {
 
 export type Weight = Omit<Chip, 'id'>;
 
-export type HealthEffect = {
+export type ChipEffect<T> = Omit<Chip, 'id' | 'quantity'> & { quantity: T };
+
+export type HealthEffect<T = number | Quantity> = {
     type: 'health';
-    healthShift: Quantity;
+    healthShift: T;
 };
 
-export type MoneyEffect = {
+export type MoneyEffect<T = number | Quantity> = {
     type: 'money';
-    moneyShift: Quantity;
+    moneyShift: T;
 };
 
-export type EnergyEffect = {
+export type EnergyEffect<T = number | Quantity> = {
     type: 'energy';
-    energyShift: Quantity;
+    energyShift: T;
 };
 
 /**
@@ -50,27 +52,27 @@ export type ForcedEffect = {
     type: 'forced';
 };
 
-export type AddToBagEffect = {
+export type AddToBagEffect<T = number | Quantity> = {
     type: 'add-to-bag';
     /**
      * These are notated as a weight, but that is just used as a placeholder for a chip without an id
      */
-    chips: Weight[];
+    chips: ChipEffect<T>[];
 };
 
-export type MoveEffect = {
+export type MoveEffect<T = number | Quantity> = {
     type: 'move';
-    distance: Quantity;
+    distance: T;
 };
 
-export type Effect =
-    | HealthEffect
-    | MoneyEffect
-    | EnergyEffect
+export type Effect<T = number | Quantity> =
+    | HealthEffect<T>
+    | MoneyEffect<T>
+    | EnergyEffect<T>
     | DiscardEffect
     | ForcedEffect
-    | MoveEffect
-    | AddToBagEffect;
+    | MoveEffect<T>
+    | AddToBagEffect<T>;
 
 export type Pattern = Style[];
 

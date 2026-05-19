@@ -29,9 +29,9 @@ export class Campaign {
 		this.pastRegions = [];
 
 		this.currentRegion = initialRegion;
-		this.currentActivity = { type: 'map' };
-
 		this.player = new Player(4, 8);
+		
+		this.currentActivity = { type: 'travel', travel: new Travel(this.player), destination: initialRegion.id };
 
 		this.regionWatcher = createExternalStore(() => this.currentRegion);
 		this.mapWatcher = createExternalStore(() => this.regions);

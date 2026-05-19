@@ -91,7 +91,7 @@ export const EffectModule = ({ isHighlighted, module }: EffectModuleProps) => {
                 <Sprite type="chip" chip={{ style: module.style }} />
                 {someEffectIsQuantity && (
                     <div className="number-overlay">
-                        <Sprite type="number" value="quantity" size="48" />
+                        <Sprite type="number" value="Y" size="48" />
                     </div>
                 )}
             </div>

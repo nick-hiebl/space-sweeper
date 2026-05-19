@@ -7,11 +7,11 @@ import type { PartialRegion } from './types';
 
 const BETTER_FUEL_MODULE: EffectModule = {
     style: 'fuel',
-    playEffects: [{ type: 'energy', energyShift: 'quantity' }],
+    playEffects: [{ type: 'energy', energyShift: 'Y' }],
     patternEffects: [
         {
             pattern: ['fuel', 'fuel'],
-            effects: [{ type: 'energy', energyShift: 'quantity' }],
+            effects: [{ type: 'energy', energyShift: 'Y' }],
         },
     ],
 };

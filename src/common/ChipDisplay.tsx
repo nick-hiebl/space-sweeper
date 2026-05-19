@@ -1,11 +1,11 @@
-import type { Chip } from '../state/types';
+import type { Chip, ChipEffect, Quantity } from '../state/types';
 
 import { Sprite } from './Sprite';
 
 import './index.css';
 
 type ChipDisplayProps = {
-    chip: Omit<Chip, 'id'>;
+    chip: Omit<Chip, 'id'> | ChipEffect<number | Quantity>;
     onMouseEnter?: () => void;
     onMouseLeave?: () => void;
     size?: '64';

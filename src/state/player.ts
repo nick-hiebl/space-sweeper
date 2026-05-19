@@ -49,7 +49,7 @@ export class Player {
 		this.sourcesWatcher = createExternalStore(() => this.sources);
 	}
 
-	triggerEffects(effects: Effect[]) {
+	triggerEffects(effects: Effect<number>[]) {
 		let hp = this.stats.hitPoints;
 		let energy = this.stats.energy;
 		let money = this.stats.money;
