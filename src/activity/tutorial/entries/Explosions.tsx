@@ -8,6 +8,7 @@ const SAMPLE_EXPLOSION_MODULE: EffectModuleType = {
     style: 'explosion',
     playEffects: [{ type: 'move', distance: 1 }],
     drawEffects: [{ type: 'health', healthShift: '-Y' }],
+    text: 'Places 1 space further. Lose X health when drawn.',
 };
 
 const SAMPLE_GEAR_MODULE: EffectModuleType = {
@@ -15,6 +16,7 @@ const SAMPLE_GEAR_MODULE: EffectModuleType = {
     playEffects: [
         { type: 'health', healthShift: 1 },
     ],
+    text: 'Restore 1 health.'
 };
 
 export const Explosions = ({ gameState, onComplete, onGameAction }: TutorialProps) => {

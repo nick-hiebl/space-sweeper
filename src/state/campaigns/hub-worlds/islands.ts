@@ -17,6 +17,7 @@ const FRUIT_MODULE: EffectModule = {
             effects: [{ type: 'money', moneyShift: 3 }],
         },
     ],
+    text: 'If followed by a tree, gain 2 health. If followed by a fuel brick, gain 3 money.',
 };
 
 const BLUE_MODULE: EffectModule = {
@@ -24,6 +25,7 @@ const BLUE_MODULE: EffectModule = {
     playEffects: [
         { type: 'move', distance: 'Y' },
     ],
+    text: 'Place twice as far as normal.',
 };
 
 const randomIslandName = (): string => {

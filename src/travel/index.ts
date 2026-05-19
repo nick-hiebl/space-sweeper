@@ -37,6 +37,7 @@ export type ImmediateState =
 const DEFAULT_MODULE = (style: Style): EffectModule => {
 	return {
 		style,
+		text: '',
 	};
 };
 

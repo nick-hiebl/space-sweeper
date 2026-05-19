@@ -8,7 +8,11 @@ import { randomIslandRegion } from './islands';
 import { randomMineRegion } from './mines';
 import type { PartialRegion, Region } from './types';
 
-const FUEL_2_MODULE: EffectModule = { style: 'fuel', playEffects: [{ type: 'energy', energyShift: 2 }] };
+const FUEL_2_MODULE: EffectModule = {
+    style: 'fuel',
+    playEffects: [{ type: 'energy', energyShift: 2 }],
+    text: 'Gain 2 energy.',
+};
 const BLUE_CHOICE_MODULE: EffectModule = {
     style: 'blue',
     patternEffects: [
@@ -21,6 +25,7 @@ const BLUE_CHOICE_MODULE: EffectModule = {
             effects: [{ type: 'money', moneyShift: 'Y' }],
         },
     ],
+    text: 'If placed after an asteroid, gain 1 health. If placed after a fuel brick, gain X money.',
 };
 
 const codeName = (): string => {

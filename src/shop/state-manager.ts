@@ -5,11 +5,15 @@ import type { EffectModule, GameState } from '../state/types';
 import type { ShopAction, ShopState } from './types';
 
 const DEFAULT_BETTER_FUEL_MODULE: EffectModule = {
-    style: 'fuel', playEffects: [{ type: 'energy', energyShift: 'Y' }],
+    style: 'fuel',
+    playEffects: [{ type: 'energy', energyShift: 'Y' }],
+    text: 'Gain X energy.',
 };
 
 const RED_ENERGY_MODULE: EffectModule = {
-    style: 'red', drawEffects: [{ type: 'energy', energyShift: 1 }],
+    style: 'red',
+    drawEffects: [{ type: 'energy', energyShift: 1 }],
+    text: 'Gain 1 energy on draw.',
 };
 
 export const defaultShopData = (state?: GameState): ShopData => {

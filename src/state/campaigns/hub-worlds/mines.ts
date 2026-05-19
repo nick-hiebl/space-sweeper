@@ -14,6 +14,7 @@ const BETTER_FUEL_MODULE: EffectModule = {
             effects: [{ type: 'energy', energyShift: 'Y' }],
         },
     ],
+    text: 'Gain X energy. If placed after another fuel, gain an extra X energy.',
 };
 
 const GEM_MODULE: EffectModule = {
@@ -23,7 +24,8 @@ const GEM_MODULE: EffectModule = {
             pattern: ['gem', 'asteroid'],
             effects: [{ type: 'money', moneyShift: 4 }],
         },
-    ]
+    ],
+    text: 'If followed by an asteroid, gain 4 money.',
 };
 
 const randomMineName = (): string => {

@@ -133,12 +133,12 @@ const POSITION_DATA: Record<SpriteId, PositionData> = {
     'belt': planetDetails(6, 0),
 };
 
-const LABEL_DATA: Record<SpriteId, string> = {
+export const LABEL_DATA: Record<SpriteId, string> = {
     // Chips
-    'chip:fuel': 'Fuel item',
-    'chip:explosion': 'Explosion item',
-    'chip:asteroid': 'Asteroid item',
-    'chip:gear': 'Wrench item',
+    'chip:fuel': 'Fuel',
+    'chip:explosion': 'Explosion',
+    'chip:asteroid': 'Asteroid',
+    'chip:gear': 'Wrench',
     'chip:blue': 'Blue item',
     'chip:red': 'Red item',
     'chip:gem': 'Gem item',

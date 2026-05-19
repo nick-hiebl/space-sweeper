@@ -83,6 +83,7 @@ export type PatternEffect = {
 
 export type EffectModule = {
     style: Style;
+    text: string;
     playEffects?: Effect[];
     drawEffects?: Effect[];
     patternEffects?: PatternEffect[];

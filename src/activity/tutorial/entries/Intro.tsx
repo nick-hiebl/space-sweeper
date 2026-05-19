@@ -25,10 +25,12 @@ const SAMPLE_FUEL_MODULE: EffectModuleType = {
     playEffects: [
         { type: 'energy', energyShift: 1 },
     ],
+    text: 'Gain 1 energy.',
 };
 
 const SAMPLE_BLUE_MODULE: EffectModuleType = {
     style: 'blue',
+    text: '',
 };
 
 const SAMPLE_ASTEROID_MODULE: EffectModuleType = {
@@ -36,6 +38,7 @@ const SAMPLE_ASTEROID_MODULE: EffectModuleType = {
     playEffects: [
         { type: 'money', moneyShift: 'Y' },
     ],
+    text: 'Gain X money.',
 };
 
 const Slide1 = (props: TutorialProps) => {

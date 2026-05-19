@@ -55,27 +55,33 @@ export const defaultEffectDeck = (): EffectModule[] => {
 					quantity: { type: 'add', args: ['Y', 1] },
 				}],
 			}],
+			text: 'When drawn, add another ice X+1 to your bag.',
 		},
 		{
 			style: 'explosion',
 			drawEffects: [{ type: 'health', healthShift: '-Y' }],
 			playEffects: [{ type: 'move', distance: 1 }],
+			text: 'Places 1 space further than normal. Lose X health when drawn.',
 		},
 		{
 			style: 'red',
 			drawEffects: [{ type: 'energy', energyShift: 1 }],
+			text: 'Gain 1 energy when drawn.',
 		},
 		{
 			style: 'gear',
 			playEffects: [{ type: 'health', healthShift: 1 }],
+			text: 'Restore 1 health.',
 		},
 		{
 			style: 'fuel',
 			playEffects: [{ type: 'energy', energyShift: 1 }],
+			text: 'Gain 1 energy.',
 		},
 		{
 			style: 'asteroid',
 			playEffects: [{ type: 'money', moneyShift: { type: 'add', args: ['Y', 2] } }],
+			text: 'Gain X+2 money.',
 		},
 		{
 			style: 'asteroid',
@@ -88,6 +94,7 @@ export const defaultEffectDeck = (): EffectModule[] => {
 					],
 				},
 			],
+			text: 'Gain X money. Gain an additional 2 money if placed after another asteroid.',
 		},
 		{
 			style: 'blue',
@@ -99,6 +106,7 @@ export const defaultEffectDeck = (): EffectModule[] => {
 					],
 				},
 			],
+			text: 'If followed by an explosion, it is placed 2 spaces further than normal.',
 		},
 	];
 };

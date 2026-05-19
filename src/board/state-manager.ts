@@ -209,6 +209,7 @@ const getDefaultBoard = (boardKey: string, scatteredEffects: Effect[]): Board =>
 const DEFAULT_MODULE = (style: Style): EffectModule => {
     return {
         style,
+        text: '',
     };
 };
 

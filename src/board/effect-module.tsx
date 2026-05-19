@@ -1,6 +1,8 @@
 import { ChipDisplay } from '../common/ChipDisplay';
-import { Sprite } from '../common/Sprite';
+import { LABEL_DATA, Sprite } from '../common/Sprite';
 import type { Effect as EffectType, EffectModule as EffectModuleType, Effect, PatternEffect, Style } from '../state/types';
+
+import './index.css';
 
 type EffectModuleProps = {
     module: EffectModuleType;
@@ -69,9 +71,13 @@ export const DisplayEffect = ({ effect, size }: { effect: EffectType, size?: 're
 };
 
 const isEffectQuantityBased = (effect: Effect): boolean => {
+    if (effect.type === 'add-to-bag') {
+        return effect.chips.some(chip => typeof chip.quantity !== 'number');
+    }
+
     const values = Object.values(effect);
 
-    return values.includes('quantity') || values.includes('-quantity');
+    return values.includes('Y') || values.includes('-Y') || values.some(v => typeof v === 'object');
 };
 
 export const EffectModule = ({ isHighlighted, module }: EffectModuleProps) => {
@@ -87,6 +93,7 @@ export const EffectModule = ({ isHighlighted, module }: EffectModuleProps) => {
 
     return (
         <div className="effect-module stack-center" data-ishighlighted={isHighlighted}>
+            <h3>{LABEL_DATA[`chip:${module.style}`]}</h3>
             <div className="effect">
                 <Sprite type="chip" chip={{ style: module.style }} />
                 {someEffectIsQuantity && (
@@ -95,6 +102,7 @@ export const EffectModule = ({ isHighlighted, module }: EffectModuleProps) => {
                     </div>
                 )}
             </div>
+            <div className="effect-description">{module.text}</div>
             {module.playEffects && (
                 <div className="inline-center">
                     <Sprite type="ui-icon" icon="play" />

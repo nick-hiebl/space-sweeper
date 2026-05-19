@@ -62,7 +62,6 @@ button.disable-able-button:disabled {
 
 .effect-module {
     display: inline-flex;
-    flex-direction: row;
     align-items: center;
     padding: 8px;
     border: 1px solid grey;
@@ -80,6 +79,10 @@ button.disable-able-button:disabled {
 
 .effect {
     position: relative;
+}
+
+.effect-description {
+    max-width: 240px;
 }
 
 #board {
