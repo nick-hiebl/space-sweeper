@@ -335,7 +335,7 @@ export class Travel {
 
 		const landedCell = this.state.cells.find(c => c.position === placedPosition);
 		if (landedCell && (landedCell?.effects?.length ?? 0) > 0) {
-			effects.concat(landedCell.effects.map(effect => resolveEffect(effect, chip)));
+			effects.push(...landedCell.effects.map(effect => resolveEffect(effect, chip)));
 		}
 
 		if (effects.length > 0) {
