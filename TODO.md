@@ -12,7 +12,6 @@
 # Small picture
 
 - Chip that increases in number when drawn.
-- Ability to reboot after death at the next planet instead of just refreshing the page.
-- Text explanation required on all effects.
+- (?) Ability to reboot after death at the next planet instead of just refreshing the page.
 - Only show relevant effects in travel.
 - Cell effects.

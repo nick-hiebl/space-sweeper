@@ -24,12 +24,12 @@ export const bigBag = (): Chip[] => {
 		{ style: 'fuel', quantity: 1, id: getId() },
 		{ style: 'fuel', quantity: 1, id: getId() },
 		{ style: 'asteroid', quantity: 1, id: getId() },
-		{ style: 'asteroid', quantity: 1, id: getId() },
-		{ style: 'asteroid', quantity: 2, id: getId() },
-		{ style: 'asteroid', quantity: 3, id: getId() },
+		// { style: 'asteroid', quantity: 1, id: getId() },
+		// { style: 'asteroid', quantity: 2, id: getId() },
+		// { style: 'asteroid', quantity: 3, id: getId() },
 		// { style: 'gem', quantity: 1, id: getId() },
 		// { style: 'fruit', quantity: 1, id: getId() },
-		// { style: 'tree', quantity: 1, id: getId() },
+		{ style: 'tree', quantity: 1, id: getId() },
 		// { style: 'red', quantity: 1, id: getId() },
 		// { style: 'ice', quantity: 1, id: getId() },
 		// { style: 'ice', quantity: 2, id: getId() },
@@ -56,6 +56,22 @@ export const defaultEffectDeck = (): EffectModule[] => {
 				}],
 			}],
 			text: 'When drawn, add another ice X+1 to your bag.',
+		},
+		{
+			style: 'tree',
+			drawEffects: [{
+				type: 'add-to-bag',
+				chips: [{
+					style: 'fruit',
+					quantity: 1,
+				}],
+			}],
+			text: 'When drawn, add Fruit 1 to your bag.'
+		},
+		{
+			style: 'fruit',
+			drawEffects: [{ type: 'money', moneyShift: 100 }],
+			text: 'When drawn, gain $100.',
 		},
 		{
 			style: 'explosion',

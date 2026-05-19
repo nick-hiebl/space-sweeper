@@ -54,6 +54,9 @@ const initialAction = (
 	weights.forEach(weight => {
 		unresolvedStyles.add(weight.style);
 	});
+	sources.effects.forEach(module => {
+		unresolvedStyles.add(module.style);
+	});
 
 	chosen.forEach(mod => {
 		unresolvedStyles.delete(mod.style);
