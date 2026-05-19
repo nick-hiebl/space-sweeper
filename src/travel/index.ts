@@ -123,9 +123,9 @@ const createCells = (level: number): Cell[] => {
 			index === 0 || index === arr.length - 1
 				? 0
 				: indexInRow === 0
-					? 0
+					? -4
 					: indexInRow === columns - 1
-						? 8
+						? 4
 						: 0;
 
 		const column = row % 2 === 0

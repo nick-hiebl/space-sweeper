@@ -113,7 +113,10 @@ const State = ({ hoveredPlace, hoveredStyle, setHoveredStyle, travel }: StatePro
 	const continueToIndex = useMemo(() => {
 		const actualY = cells[farthestReachableCell].offset.y;
 
-		return last(cells.filter(c => c.offset.y <= actualY).map((_, index) => index));
+		// As the rows snake, we want to allow a cell slightly below our own
+		const Y_BUFFER = 10;
+
+		return last(cells.filter(c => c.offset.y <= actualY + Y_BUFFER).map((_, index) => index));
 	}, [farthestReachableCell]);
 
 	const height = (cells[continueToIndex] ?? last(cells)).offset.y + 64;
