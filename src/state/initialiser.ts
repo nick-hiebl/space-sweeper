@@ -39,7 +39,7 @@ export const bigBag = (): Chip[] => {
 
 export const getDefaultWeights = (): Weight[] => {
 	return [
-		{ style: 'explosion', quantity: 1 },
+		// { style: 'explosion', quantity: 1 },
 	];
 };
 
@@ -71,7 +71,17 @@ export const defaultEffectDeck = (): EffectModule[] => {
 		{
 			style: 'fruit',
 			drawEffects: [{ type: 'money', moneyShift: 100 }],
-			text: 'When drawn, gain $100.',
+			returnToBagEffects: [
+				{ type: 'discard' },
+				{
+					type: 'add-to-bag',
+					chips: [{
+						style: 'fruit',
+						quantity: { type: 'add', args: ['Y', 1] }
+					}],
+				},
+			],
+			text: 'When drawn, gain $100. Increment number by 1 when returning to bag.',
 		},
 		{
 			style: 'explosion',

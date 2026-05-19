@@ -121,6 +121,15 @@ export const EffectModule = ({ isHighlighted, module }: EffectModuleProps) => {
                     ))}
                 </div>
             )}
+            {module.returnToBagEffects && (
+                <div className="inline-center">
+                    <Sprite type="ui-icon" icon="return-to-bag" />
+                    <Sprite type="ui-icon" icon="arrow" size="32" />
+                    {module.returnToBagEffects.map((effect, index) => (
+                        <DisplayEffect key={index} effect={effect} />
+                    )).flatMap((v, i, arr) => i === arr.length - 1 ? v : [v, ','])}
+                </div>
+            )}
             {module.patternEffects && (
                 <div className="stack">
                     {module.patternEffects.map((patternEffect, index) => (

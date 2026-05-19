@@ -232,6 +232,16 @@ export class Travel {
 		this.triggerEffects(drawEffects);
 	}
 
+	findRelevantRule(style: Style) {
+		const relevantRule = this.sources.effects.find(module => module.style === style);
+
+		if (!relevantRule) {
+			throw new Error('No relevant rule!');
+		}
+
+		return relevantRule;
+	}
+
 	choose(chip: Chip) {
 		if (this.currentAction.type !== 'drawing') {
 			throw new Error('Choosing a chip out of turn!');
@@ -255,17 +265,8 @@ export class Travel {
 			bag: this.sources.bag.filter(c => c !== chip),
 		};
 
-		this.currentAction = { type: 'waiting' };
-
-		this.stateWatcher.triggerUpdate();
-		this.actionWatcher.triggerUpdate();
-		this.sourceWatcher.triggerUpdate();
-
-		const relevantRule = this.sources.effects.find(module => module.style === chip.style);
-
-		if (!relevantRule) {
-			throw new Error('No relevant rule!');
-		}
+		// I think this is just used to verify that there is a rule in this scope
+		this.findRelevantRule(chip.style);
 
 		const effectsFromPlay = getPlayEffectsFromPlacing({
 			effectModules: this.sources.effects,
@@ -275,6 +276,30 @@ export class Travel {
 
 		const effects: Effect<number>[] = effectsFromPlay;
 
+		this.currentAction.options.forEach(option => {
+			// Don't trigger returnToBag effects for the chosen chip
+			if (option.id === chip.id) {
+				return;
+			}
+
+			const relevantRule = this.findRelevantRule(option.style);
+
+			if (relevantRule.returnToBagEffects) {
+				const returnToBagEffects = relevantRule.returnToBagEffects
+					.map(effect => resolveEffect(effect, option));
+
+				effects.push(...returnToBagEffects);
+
+				// Need to discard in this case
+				if (returnToBagEffects.some(effect => effect.type === 'discard')) {
+					this.sources = {
+						...this.sources,
+						bag: this.sources.bag.filter(c => c !== option),
+					};
+				}
+			}
+		});
+
 		const landedCell = this.state.cells.find(c => c.position === placedPosition);
 		if (landedCell && (landedCell?.effects?.length ?? 0) > 0) {
 			effects.concat(landedCell.effects.map(effect => resolveEffect(effect, chip)));
@@ -283,6 +308,12 @@ export class Travel {
 		if (effects.length > 0) {
 			this.triggerEffects(effects);
 		}
+
+		this.currentAction = { type: 'waiting' };
+
+		this.stateWatcher.triggerUpdate();
+		this.actionWatcher.triggerUpdate();
+		this.sourceWatcher.triggerUpdate();
 	}
 
 	triggerEffects(effects: Effect<number>[]) {

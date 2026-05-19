@@ -39,11 +39,12 @@ export const TravelComponent = ({ travel }: Props) => {
 			{hitPoints <= 0 ? (
 				<div>
 					<button
+						className="button"
 						onClick={() => {
 							campaign.gameEnd();
 						}}
 					>
-						Move on
+						Forfeit
 					</button>
 				</div>
 			) : action.type === 'picking-modules' ? (

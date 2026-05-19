@@ -86,6 +86,7 @@ export type EffectModule = {
     text: string;
     playEffects?: Effect[];
     drawEffects?: Effect[];
+    returnToBagEffects?: Effect[];
     patternEffects?: PatternEffect[];
 };
 
