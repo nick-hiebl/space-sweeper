@@ -26,6 +26,7 @@ export const TravelComponent = ({ travel }: Props) => {
 	const modules = useExternalStore(travel.moduleWatcher);
 
 	const [hoveredStyle, setHoveredStyle] = useState<Style | undefined>(undefined);
+	const [hoveredQuantity, setHoveredQuantity] = useState<number | undefined>(undefined);
 	const [hoveredPlace, setHoveredPlace] = useState<number | undefined>(undefined);
 
 	const { bag, weights } = useExternalStore(travel.sourceWatcher);
@@ -38,7 +39,9 @@ export const TravelComponent = ({ travel }: Props) => {
 				travel={travel}
 				hoveredPlace={hoveredPlace}
 				hoveredStyle={hoveredStyle}
+				hoveredQuantity={hoveredQuantity}
 				setHoveredStyle={setHoveredStyle}
+				setHoveredQuantity={setHoveredQuantity}
 			/>
 			{hitPoints <= 0 ? (
 				<div>
@@ -60,6 +63,7 @@ export const TravelComponent = ({ travel }: Props) => {
 					action={action}
 					travel={travel}
 					setHoveredStyle={setHoveredStyle}
+					setHoveredQuantity={setHoveredQuantity}
 					setHoveredPlace={setHoveredPlace}
 				/>
 			) : (
@@ -71,6 +75,7 @@ export const TravelComponent = ({ travel }: Props) => {
 						key={mod.style}
 						module={mod}
 						isHighlighted={!hoveredStyle ? undefined : mod.style === hoveredStyle}
+						previewQuantity={hoveredQuantity}
 					/>
 				))}
 			</div>
@@ -82,10 +87,12 @@ type StateProps = {
 	travel: Travel;
 	hoveredStyle: Style | undefined;
 	hoveredPlace: number | undefined;
+	hoveredQuantity: number | undefined;
 	setHoveredStyle: (style: Style | undefined) => void;
+	setHoveredQuantity: (quantity: number | undefined) => void;
 };
 
-const State = ({ hoveredPlace, hoveredStyle, setHoveredStyle, travel }: StateProps) => {
+const State = ({ hoveredPlace, hoveredStyle, setHoveredQuantity, setHoveredStyle, travel }: StateProps) => {
 	const { cells, played } = useExternalStore(travel.stateWatcher);
 	const [furthestCellIndex, setFurthestCellIndex] = useState(Math.min(cells.length - 1, 0));
 
@@ -137,8 +144,14 @@ const State = ({ hoveredPlace, hoveredStyle, setHoveredStyle, travel }: StatePro
 								chip={chip}
 								hoveredStyle={hoveredStyle}
 								isHovered={cell.position === hoveredPlace}
-								onMouseEnter={chip ? () => setHoveredStyle(chip.style) : undefined}
-								onMouseLeave={chip ? () => setHoveredStyle(undefined) : undefined}
+								onMouseEnter={chip ? () => {
+									setHoveredStyle(chip.style);
+									setHoveredQuantity(chip.quantity);
+								} : undefined}
+								onMouseLeave={chip ? () => {
+									setHoveredStyle(undefined);
+									setHoveredQuantity(chip.quantity);
+								} : undefined}
 							/>
 						);
 					})}
@@ -186,9 +199,10 @@ type DrawingProps = {
 	action: DrawingState;
 	setHoveredStyle: (style: Style | undefined) => void;
 	setHoveredPlace: (number: number | undefined) => void;
+	setHoveredQuantity: (number: number | undefined) => void;
 };
 
-const Drawing = ({ action, travel, setHoveredStyle, setHoveredPlace }: DrawingProps) => {
+const Drawing = ({ action, travel, setHoveredStyle, setHoveredQuantity, setHoveredPlace }: DrawingProps) => {
 	return (
 		<div className="inline gap-8px">
 			{action.options.map(chip => {
@@ -197,11 +211,13 @@ const Drawing = ({ action, travel, setHoveredStyle, setHoveredPlace }: DrawingPr
 				const onFocus = () => {
 					setHoveredStyle(chip.style);
 					setHoveredPlace(willLandOn);
+					setHoveredQuantity(chip.quantity);
 				};
 
 				const onBlur = () => {
 					setHoveredStyle(undefined);
 					setHoveredPlace(undefined);
+					setHoveredQuantity(undefined);
 				};
 
 				return (

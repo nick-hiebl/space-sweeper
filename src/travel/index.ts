@@ -143,7 +143,7 @@ const createCells = (level: number): Cell[] => {
 		return {
 			offset: { x: column * (64 + 4), y: row * (64 + 12) + specialOffset },
 			position: index,
-			effects: [],
+			effects: [{ type: 'money', moneyShift: 'Y' }],
 			markerNumber: marker,
 		};
 	})
