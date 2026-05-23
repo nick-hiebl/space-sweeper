@@ -98,8 +98,6 @@ const State = ({ hoveredPlace, hoveredStyle, setHoveredQuantity, setHoveredStyle
 
 	const { bag, weights } = useExternalStore(travel.sourceWatcher);
 
-	const lastPlayed = last(played)?.[1] ?? -1;
-
 	const farthestReachableCell = useMemo(() => {
 		const lastMarkerCell = last(cells.filter(x => x.markerNumber)).position;
 
@@ -109,7 +107,7 @@ const State = ({ hoveredPlace, hoveredStyle, setHoveredQuantity, setHoveredStyle
 				.concat(bag)
 				.map(chip => travel.resolvePlacementDistance(chip)),
 		);
-	}, [bag, lastPlayed, weights]);
+	}, [bag, cells, travel, weights]);
 
 	useEffect(() => {
 		if (farthestReachableCell > furthestCellIndex) {
@@ -124,7 +122,7 @@ const State = ({ hoveredPlace, hoveredStyle, setHoveredQuantity, setHoveredStyle
 		const Y_BUFFER = 10;
 
 		return last(cells.filter(c => c.offset.y <= actualY + Y_BUFFER).map((_, index) => index));
-	}, [farthestReachableCell]);
+	}, [cells, farthestReachableCell]);
 
 	const height = (cells[continueToIndex] ?? last(cells)).offset.y + 64;
 
