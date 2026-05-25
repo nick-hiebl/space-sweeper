@@ -40,7 +40,7 @@ export const Game = () => {
 
 	return (
 		<div id="game">
-			<div className="inline-center spread gap-16px wrap">
+			<div className="header-bar inline-center spread gap-16px wrap">
 				<PlayerInfo />
 				<div className="inline gap-8px">
 					<button
