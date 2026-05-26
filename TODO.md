@@ -13,3 +13,5 @@
 
 - (?) Ability to reboot after death at the next planet instead of just refreshing the page.
 - Only show relevant effects in travel.
+- Conditional effects.
+- Return to bag effect.
