@@ -107,11 +107,6 @@ export const defaultEffectDeck = (): EffectModule[] => {
 		},
 		{
 			style: 'asteroid',
-			playEffects: [{ type: 'money', moneyShift: { type: 'add', args: ['Y', 2] } }],
-			text: 'Gain X+2 money.',
-		},
-		{
-			style: 'asteroid',
 			playEffects: [{ type: 'money', moneyShift: 'Y' }],
 			patternEffects: [
 				{
