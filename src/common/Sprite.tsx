@@ -2,31 +2,26 @@ import type { Chip, Quantity, Style } from '../state/types';
 
 import './index.css';
 
-const SPRITE_IMAGE = new Image();
-SPRITE_IMAGE.src = './shape-sprites.png';
+const loadImage = (src: string): { image: HTMLImageElement, promise: Promise<void> } => {
+    const image = new Image();
+    image.src = src;
 
-const PLANET_IMAGE = new Image();
-PLANET_IMAGE.src = './planet-sprites.png';
-
-type SpriteSrc = 'planet' | 'sprite';
-
-export const imageReady = new Promise<void>(resolve => {
-    const completed: Record<SpriteSrc, boolean> = {
-        'sprite': false,
-        'planet': false,
+    return {
+        image,
+        promise: new Promise(res => {
+            image.onload = () => res();
+        }),
     };
+};
 
-    const onComplete = (src: SpriteSrc) => {
-        completed[src] = true;
+const SPRITE_IMAGE = loadImage('./shape-sprites.png');
 
-        if (Object.values(completed).every(v => v)) {
-            resolve();
-        }
-    };
+const PLANET_IMAGE = loadImage('./planet-sprites.png');
 
-    SPRITE_IMAGE.onload = () => onComplete('sprite');
-    PLANET_IMAGE.onload = () => onComplete('planet');
-});
+export const imageReady = Promise.all([
+    SPRITE_IMAGE.promise,
+    PLANET_IMAGE.promise,
+]);
 
 type SpriteTypeProps =
     | { type: 'chip'; chip: Pick<Chip, 'style'> }
@@ -197,9 +192,9 @@ const getDataURI = (id: SpriteId, type: SpriteTypeProps['type']): string => {
         throw new Error('Could not set up images!');
     }
 
-    const srcImage = type === 'planet' ? PLANET_IMAGE : SPRITE_IMAGE;
+    const src = type === 'planet' ? PLANET_IMAGE : SPRITE_IMAGE;
 
-    ctx.drawImage(srcImage, pos.x, pos.y, pos.width, pos.height, 0, 0, pos.width, pos.height);
+    ctx.drawImage(src.image, pos.x, pos.y, pos.width, pos.height, 0, 0, pos.width, pos.height);
 
     return canvas.toDataURL();
 };
