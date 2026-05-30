@@ -22,11 +22,11 @@ export type PickingModuleState = {
 	available: EffectModule[];
 };
 
-export type WaitingState = { type: 'waiting' };
+type WaitingState = { type: 'waiting' };
 
 export type DrawingState = { type: 'drawing', options: Chip[] };
 
-export type EndedState = { type: 'ended' };
+type EndedState = { type: 'ended' };
 
 export type ImmediateState =
 	| PickingModuleState

@@ -5,6 +5,7 @@ import { ShopComponent } from '../../activity2/shop';
 import { StartActivity as StartActivityComponent } from '../../activity2/start';
 import { createMyMap } from '../../common/grid-functions';
 import { selectRandom } from '../../common/random';
+import type { PlanetIcon } from '../../common/Sprite';
 import { last } from '../common';
 
 import type { Campaign } from './campaign';
@@ -98,19 +99,46 @@ const createCampaignActivities = (): SpecificCampaignActivity[] => {
 
 const WIGGLE = 0.2;
 
+const nameGenerators: Partial<Record<PlanetIcon, () => string>> = {
+	earth: () => {
+		const descriptor = selectRandom('Warm Sunny Coastal Tropical Relaxing Pleasant Humid Summery'.split(' '));
+		const place = selectRandom('Shores Waters Islands Archipelago Tropics Coast Seas Jungle Paradise'.split(' '));
+		const name = selectRandom(['Wa', 'Sun', 'the Outer Rim', 'Haven-62', 'Paradina', 'Sol']);
+
+		return `${descriptor} ${place} of ${name}`;
+	},
+	belt: () => {
+		const descriptor = selectRandom('Shattered Bored Flattened Crushed Leveled'.split(' '));
+		const place = selectRandom(['Mines', 'Caves', 'Veins', 'Mining Site', 'Asteroid Belt', 'Extraction']);
+		const suffix = `${selectRandom([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])}-${selectRandom(Array.from('ABCDX'))}`;
+
+		return `${descriptor} ${place} ${suffix}`;
+	},
+};
+
+const defaultName = () => {
+	const descriptor = selectRandom('Flooded Hot Irradiated Drowned Frozen Isolated Shattered Dredged Excavated Temperate Polar Outer Remote'.split(' '));
+    const locationType = selectRandom('Planet Moon System Outpost Station'.split(' '));
+    const name = selectRandom('Hoth Titan Jupiter Io Calypso Ral Keros Ceres Makemake Outar Torren Kaynar'.split(' '));
+
+    return `${descriptor} ${locationType} of ${name}`;
+};
+
 const createRegion = (row: number, column: number): CampaignRegion => {
 	const id = regionId();
 
+	const theme = selectRandom<PlanetIcon>(['earth', 'black-hole', 'ice', 'gas-giant', 'moon', 'quasar', 'belt']);
+
 	return {
 		id,
-		name: `World ${id}`,
+		name: nameGenerators[theme]?.() ?? defaultName(),
 		activities: [],
 		row,
 		column,
 		validNext: [],
-		icon: selectRandom(['earth', 'black-hole', 'ice', 'gas-giant', 'moon', 'quasar', 'belt']),
-		x: Math.round((column + 1/2 + Math.random() * WIGGLE - WIGGLE / 2) * X_SCALE),
-		y: Math.round((row + 1/2 + Math.random() * WIGGLE - WIGGLE / 2) * Y_SCALE),
+		icon: theme,
+		x: Math.round((column + 1 / 2 + Math.random() * WIGGLE - WIGGLE / 2) * X_SCALE),
+		y: Math.round((row + 1 / 2 + Math.random() * WIGGLE - WIGGLE / 2) * Y_SCALE),
 	};
 };
 
@@ -216,7 +244,7 @@ export const setupMap = (): { regions: CampaignRegion[][]; initialRegion: Curren
 		validNext: finalParents.map(r => r.id),
 		icon: 'earth',
 		x: Math.floor((finalParents[0].x + last(finalParents).x) / 2),
-		y: (map.length + 1/2) * Y_SCALE,
+		y: (map.length + 1 / 2) * Y_SCALE,
 	};
 
 	map.push([initialRegion]);

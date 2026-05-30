@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 
-import { boardDataPromise } from './board/board-data';
 import { imageReady } from './common/Sprite';
 import { Game } from './game';
 import { Campaign } from './state/campaigns/campaign';
@@ -15,7 +14,6 @@ export const App = () => {
 	useEffect(() => {
 		const allPromises = Promise.all([
 			imageReady,
-			boardDataPromise,
 		]);
 
 		allPromises.then(() => {

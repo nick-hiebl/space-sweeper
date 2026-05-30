@@ -2,7 +2,6 @@ import { createExternalStore, type ExternalStore } from '../common/external-stor
 import { clamp } from '../common/random';
 
 import { bigBag, defaultEffectDeck, getDefaultWeights, getId } from './initialiser';
-import { readQuantity } from './state-manager';
 import type { Chip, Effect, EffectModule, Weight } from './types';
 
 export type PlayerStats = {
@@ -56,11 +55,11 @@ export class Player {
 
 		effects.forEach(effect => {
 			if (effect.type === 'money') {
-				money += readQuantity(effect.moneyShift);
+				money += effect.moneyShift;
 			} else if (effect.type === 'health') {
-				hp += readQuantity(effect.healthShift);
+				hp += effect.healthShift;
 			} else if (effect.type === 'energy') {
-				energy += readQuantity(effect.energyShift);
+				energy += effect.energyShift;
 			}
 			// Other types of effects can be ignored as they may not apply to the player
 		});

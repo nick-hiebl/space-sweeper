@@ -1,4 +1,4 @@
-import { Activity, ActivityManager, ActivitySignal } from './campaign';
+import { Activity } from './campaign';
 
 export type Style =
     | 'explosion'
@@ -12,7 +12,7 @@ export type Style =
     | 'tree'
     | 'ice';
 
-export type Id = number;
+type Id = number;
 
 /**
  * 'Y' was chosen as the placeholder in types for 'X' in order to make it easier to find in code.
@@ -33,17 +33,17 @@ export type Weight = Omit<Chip, 'id'>;
 
 export type ChipEffect<T> = Omit<Chip, 'id' | 'quantity'> & { quantity: T };
 
-export type HealthEffect<T = number | Quantity> = {
+type HealthEffect<T = number | Quantity> = {
     type: 'health';
     healthShift: T;
 };
 
-export type MoneyEffect<T = number | Quantity> = {
+type MoneyEffect<T = number | Quantity> = {
     type: 'money';
     moneyShift: T;
 };
 
-export type EnergyEffect<T = number | Quantity> = {
+type EnergyEffect<T = number | Quantity> = {
     type: 'energy';
     energyShift: T;
 };
@@ -51,15 +51,15 @@ export type EnergyEffect<T = number | Quantity> = {
 /**
  * I have no idea what this is for.
  */
-export type DiscardEffect = {
+type DiscardEffect = {
     type: 'discard';
 };
 
-export type ForcedEffect = {
+type ForcedEffect = {
     type: 'forced';
 };
 
-export type AddToBagEffect<T = number | Quantity> = {
+type AddToBagEffect<T = number | Quantity> = {
     type: 'add-to-bag';
     transform?: boolean;
     /**
@@ -82,7 +82,7 @@ export type Effect<T = number | Quantity> =
     | MoveEffect<T>
     | AddToBagEffect<T>;
 
-export type Pattern = Style[];
+type Pattern = Style[];
 
 export type PatternEffect = {
     pattern: Pattern;
@@ -97,35 +97,3 @@ export type EffectModule = {
     returnToBagEffects?: Effect[];
     patternEffects?: PatternEffect[];
 };
-
-export type GameState = {
-    bag: Chip[];
-    effectDeck: EffectModule[];
-    energy: number;
-    maxEnergy: number;
-    hitPoints: number;
-    maxHitPoints: number;
-    money: number;
-    weights: Weight[];
-    currentActivity: Activity;
-};
-
-export type GameStateWithCampaign<T> = GameState & {
-    campaign: ActivityManager<T>;
-    campaignData: T;
-};
-
-type UpdatableStats = 'maxEnergy' | 'maxHitPoints' | 'energy' | 'hitPoints' | 'money';
-
-export type GameAction =
-    | { type: 'trigger-effects'; effects: Effect[] }
-    | { type: 'add-chip'; chips: Omit<Chip, 'id'>[] }
-    | { type: 'add-module'; modules: EffectModule[] }
-    | { type: 'add-weight'; weights: Weight[] }
-    | { type: 'remove-chip'; chips: Id[] }
-    | { type: 'remove-module'; modules: EffectModule[] }
-    | {
-        type: 'update-stats';
-        newStats: Partial<Pick<GameState, UpdatableStats>> & Partial<Record<Exclude<keyof GameState, UpdatableStats>, never>>;
-    }
-    | ActivitySignal;

@@ -24,13 +24,13 @@ export type CurrentCampaignRegion = CampaignRegion & {
 	completed: boolean;
 };
 
-export type ActivityCommon = {
+type ActivityCommon = {
 	name: string;
 	id: number;
 	type: string;
 };
 
-export type CampaignActivity<T extends ActivityCommon> = {
+type CampaignActivity<T extends ActivityCommon> = {
 	type: 'hub',
 	data: T;
 	Component: ComponentType<T>;
@@ -44,7 +44,7 @@ export type SpecificCampaignActivity =
 	| CampaignActivity<ChoiceActivity>
 	| CampaignActivity<ModuleTrashActivity>;
 
-export type StartActivity = ActivityCommon & { type: 'start' };
+type StartActivity = ActivityCommon & { type: 'start' };
 
 export type CombinerActivity = ActivityCommon & { type: 'combiner' };
 
@@ -75,7 +75,7 @@ export type ShopActivity = ActivityCommon & {
 	}[];
 };
 
-export type TravelActivity = {
+type TravelActivity = {
 	type: 'travel';
 	travel: Travel;
 	destination: number;

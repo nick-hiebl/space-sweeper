@@ -1,19 +1,8 @@
-import type { ActivityManager } from './campaign';
-import type { Chip, EffectModule, GameState, GameStateWithCampaign, Weight } from './types';
+import type { Chip, EffectModule, Weight } from './types';
 
 let startId = 0;
 export const getId = () => {
 	return startId++;
-};
-
-const smallBag = (): Chip[] => {
-	return [
-		{ style: 'gear', quantity: 1, id: getId() },
-		{ style: 'fuel', quantity: 1, id: getId() },
-		{ style: 'asteroid', quantity: 1, id: getId() },
-		{ style: 'asteroid', quantity: 2, id: getId() },
-		{ style: 'asteroid', quantity: 3, id: getId() },
-	];
 };
 
 export const bigBag = (): Chip[] => {
@@ -131,46 +120,4 @@ export const defaultEffectDeck = (): EffectModule[] => {
 			text: 'If followed by an explosion, it is placed 2 spaces further than normal.',
 		},
 	];
-};
-
-type GamePrefill = Pick<GameState, 'bag' | 'maxEnergy' | 'maxHitPoints' | 'effectDeck' | 'weights'>;
-
-export const SHORT_GAME_DATA: GamePrefill = {
-	bag: smallBag(),
-	maxEnergy: 5,
-	maxHitPoints: 3,
-	effectDeck: defaultEffectDeck(),
-	weights: [],
-};
-
-const NORMAL_GAME_DATA: GamePrefill = {
-	bag: bigBag(),
-	maxEnergy: 8,
-	maxHitPoints: 4,
-	effectDeck: defaultEffectDeck(),
-	weights: getDefaultWeights(),
-};
-
-export const initialGameState = <T>(
-	campaign: ActivityManager<T>,
-	initialCampaign: (initialState: GameState) => T,
-	gameSettings = NORMAL_GAME_DATA,
-): GameStateWithCampaign<T> => {
-	const state: GameState = {
-		bag: gameSettings.bag,
-		energy: gameSettings.maxEnergy,
-		maxEnergy: gameSettings.maxEnergy,
-		hitPoints: gameSettings.maxHitPoints,
-		maxHitPoints: gameSettings.maxHitPoints,
-		money: 0,
-		effectDeck: gameSettings.effectDeck,
-		weights: gameSettings.weights,
-		currentActivity: { type: 'start' },
-	};
-
-	return {
-		...state,
-		campaign,
-		campaignData: initialCampaign(state),
-	};
 };
